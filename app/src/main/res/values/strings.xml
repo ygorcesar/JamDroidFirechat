@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">JamDroidFireChat</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Google Auth Strings -->
+    <string name="google_error_auth_with_google">"Erro na autenticação com o Google: "</string>
+    <string name="google_error_network_error">"Erro de rede: "</string>
+    <string name="google_error_recoverable_oauth_error">Recoverable Google OAuth error: </string>
+
+    <!-- Dialogs and Progress Dialogs -->
+    <string name="progress_dialog_loading" type="id">Carregando..</string>
+    <string name="progress_dialog_authenticating_with_google">Autenticando com o Google</string>
+
+    <!-- OAuth Format -->
+    <string name="oauth2_format">oauth2:%s</string>
+
+    <!-- Errors -->
+    <string name="error_message_failed_sign_in_no_network">Erro ao tentar conectar, verifique sua conexão.</string>
+
+    <!-- Log Messages -->
+    <string name="log_message_auth_successful">Auth successful.</string>
+    <string name="log_error_invalid_provider">Invalid provider: </string>
+    <string name="button_send">Enviar</string>
+    <string name="notice_insert_message">Insira uma mensagem</string>
+
+    <!-- Base Error Strings-->
+    <string name="log_error_occurred">"Ocorreu um erro: "</string>
+    <string name="hint_write_here">Digite aqui...</string>
+</resources>
