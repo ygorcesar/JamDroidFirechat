@@ -1,10 +1,13 @@
 package com.ygorcesar.jamdroidfirechat;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.ygorcesar.jamdroidfirechat.fragment.ChatFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -14,6 +17,9 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragment, new ChatFragment()).commit();
     }
 
     @Override

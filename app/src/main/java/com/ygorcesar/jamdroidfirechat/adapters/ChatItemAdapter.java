@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.Chat;
 import com.ygorcesar.jamdroidfirechat.model.User;
+import com.ygorcesar.jamdroidfirechat.utils.OnRecyclerItemClickListener;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
     private List<Chat> mChats;
     private LayoutInflater mLayoutInflater;
     private String mEmailUser;
+    private OnRecyclerItemClickListener mOnRecyclerItemClickListener;
 
     public ChatItemAdapter(Context c, List<Chat> chats, List<User> users,
                            List<String> usersEmails, String emailUser) {
@@ -71,7 +74,12 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
                 .into(imageView);
     }
 
+    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener listener){
+        this.mOnRecyclerItemClickListener = listener;
+    }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder {
+        private RelativeLayout rvMessageContainer;
         private CircleImageView ivUserPhotoSender;
         private TextView tvUserEmail;
         private TextView tvMessage;
@@ -80,11 +88,18 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            rvMessageContainer = (RelativeLayout) itemView.findViewById(R.id.rv_message_container);
             ivUserPhotoSender = (CircleImageView) itemView.findViewById(R.id.iv_item_user_photo_sender);
             tvUserEmail = (TextView) itemView.findViewById(R.id.tv_item_user_email);
             tvMessage = (TextView) itemView.findViewById(R.id.tv_item_message);
             spaceLeft = (Space) itemView.findViewById(R.id.space_left);
             spaceRight = (Space) itemView.findViewById(R.id.space_right);
+
+            rvMessageContainer.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    mOnRecyclerItemClickListener.onRecycleItemClick(v.getId(), getAdapterPosition());
+                }
+            });
         }
 
         private void setViewIsSender(boolean isSender) {

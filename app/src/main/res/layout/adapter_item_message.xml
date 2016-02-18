@@ -12,6 +12,7 @@
         android:layout_alignParentStart="true"/>
 
     <RelativeLayout
+        android:id="@+id/rv_message_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/item_message_margin_v"

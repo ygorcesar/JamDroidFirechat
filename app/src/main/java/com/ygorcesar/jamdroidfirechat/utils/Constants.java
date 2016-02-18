@@ -11,7 +11,6 @@ public final class Constants {
     public static final String KEY_USER_EMAIL = "USER_EMAIL";
     public static final String KEY_USER_DISPLAY_NAME = "USER_DISPLAY_NAME";
     public static final String KEY_USER_PROVIDER_PHOTO_URL = "USER_PROVIDER_PHOTO_URL";
-    public static final String KEY_USER_PROFILE_PHOTO_URL = "USER_PHOTO_URL";
 
     /**
      * Constants for Firebase login

@@ -26,4 +26,5 @@
     <dimen name="edt_msg_content_padding_v">6dp</dimen>
     <dimen name="circle_photo_user">48dp</dimen>
     <dimen name="chat_item_space_horizontal">38dp</dimen>
+    <dimen name="circle_photo_user_detail">180dp</dimen>
 </resources>

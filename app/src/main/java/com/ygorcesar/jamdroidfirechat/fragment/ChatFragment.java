@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,11 +25,13 @@ import com.ygorcesar.jamdroidfirechat.model.Chat;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
+import com.ygorcesar.jamdroidfirechat.utils.OnRecyclerItemClickListener;
+import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatFragment extends Fragment implements View.OnClickListener {
+public class ChatFragment extends Fragment implements View.OnClickListener, OnRecyclerItemClickListener {
 
     private RecyclerView mRecyclerViewChat;
     private FloatingActionButton mFabSendMsg;
@@ -48,6 +51,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        getActivity().setTitle(getString(R.string.app_name));
 
         mRecyclerViewChat = (RecyclerView) rootView.findViewById(R.id.rv_chat);
         mRecyclerViewChat.setHasFixedSize(true);
@@ -85,6 +89,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         mKeys = new ArrayList<>();
 
         mAdapter = new ChatItemAdapter(getActivity(), mChats, mUsers, mUsersEmails, mEncodedMail);
+        mAdapter.setOnRecyclerItemClickListener(this);
         mRecyclerViewChat.setAdapter(mAdapter);
     }
 
@@ -195,5 +200,20 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                 sendMessage();
                 break;
         }
+    }
+
+    @Override public void onRecycleItemClick(int view_id, int position) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        int userIndex = mUsersEmails.indexOf(mChats.get(position).getEmail());
+        Bundle args = new Bundle();
+        args.putString(Constants.KEY_USER_DISPLAY_NAME, mUsers.get(userIndex).getName());
+        args.putString(Constants.KEY_ENCODED_EMAIL, Utils.decodeEmail(mUsers.get(userIndex).getEmail()));
+        args.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, mUsers.get(userIndex).getPhotoUrl());
+        UserFragment fragment = new UserFragment();
+        fragment.setArguments(args);
+
+        transaction.replace(R.id.fragment, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
