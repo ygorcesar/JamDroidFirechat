@@ -4,8 +4,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
-    def versionMajor = 0
-    def versionMinor = 1
+    def versionMajor = 1
+    def versionMinor = 0
     def versionPatch = 0
 
     defaultConfig {
@@ -48,6 +48,12 @@ dependencies {
 
     /* Firebase SDK */
     compile 'com.firebase:firebase-client-android:2.3.1'
+
+    /* Picasso para download de imagens */
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    /* Circle ImageView */
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

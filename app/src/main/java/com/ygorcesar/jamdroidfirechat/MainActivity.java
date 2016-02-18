@@ -31,10 +31,14 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_revoke_access:
+                revokeAccess();
+                return true;
+            case R.id.action_exit:
+                logout();
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

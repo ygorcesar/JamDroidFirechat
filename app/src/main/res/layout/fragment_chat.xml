@@ -5,6 +5,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
                 tools:context=".fragment.ChatFragment"
+                android:background="@drawable/gdg_background_small_colored"
                 tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView

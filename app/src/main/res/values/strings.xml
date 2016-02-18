@@ -26,4 +26,8 @@
     <!-- Base Error Strings-->
     <string name="log_error_occurred">"Ocorreu um erro: "</string>
     <string name="hint_write_here">Digite aqui...</string>
+    <string name="action_exit">Sair</string>
+    <string name="action_revoke_access">Revogar Acesso</string>
+    <string name="app_firechat">FireChat</string>
+    <string name="app_jamdroid">JamDroid</string>
 </resources>

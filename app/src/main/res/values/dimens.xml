@@ -2,18 +2,28 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_send_margin">6dp</dimen>
 
     <dimen name="recycler_view_padding">16dp</dimen>
-    <dimen name="item_message_margin">8dp</dimen>
+
+    <dimen name="item_message_margin_h">8dp</dimen>
+    <dimen name="item_message_margin_v">4dp</dimen>
     <dimen name="item_message_padding">8dp</dimen>
-    <dimen name="item_user_photo_margin_h">8dp</dimen>
+
+    <dimen name="item_user_photo_margin_h">12dp</dimen>
     <dimen name="item_user_email_margin_v">4dp</dimen>
+
     <dimen name="ln_send_container_padding_h">4dp</dimen>
     <dimen name="ln_send_container_padding_v">2dp</dimen>
+
+    <dimen name="item_user_name_text_size">16sp</dimen>
+    <dimen name="item_message_content_text_size">16sp</dimen>
 
     <dimen name="edt_msg_content_margin">8dp</dimen>
     <dimen name="edt_msg_content_padding_h">8dp</dimen>
     <dimen name="edt_msg_content_padding_v">6dp</dimen>
+    <dimen name="circle_photo_user">48dp</dimen>
+    <dimen name="chat_item_space_horizontal">38dp</dimen>
 </resources>

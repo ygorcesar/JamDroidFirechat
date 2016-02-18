@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center|top"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/colorPrimary">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:gravity="center|top">
 
-    <android.support.v4.widget.Space
-        android:layout_width="wrap_content"
-        android:layout_height="100dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/gdg_background">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher" />
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"/>
 
-    <android.support.v4.widget.Space
-        android:layout_width="wrap_content"
-        android:layout_height="200dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/app_jamdroid"
+            android:layout_marginRight="120dp"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:layout_marginLeft="120dp"
+            android:text="@string/app_firechat"
+            android:textColor="#ff0"
+            android:textSize="36sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/droidjamfirechat_image"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"/>
+    </LinearLayout>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_with_google"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_margin="24dp"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

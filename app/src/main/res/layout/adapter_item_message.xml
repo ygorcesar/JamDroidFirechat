@@ -1,36 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_message_margin"
-                android:background="@drawable/message_item_background"
-                android:elevation="2dp"
-                android:orientation="vertical"
-                android:padding="@dimen/item_message_padding">
+                android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_item_user_photo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/item_user_photo_margin_h"
-        android:layout_marginRight="@dimen/item_user_photo_margin_h"
-        android:scaleType="centerCrop"/>
+    <android.support.v4.widget.Space
+        android:id="@+id/space_left"
+        android:layout_width="@dimen/chat_item_space_horizontal"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
-    <TextView
-        android:id="@+id/tv_item_user_email"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/item_user_email_margin_v"
-        android:layout_toEndOf="@+id/iv_item_user_photo"
-        android:layout_toRightOf="@id/iv_item_user_photo"
-        android:textStyle="bold"/>
+        android:layout_marginBottom="@dimen/item_message_margin_v"
+        android:layout_marginLeft="@dimen/item_message_margin_h"
+        android:layout_marginRight="@dimen/item_message_margin_h"
+        android:layout_marginTop="@dimen/item_message_margin_v"
+        android:layout_toEndOf="@id/space_left"
+        android:layout_toLeftOf="@+id/space_right"
+        android:layout_toRightOf="@id/space_left"
+        android:layout_toStartOf="@+id/space_right"
+        android:background="@drawable/message_item_background"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:padding="@dimen/item_message_padding">
 
-    <TextView
-        android:id="@+id/tv_item_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_item_user_email"
-        android:layout_toEndOf="@+id/iv_item_user_photo"
-        android:layout_toRightOf="@id/iv_item_user_photo"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_item_user_photo_sender"
+            android:layout_width="@dimen/circle_photo_user"
+            android:layout_height="@dimen/circle_photo_user"
+            android:layout_marginEnd="@dimen/item_user_photo_margin_h"
+            android:layout_marginRight="@dimen/item_user_photo_margin_h"
+            android:scaleType="centerCrop"
+            app:civ_border_color="@color/circle_iv_border"
+            app:civ_border_width="1dp"/>
 
+        <TextView
+            android:id="@+id/tv_item_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/item_user_email_margin_v"
+            android:layout_toEndOf="@+id/iv_item_user_photo_sender"
+            android:layout_toRightOf="@+id/iv_item_user_photo_sender"
+            android:textSize="@dimen/item_user_name_text_size"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_item_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_item_user_email"
+            android:layout_toEndOf="@+id/iv_item_user_photo_sender"
+            android:layout_toRightOf="@+id/iv_item_user_photo_sender"
+            android:textSize="@dimen/item_message_content_text_size"/>
+    </RelativeLayout>
+
+    <android.support.v4.widget.Space
+        android:id="@+id/space_right"
+        android:layout_width="@dimen/chat_item_space_horizontal"
+        android:layout_height="42dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>
