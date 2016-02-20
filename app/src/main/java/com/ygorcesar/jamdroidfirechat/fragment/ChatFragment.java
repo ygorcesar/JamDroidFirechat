@@ -19,6 +19,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.firebase.client.ServerValue;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.adapters.ChatItemAdapter;
 import com.ygorcesar.jamdroidfirechat.model.Chat;
@@ -29,6 +30,7 @@ import com.ygorcesar.jamdroidfirechat.utils.OnRecyclerItemClickListener;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatFragment extends Fragment implements View.OnClickListener, OnRecyclerItemClickListener {
@@ -61,17 +63,19 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         mEdtMsgContent = (AppCompatEditText) rootView.findViewById(R.id.edt_message_content);
 
         initializeScreen();
+        initializeFirebase();
 
         return rootView;
     }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
-        initializeFirebase();
     }
 
-    @Override public void onDestroy() {
-        super.onDestroy();
+    @Override
+    public void onPause() {
+        super.onPause();
         removeFirebaseListeners();
     }
 
@@ -111,8 +115,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
 
             Firebase firebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT);
             Firebase chatRef = firebaseRef.push();
-
-            Chat chat = new Chat(mEncodedMail, msg);
+            HashMap<String, Object> timeSended = new HashMap<>();
+            timeSended.put(Constants.KEY_CHAT_TIME_SENDED, ServerValue.TIMESTAMP);
+            Chat chat = new Chat(mEncodedMail, msg, timeSended);
             chatRef.setValue(chat);
             mEdtMsgContent.setText("");
         } else {
@@ -126,7 +131,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
 
     private ChildEventListener createFirebaseChatListener() {
         return new ChildEventListener() {
-            @Override public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     Chat chat = dataSnapshot.getValue(Chat.class);
                     mChats.add(chat);
@@ -138,28 +144,36 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
                 }
             }
 
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     int index = mKeys.indexOf(dataSnapshot.getKey());
-                    mChats.set(index, dataSnapshot.getValue(Chat.class));
-                    mAdapter.notifyItemChanged(index);
+                    if (index != -1) {
+                        mChats.set(index, dataSnapshot.getValue(Chat.class));
+                        mAdapter.notifyItemChanged(index);
+                    }
                 }
             }
 
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
                     int index = mKeys.indexOf(dataSnapshot.getKey());
-                    mChats.remove(index);
-                    mKeys.remove(index);
-                    mAdapter.notifyItemRemoved(index);
+                    if (index != -1) {
+                        mChats.remove(index);
+                        mKeys.remove(index);
+                        mAdapter.notifyItemRemoved(index);
+                    }
                 }
             }
 
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 
-            @Override public void onCancelled(FirebaseError firebaseError) {
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         };
@@ -167,23 +181,28 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
 
     private ChildEventListener createFirebaseUsersListeners() {
         return new ChildEventListener() {
-            @Override public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     mUsers.add(dataSnapshot.getValue(User.class));
                     mUsersEmails.add(dataSnapshot.getValue(User.class).getEmail());
                 }
             }
 
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
 
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
             }
 
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
-            @Override public void onCancelled(FirebaseError firebaseError) {
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
             }
         };
     }
@@ -202,7 +221,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         }
     }
 
-    @Override public void onRecycleItemClick(int view_id, int position) {
+    @Override
+    public void onRecycleItemClick(int view_id, int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         int userIndex = mUsersEmails.indexOf(mChats.get(position).getEmail());
         Bundle args = new Bundle();

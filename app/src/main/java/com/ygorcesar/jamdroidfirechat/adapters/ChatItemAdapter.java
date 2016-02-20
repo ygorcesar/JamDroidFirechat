@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.Chat;
 import com.ygorcesar.jamdroidfirechat.model.User;
+import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.OnRecyclerItemClickListener;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
@@ -52,10 +53,12 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         Chat chat = mChats.get(position);
         int index = mUsersEmails.indexOf(chat.getEmail());
-        loadImageWithPicasso(holder.ivUserPhotoSender, mUsers.get(index).getPhotoUrl());
-
+        if (index != -1) {
+            loadImageWithPicasso(holder.ivUserPhotoSender, mUsers.get(index).getPhotoUrl());
+        }
         holder.tvUserEmail.setText(Utils.decodeEmail(chat.getEmail()));
         holder.tvMessage.setText(chat.getMessage());
+        holder.tvMessageTime.setText(Utils.timestampToHour(chat.getTime().get(Constants.KEY_CHAT_TIME_SENDED)));
         holder.setViewIsSender(isSender(chat.getEmail()));
     }
 
@@ -74,7 +77,7 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
                 .into(imageView);
     }
 
-    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener listener){
+    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener listener) {
         this.mOnRecyclerItemClickListener = listener;
     }
 
@@ -83,6 +86,7 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
         private CircleImageView ivUserPhotoSender;
         private TextView tvUserEmail;
         private TextView tvMessage;
+        private TextView tvMessageTime;
         private Space spaceLeft;
         private Space spaceRight;
 
@@ -92,11 +96,13 @@ public class ChatItemAdapter extends RecyclerView.Adapter<ChatItemAdapter.ItemVi
             ivUserPhotoSender = (CircleImageView) itemView.findViewById(R.id.iv_item_user_photo_sender);
             tvUserEmail = (TextView) itemView.findViewById(R.id.tv_item_user_email);
             tvMessage = (TextView) itemView.findViewById(R.id.tv_item_message);
+            tvMessageTime = (TextView) itemView.findViewById(R.id.tv_item_message_time);
             spaceLeft = (Space) itemView.findViewById(R.id.space_left);
             spaceRight = (Space) itemView.findViewById(R.id.space_right);
 
             rvMessageContainer.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     mOnRecyclerItemClickListener.onRecycleItemClick(v.getId(), getAdapterPosition());
                 }
             });

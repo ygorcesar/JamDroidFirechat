@@ -27,4 +27,5 @@
     <dimen name="circle_photo_user">48dp</dimen>
     <dimen name="chat_item_space_horizontal">38dp</dimen>
     <dimen name="circle_photo_user_detail">180dp</dimen>
+    <dimen name="item_message_time_size">12sp</dimen>
 </resources>

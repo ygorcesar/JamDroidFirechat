@@ -56,6 +56,15 @@
             android:layout_toEndOf="@+id/iv_item_user_photo_sender"
             android:layout_toRightOf="@+id/iv_item_user_photo_sender"
             android:textSize="@dimen/item_message_content_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_item_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_item_message"
+            android:textSize="@dimen/item_message_time_size"/>
     </RelativeLayout>
 
     <android.support.v4.widget.Space
