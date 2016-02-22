@@ -10,6 +10,12 @@ public class Chat {
     public Chat() {
     }
 
+    /**
+     *
+     * @param email
+     * @param message
+     * @param time
+     */
     public Chat(String email, String message, HashMap<String, Object> time) {
         this.email = email;
         this.message = message;

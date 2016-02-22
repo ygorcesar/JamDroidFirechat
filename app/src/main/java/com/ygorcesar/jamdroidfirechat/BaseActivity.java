@@ -23,7 +23,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
     private final String TAG = BaseActivity.class.getSimpleName();
     protected String mProvider, mEncodedEmail;
-    /*Used to Interact with Google APIs*/
     protected GoogleApiClient mGoogleApiClient;
     protected Firebase.AuthStateListener mAuthListener;
     protected Firebase mFireBaseRef;
@@ -55,19 +54,15 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        if (this instanceof )
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
 
+    /**
+     * Inicializa a api Google Client
+     */
     private void setupGoogleApiClient() {
-        /* INITIALIZING GOOGLE SIGN IN OPTIONS */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -78,6 +73,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 .build();
     }
 
+    /**
+     * Desconecta a conta google do app
+     */
     protected void logout() {
         if (mProvider != null) {
             mFireBaseRef.unauth();
@@ -97,6 +95,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Revoga o acesso da conta google a aplicação
+     */
     protected void revokeAccess() {
         if (mProvider != null) {
             mFireBaseRef.unauth();
@@ -116,8 +117,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Move o usuário para a tela de Login ao inicializar o app
+     */
     private void takeUserToLoginScreenOnUnAuth() {
-        /* Move user to LoginActivity, and remove the backstack */
         Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

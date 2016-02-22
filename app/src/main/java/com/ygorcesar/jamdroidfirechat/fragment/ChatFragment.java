@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,14 +64,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         mEdtMsgContent = (AppCompatEditText) rootView.findViewById(R.id.edt_message_content);
 
         initializeScreen();
-        initializeFirebase();
-
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        initializeFirebase();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
     }
 
     /**
-     * Initialize Listeners, adapter on recycler view...
+     * Inicializando Adapters, RecyclerView e Listeners...
      */
     private void initializeScreen() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -97,12 +97,18 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         mRecyclerViewChat.setAdapter(mAdapter);
     }
 
+    /**
+     * Inicializando Firebase e Listeners do Firebase
+     */
     private void initializeFirebase() {
-        childUserListener = createFirebaseUsersListeners();
+        if (childChatListener == null && childUserListener == null) {
+            childUserListener = createFirebaseUsersListeners();
+            childChatListener = createFirebaseChatListener();
+        }
         refUsers = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_USERS);
         refUsers.addChildEventListener(childUserListener);
 
-        childChatListener = createFirebaseChatListener();
+
         mFirebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_CHAT);
         Query chatsRef = mFirebaseRef.orderByKey().limitToLast(50);
 
@@ -208,8 +214,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
     }
 
     private void removeFirebaseListeners() {
-        mFirebaseRef.removeEventListener(childChatListener);
-        refUsers.removeEventListener(childUserListener);
+        if (childChatListener != null && childUserListener != null) {
+            mFirebaseRef.removeEventListener(childChatListener);
+            refUsers.removeEventListener(childUserListener);
+        }
     }
 
     @Override

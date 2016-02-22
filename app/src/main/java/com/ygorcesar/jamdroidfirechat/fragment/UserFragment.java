@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -23,13 +24,23 @@ public class UserFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            Picasso.with(getActivity())
-                    .load(args.getString(Constants.KEY_USER_PROVIDER_PHOTO_URL, ""))
-                    .placeholder(R.drawable.ic_person)
-                    .into(circleIvUserPhoto);
+            getImageFromUrlToImageView(args.getString(Constants.KEY_USER_PROVIDER_PHOTO_URL, "")
+                    , circleIvUserPhoto);
             getActivity().setTitle(args.getString(Constants.KEY_USER_DISPLAY_NAME, getString(R.string.app_name)));
             txUserEmail.setText(args.getString(Constants.KEY_ENCODED_EMAIL, ""));
         }
         return rootView;
+    }
+
+    /**
+     * Usando Picasso Lib para baixar imagem do usuário obtida pelo provider e adicionar a View
+     * @param url
+     * @param view
+     */
+    private void getImageFromUrlToImageView(String url, ImageView view){
+        Picasso.with(getActivity())
+                .load(url)
+                .placeholder(R.drawable.ic_person)
+                .into(view);
     }
 }

@@ -189,7 +189,7 @@ public class LoginActivity extends BaseActivity {
 
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
 
-        final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
+        final String userName = (String) authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_DISPLAY_NAME);
 
         final Firebase userLocation = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS).child(mEncodedEmail);
         userLocation.addListenerForSingleValueEvent(new ValueEventListener() {
