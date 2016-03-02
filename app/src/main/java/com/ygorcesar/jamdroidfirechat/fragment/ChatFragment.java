@@ -110,6 +110,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
 
 
         mFirebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_CHAT);
+        mFirebaseRef.keepSynced(true);
         Query chatsRef = mFirebaseRef.orderByKey().limitToLast(50);
 
         chatsRef.addChildEventListener(childChatListener);

@@ -12,5 +12,6 @@ public class DroidFireChatApplication extends android.app.Application {
          * Inicializando Firebase junto com a aplicação
          */
         Firebase.setAndroidContext(this);
+        Firebase.getDefaultConfig().setPersistenceEnabled(true);
     }
 }
