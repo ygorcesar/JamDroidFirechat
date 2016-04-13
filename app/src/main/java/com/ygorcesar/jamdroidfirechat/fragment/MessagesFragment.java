@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ServerValue;
+import com.firebase.client.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.R;
-import com.ygorcesar.jamdroidfirechat.adapters.ChatItemAdapter;
-import com.ygorcesar.jamdroidfirechat.model.Chat;
+import com.ygorcesar.jamdroidfirechat.adapters.MessageItemAdapter;
+import com.ygorcesar.jamdroidfirechat.model.Message;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ChatFragment extends Fragment implements View.OnClickListener, OnRecyclerItemClickListener {
+public class MessagesFragment extends Fragment implements View.OnClickListener, OnRecyclerItemClickListener {
 
     private RecyclerView mRecyclerViewChat;
     private FloatingActionButton mFabSendMsg;
@@ -42,26 +42,32 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
     private String mEncodedMail;
     private List<User> mUsers;
     private List<String> mUsersEmails;
-    private List<Chat> mChats;
+    private List<Message> mMessages;
     private List<String> mKeys;
-    private Firebase mFirebaseRef;
-    private Firebase refUsers;
-    private ChildEventListener childChatListener;
-    private ChildEventListener childUserListener;
-    private ChatItemAdapter mAdapter;
+    private Firebase mRefMessages;
+    private Firebase mRefUsers;
+    private ChildEventListener childMessagesListener;
+    private ValueEventListener valueUserListener;
+    private MessageItemAdapter mAdapter;
+    private String mChildChatKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        getActivity().setTitle(getString(R.string.app_name));
+        View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        mRecyclerViewChat = (RecyclerView) rootView.findViewById(R.id.rv_chat);
+        mRecyclerViewChat = (RecyclerView) rootView.findViewById(R.id.rv_message);
         mRecyclerViewChat.setHasFixedSize(true);
         mRecyclerViewChat.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mFabSendMsg = (FloatingActionButton) rootView.findViewById(R.id.btn_send_message);
         mEdtMsgContent = (AppCompatEditText) rootView.findViewById(R.id.edt_message_content);
+
+        if (getArguments() != null) {
+            mChildChatKey = getArguments().getString(Constants.KEY_CHAT_CHILD, "");
+            getActivity().setTitle(getArguments()
+                    .getString(Constants.KEY_USER_DISPLAY_NAME, getString(R.string.app_name)));
+        }
 
         initializeScreen();
         return rootView;
@@ -79,6 +85,11 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         removeFirebaseListeners();
     }
 
+    @Override public void onDetach() {
+        super.onDetach();
+        getActivity().setTitle(getString(R.string.app_name));
+    }
+
     /**
      * Inicializando Adapters, RecyclerView e Listeners...
      */
@@ -89,10 +100,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
 
         mUsers = new ArrayList<>();
         mUsersEmails = new ArrayList<>();
-        mChats = new ArrayList<>();
+        mMessages = new ArrayList<>();
         mKeys = new ArrayList<>();
 
-        mAdapter = new ChatItemAdapter(getActivity(), mChats, mUsers, mUsersEmails, mEncodedMail);
+        mAdapter = new MessageItemAdapter(getActivity(), mMessages, mUsers, mUsersEmails);
         mAdapter.setOnRecyclerItemClickListener(this);
         mRecyclerViewChat.setAdapter(mAdapter);
     }
@@ -101,31 +112,31 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
      * Inicializando Firebase e Listeners do Firebase
      */
     private void initializeFirebase() {
-        if (childChatListener == null && childUserListener == null) {
-            childUserListener = createFirebaseUsersListeners();
-            childChatListener = createFirebaseChatListener();
+        if (childMessagesListener == null && valueUserListener == null) {
+            valueUserListener = createFirebaseUsersListeners();
+            childMessagesListener = createFirebaseChatListener();
         }
-        refUsers = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_USERS);
-        refUsers.addChildEventListener(childUserListener);
+        mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_USERS);
+        mRefUsers.addValueEventListener(valueUserListener);
 
 
-        mFirebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_CHAT);
-        mFirebaseRef.keepSynced(true);
-        Query chatsRef = mFirebaseRef.orderByKey().limitToLast(50);
+        mRefMessages = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT).child(mChildChatKey);
+        mRefMessages.keepSynced(true);
+        Query chatsRef = mRefMessages.orderByKey().limitToLast(50);
 
-        chatsRef.addChildEventListener(childChatListener);
+        chatsRef.addChildEventListener(childMessagesListener);
     }
 
     private void sendMessage() {
         String msg = mEdtMsgContent.getText().toString();
         if (validateMsgContent(msg)) {
 
-            Firebase firebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT);
+            Firebase firebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT).child(mChildChatKey);
             Firebase chatRef = firebaseRef.push();
             HashMap<String, Object> timeSended = new HashMap<>();
             timeSended.put(Constants.KEY_CHAT_TIME_SENDED, ServerValue.TIMESTAMP);
-            Chat chat = new Chat(mEncodedMail, msg, timeSended);
-            chatRef.setValue(chat);
+            Message message = new Message(mEncodedMail, msg, timeSended);
+            chatRef.setValue(message);
             mEdtMsgContent.setText("");
         } else {
             Toast.makeText(getActivity(), getString(R.string.notice_insert_message), Toast.LENGTH_SHORT).show();
@@ -136,16 +147,21 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         return !msg.isEmpty();
     }
 
+    /**
+     * Criando Listener para observar nó messagens de determinado chat
+     *
+     * @return
+     */
     private ChildEventListener createFirebaseChatListener() {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    Chat chat = dataSnapshot.getValue(Chat.class);
-                    mChats.add(chat);
+                    Message message = dataSnapshot.getValue(Message.class);
+                    mMessages.add(message);
                     mKeys.add(dataSnapshot.getKey());
 
-                    int posAdded = mChats.size() - 1;
+                    int posAdded = mMessages.size() - 1;
                     mRecyclerViewChat.scrollToPosition(posAdded);
                     mAdapter.notifyItemInserted(posAdded);
                 }
@@ -156,7 +172,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     int index = mKeys.indexOf(dataSnapshot.getKey());
                     if (index != -1) {
-                        mChats.set(index, dataSnapshot.getValue(Chat.class));
+                        mMessages.set(index, dataSnapshot.getValue(Message.class));
                         mAdapter.notifyItemChanged(index);
                     }
                 }
@@ -167,7 +183,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
                 if (dataSnapshot != null) {
                     int index = mKeys.indexOf(dataSnapshot.getKey());
                     if (index != -1) {
-                        mChats.remove(index);
+                        mMessages.remove(index);
                         mKeys.remove(index);
                         mAdapter.notifyItemRemoved(index);
                     }
@@ -186,26 +202,16 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         };
     }
 
-    private ChildEventListener createFirebaseUsersListeners() {
-        return new ChildEventListener() {
+    private ValueEventListener createFirebaseUsersListeners() {
+        return new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    mUsers.add(dataSnapshot.getValue(User.class));
-                    mUsersEmails.add(dataSnapshot.getValue(User.class).getEmail());
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        mUsers.add(snapshot.getValue(User.class));
+                        mUsersEmails.add(snapshot.getValue(User.class).getEmail());
+                    }
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
             @Override
@@ -214,10 +220,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         };
     }
 
+    /**
+     * Remove listeners dos objetos Firebase
+     */
     private void removeFirebaseListeners() {
-        if (childChatListener != null && childUserListener != null) {
-            mFirebaseRef.removeEventListener(childChatListener);
-            refUsers.removeEventListener(childUserListener);
+        if (childMessagesListener != null && valueUserListener != null) {
+            mRefMessages.removeEventListener(childMessagesListener);
+            mRefUsers.removeEventListener(valueUserListener);
         }
     }
 
@@ -230,10 +239,16 @@ public class ChatFragment extends Fragment implements View.OnClickListener, OnRe
         }
     }
 
+    /**
+     * Resgata click do adapter por meio da interface implementada para exibir usuário da mensagem
+     *
+     * @param view_id
+     * @param position
+     */
     @Override
     public void onRecycleItemClick(int view_id, int position) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        int userIndex = mUsersEmails.indexOf(mChats.get(position).getEmail());
+        int userIndex = mUsersEmails.indexOf(mMessages.get(position).getEmail());
         Bundle args = new Bundle();
         args.putString(Constants.KEY_USER_DISPLAY_NAME, mUsers.get(userIndex).getName());
         args.putString(Constants.KEY_ENCODED_EMAIL, Utils.decodeEmail(mUsers.get(userIndex).getEmail()));

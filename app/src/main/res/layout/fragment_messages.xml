@@ -4,12 +4,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                tools:context=".fragment.ChatFragment"
+                tools:context=".fragment.MessagesFragment"
                 android:background="@drawable/gdg_background_small_colored"
                 tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_chat"
+        android:id="@+id/rv_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/edt_message_content"/>

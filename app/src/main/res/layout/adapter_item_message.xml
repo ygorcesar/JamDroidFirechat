@@ -1,76 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="message"
+            type="com.ygorcesar.jamdroidfirechat.model.Message"/>
+
+        <variable
+            name="user"
+            type="com.ygorcesar.jamdroidfirechat.model.User"/>
+    </data>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_left"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            app:spaceSender="@{message.email}"/>
+
+        <RelativeLayout
+            android:id="@+id/rv_message_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/item_message_margin_v"
+            android:layout_marginLeft="@dimen/item_message_margin_h"
+            android:layout_marginRight="@dimen/item_message_margin_h"
+            android:layout_marginTop="@dimen/item_message_margin_v"
+            android:layout_toEndOf="@id/space_left"
+            android:layout_toLeftOf="@+id/space_right"
+            android:layout_toRightOf="@id/space_left"
+            android:layout_toStartOf="@+id/space_right"
+            android:background="@drawable/message_item_background"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="@dimen/item_message_padding">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_item_user_photo_sender"
+                style="@style/AppTheme.CircleImgList"
+                app:civ_border_color="@color/circle_iv_border"
+                app:civ_border_width="1dp"
+                app:photoUrl="@{user.photoUrl}"
+                tools:src="@drawable/ic_person"/>
+
+            <TextView
+                android:id="@+id/tv_item_user_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/item_user_email_margin_v"
+                android:layout_toEndOf="@+id/iv_item_user_photo_sender"
+                android:layout_toRightOf="@+id/iv_item_user_photo_sender"
+                android:text="@{user.name}"
+                android:textSize="@dimen/item_user_name_text_size"
+                android:textStyle="bold"/>
 
-    <android.support.v4.widget.Space
-        android:id="@+id/space_left"
-        android:layout_width="@dimen/chat_item_space_horizontal"
-        android:layout_height="2dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+            <TextView
+                android:id="@+id/tv_item_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_item_user_email"
+                android:layout_toEndOf="@+id/iv_item_user_photo_sender"
+                android:layout_toRightOf="@+id/iv_item_user_photo_sender"
+                android:text="@{message.message}"
+                android:textSize="@dimen/item_message_content_text_size"/>
 
-    <RelativeLayout
-        android:id="@+id/rv_message_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/item_message_margin_v"
-        android:layout_marginLeft="@dimen/item_message_margin_h"
-        android:layout_marginRight="@dimen/item_message_margin_h"
-        android:layout_marginTop="@dimen/item_message_margin_v"
-        android:layout_toEndOf="@id/space_left"
-        android:layout_toLeftOf="@+id/space_right"
-        android:layout_toRightOf="@id/space_left"
-        android:layout_toStartOf="@+id/space_right"
-        android:background="@drawable/message_item_background"
-        android:elevation="2dp"
-        android:orientation="vertical"
-        android:padding="@dimen/item_message_padding">
+            <TextView
+                android:id="@+id/tv_item_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_item_message"
+                android:textSize="@dimen/item_message_time_size"
+                app:time="@{message.time}"/>
+        </RelativeLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_item_user_photo_sender"
-            android:layout_width="@dimen/circle_photo_user"
-            android:layout_height="@dimen/circle_photo_user"
-            android:layout_marginEnd="@dimen/item_user_photo_margin_h"
-            android:layout_marginRight="@dimen/item_user_photo_margin_h"
-            android:scaleType="centerCrop"
-            app:civ_border_color="@color/circle_iv_border"
-            app:civ_border_width="1dp"/>
-
-        <TextView
-            android:id="@+id/tv_item_user_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/item_user_email_margin_v"
-            android:layout_toEndOf="@+id/iv_item_user_photo_sender"
-            android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-            android:textSize="@dimen/item_user_name_text_size"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tv_item_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_item_user_email"
-            android:layout_toEndOf="@+id/iv_item_user_photo_sender"
-            android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-            android:textSize="@dimen/item_message_content_text_size"/>
-
-        <TextView
-            android:id="@+id/tv_item_message_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v4.widget.Space
+            android:id="@+id/space_right"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="42dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_item_message"
-            android:textSize="@dimen/item_message_time_size"/>
+            app:spaceSender="@{message.email}"/>
     </RelativeLayout>
-
-    <android.support.v4.widget.Space
-        android:id="@+id/space_right"
-        android:layout_width="@dimen/chat_item_space_horizontal"
-        android:layout_height="42dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
-</RelativeLayout>
+</layout>

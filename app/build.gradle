@@ -5,8 +5,12 @@ android {
     buildToolsVersion "23.0.2"
 
     def versionMajor = 1
-    def versionMinor = 0
+    def versionMinor = 1
     def versionPatch = 0
+
+    dataBinding{
+        enabled = true;
+    }
 
     defaultConfig {
         applicationId "com.ygorcesar.jamdroidfirechat"

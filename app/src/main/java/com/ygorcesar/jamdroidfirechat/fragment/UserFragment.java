@@ -33,7 +33,7 @@ public class UserFragment extends Fragment {
     }
 
     /**
-     * Usando Picasso Lib para baixar imagem do usuário obtida pelo provider e adicionar a View
+     * Usando Picasso Librarie para baixar imagem do usuário obtida pelo provider e adicionar a View
      * @param url
      * @param view
      */

@@ -26,4 +26,11 @@
         <item name="android:colorBackground">@color/colorPrimary</item>
     </style>
 
+    <style name="AppTheme.CircleImgList">
+        <item name="android:layout_width">@dimen/circle_photo_user</item>
+        <item name="android:layout_height">@dimen/circle_photo_user</item>
+        <item name="android:layout_marginRight">@dimen/item_user_photo_margin_h</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
 </resources>

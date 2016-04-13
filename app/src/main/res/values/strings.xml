@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">JamDroidFireChat</string>
     <string name="action_settings">Settings</string>
+    <string name="chat_global">Global</string>
 
     <!-- Google Auth Strings -->
     <string name="google_error_auth_with_google">"Erro na autenticação com o Google: "</string>

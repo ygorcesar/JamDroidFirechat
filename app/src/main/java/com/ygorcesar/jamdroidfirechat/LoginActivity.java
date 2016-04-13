@@ -201,6 +201,8 @@ public class LoginActivity extends BaseActivity {
 
                     User user = new User(userName, mEncodedEmail, photoUrl, timestampJoined);
                     userLocation.setValue(user);
+//                    userLocation.child(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
+//                            .child(ConstantsFirebase.FIREBASE_PROPERTY_CHAT_GERAL).setValue(true);
                 }
             }
 

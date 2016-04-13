@@ -12,4 +12,5 @@ public final class Constants {
     public static final String KEY_USER_DISPLAY_NAME = "USER_DISPLAY_NAME";
     public static final String KEY_USER_PROVIDER_PHOTO_URL = "USER_PROVIDER_PHOTO_URL";
     public static final String KEY_CHAT_TIME_SENDED = "CHAT_TIME_SENDED";
+    public static final String KEY_CHAT_CHILD = "CHAT_KEY_CHILD";
 }

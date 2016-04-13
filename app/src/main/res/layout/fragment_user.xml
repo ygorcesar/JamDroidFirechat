@@ -18,15 +18,13 @@
             android:layout_height="@dimen/circle_photo_user_detail"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/gdg_background"/>
+            android:layout_marginBottom="24dp"/>
 
         <TextView
             android:id="@+id/tv_user_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_user_photo"
-            android:text="Email"
             android:textColor="@color/white"
             android:textSize="@dimen/item_user_name_text_size"
             android:textStyle="bold"/>
