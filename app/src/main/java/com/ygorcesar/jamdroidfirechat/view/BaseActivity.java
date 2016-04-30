@@ -1,4 +1,4 @@
-package com.ygorcesar.jamdroidfirechat;
+package com.ygorcesar.jamdroidfirechat.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

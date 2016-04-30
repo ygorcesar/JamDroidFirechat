@@ -7,17 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.Space;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ygorcesar.jamdroidfirechat.R;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class Utils {
 
@@ -41,25 +33,6 @@ public class Utils {
         return userEmail.replace(",", ".");
     }
 
-    /**
-     * Transformando o timestamp do servidor para TimeZone padrão do Aparelho
-     *
-     * @param time
-     * @return
-     */
-    public static String timestampToHour(Object time) {
-        Timestamp stamp = new Timestamp((long) time);
-        Date date = new Date(stamp.getTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", new Locale("pt", "BR"));
-        sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(date);
-    }
-
-    public static void loadImageWithPicasso(Context context, ImageView imageView, String url) {
-        Picasso.with(context).load(url)
-                .placeholder(R.drawable.ic_person)
-                .into(imageView);
-    }
 
     /**
      * Utilizando Librarie Picasso para carregar imagens em imageview
@@ -86,34 +59,6 @@ public class Utils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String userEmail = preferences.getString(Constants.KEY_ENCODED_EMAIL, "");
         return userEmail.equals(senderEmail);
-    }
-
-    /**
-     * Binding adapter para carregar imagem por url em uma ImageView
-     * @param view
-     * @param url
-     */
-    @BindingAdapter({"bind:photoUrl"})
-    public static void loadImage(ImageView view, String url) {
-        if (url.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
-            view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_chat_global));
-        } else {
-            loadImageWithPicasso(view.getContext(), view, url, R.drawable.ic_person);
-        }
-    }
-
-    /**
-     * Binding Adapter para transformar timestamp do servidor para horário local
-     * @param view
-     * @param time
-     */
-    @BindingAdapter({"bind:time"})
-    public static void decodeTimestamp(TextView view, HashMap<String, Object> time) {
-        Timestamp stamp = new Timestamp((long) time.get(Constants.KEY_CHAT_TIME_SENDED));
-        Date date = new Date(stamp.getTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", new Locale("pt", "BR"));
-        sdf.setTimeZone(TimeZone.getDefault());
-        view.setText(sdf.format(date));
     }
 
     /**

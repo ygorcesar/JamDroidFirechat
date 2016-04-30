@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="message"
-            type="com.ygorcesar.jamdroidfirechat.model.Message"/>
+            name="view"
+            type="android.view.View"/>
 
         <variable
-            name="user"
-            type="com.ygorcesar.jamdroidfirechat.model.User"/>
+            name="messageViewModel"
+            type="com.ygorcesar.jamdroidfirechat.viewmodel.MessageAdapterViewModel"/>
     </data>
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/rv_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v4.widget.Space
             android:id="@+id/space_left"
@@ -23,7 +25,7 @@
             android:layout_height="2dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            app:spaceSender="@{message.email}"/>
+            android:visibility="@{messageViewModel.sender ? view.VISIBLE : view.GONE}"/>
 
         <RelativeLayout
             android:id="@+id/rv_message_container"
@@ -40,14 +42,15 @@
             android:background="@drawable/message_item_background"
             android:elevation="2dp"
             android:orientation="vertical"
-            android:padding="@dimen/item_message_padding">
+            android:padding="@dimen/item_message_padding"
+            android:onClick="@{messageViewModel.onItemClick}">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_item_user_photo_sender"
                 style="@style/AppTheme.CircleImgList"
                 app:civ_border_color="@color/circle_iv_border"
                 app:civ_border_width="1dp"
-                app:photoUrl="@{user.photoUrl}"
+                app:photoUrl="@{messageViewModel.photoUrl}"
                 tools:src="@drawable/ic_person"/>
 
             <TextView
@@ -57,9 +60,10 @@
                 android:layout_marginBottom="@dimen/item_user_email_margin_v"
                 android:layout_toEndOf="@+id/iv_item_user_photo_sender"
                 android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-                android:text="@{user.name}"
+                android:text="@{messageViewModel.name}"
                 android:textSize="@dimen/item_user_name_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="Ygor César"/>
 
             <TextView
                 android:id="@+id/tv_item_message"
@@ -68,8 +72,9 @@
                 android:layout_below="@+id/tv_item_user_email"
                 android:layout_toEndOf="@+id/iv_item_user_photo_sender"
                 android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-                android:text="@{message.message}"
-                android:textSize="@dimen/item_message_content_text_size"/>
+                android:text="@{messageViewModel.message}"
+                android:textSize="@dimen/item_message_content_text_size"
+                tools:text="Mussum Ipsum, cacilds vidis litro abertis."/>
 
             <TextView
                 android:id="@+id/tv_item_message_time"
@@ -78,8 +83,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_item_message"
+                android:text="@{messageViewModel.time}"
                 android:textSize="@dimen/item_message_time_size"
-                app:time="@{message.time}"/>
+                tools:text="12:30"/>
         </RelativeLayout>
 
         <android.support.v4.widget.Space
@@ -88,6 +94,6 @@
             android:layout_height="42dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            app:spaceSender="@{message.email}"/>
+            android:visibility="@{messageViewModel.sender ? view.GONE : view.VISIBLE}"/>
     </RelativeLayout>
 </layout>

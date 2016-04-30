@@ -35,4 +35,6 @@ public final class ConstantsFirebase {
      */
     public static final String GOOGLE_PROVIDER = "google";
     public static final String PROVIDER_DATA_DISPLAY_NAME = "displayName";
+
+    public static final String CHAT_GLOBAL_HELPER = "Global";
 }

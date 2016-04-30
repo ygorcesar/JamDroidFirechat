@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/JamDroidFireChat.iml" filepath="$PROJECT_DIR$/JamDroidFireChat.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jamdroidfirechat.iml" filepath="$PROJECT_DIR$/jamdroidfirechat.iml" />
     </modules>
   </component>
 </project>

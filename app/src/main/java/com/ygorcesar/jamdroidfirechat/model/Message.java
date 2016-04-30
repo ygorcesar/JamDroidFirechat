@@ -11,7 +11,6 @@ public class Message {
     }
 
     /**
-     *
      * @param email
      * @param message
      * @param time

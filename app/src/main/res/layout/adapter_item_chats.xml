@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="user"
-            type="com.ygorcesar.jamdroidfirechat.model.User"/>
+            name="view"
+            type="android.view.View"/>
+
+        <variable
+            name="chatsViewModel"
+            type="com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModel"/>
     </data>
 
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ln_item_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:background="@color/white"
         android:gravity="center"
+        android:onClick="@{chatsViewModel.onItemClick}"
         android:orientation="horizontal"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="@dimen/activity_horizontal_margin"
+        android:visibility="@{chatsViewModel.sender ? view.GONE : view.VISIBLE}">
 
         <de.hdodenhof.circleimageview.CircleImageView
             style="@style/AppTheme.CircleImgList"
             app:civ_border_color="@color/circle_iv_border"
             app:civ_border_width="1dp"
-            app:photoUrl="@{user.photoUrl}"/>
+            app:photoUrl="@{chatsViewModel.photoUrl}"
+            tools:src="@drawable/ic_person"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{user.name}"
+            android:text="@{chatsViewModel.name}"
             android:textSize="@dimen/item_user_name_text_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:text="Ygor César"/>
 
     </LinearLayout>
 </layout>
