@@ -44,11 +44,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     /* Google Api and Libraries */
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    def googleVersion = '23.3.0'
+    compile "com.android.support:appcompat-v7:${googleVersion}"
+    compile "com.android.support:design:${googleVersion}"
 
     /* Google Play Services */
     compile 'com.google.android.gms:play-services-auth:8.4.0'
+
+    /* Facebook SDK*/
+    compile 'com.facebook.android:facebook-android-sdk:4.11.0'
 
     /* Firebase SDK */
     compile 'com.firebase:firebase-client-android:2.3.1'
