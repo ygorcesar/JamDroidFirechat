@@ -13,7 +13,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/gdg_background">
+        >
 
         <android.support.v4.widget.Space
             android:layout_width="wrap_content"
@@ -22,10 +22,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="120dp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:text="@string/app_jamdroid"
-            android:layout_marginRight="120dp"
             android:textColor="@color/white"
             android:textSize="36sp"
             android:textStyle="bold"/>
@@ -33,18 +33,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="120dp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:layout_marginLeft="120dp"
             android:text="@string/app_firechat"
             android:textColor="#ff0"
             android:textSize="36sp"
             android:textStyle="bold"/>
 
         <ImageView
-            android:layout_gravity="center"
             android:layout_width="180dp"
             android:layout_height="180dp"
+            android:layout_gravity="center"
             android:src="@drawable/droidjamfirechat_image"/>
 
         <android.support.v4.widget.Space
@@ -55,7 +55,24 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_with_google"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_button"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="24dp"
-        android:layout_height="wrap_content"/>
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="20dp"/>
 </RelativeLayout>

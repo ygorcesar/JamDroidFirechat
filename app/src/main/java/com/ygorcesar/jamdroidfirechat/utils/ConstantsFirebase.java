@@ -34,7 +34,11 @@ public final class ConstantsFirebase {
      * Constants para Login com Firebase
      */
     public static final String GOOGLE_PROVIDER = "google";
+    public static final String FACEBOOK_PROVIDER = "facebook";
+
+    public static final String PROVIDER_DATA_EMAIL = "email";
     public static final String PROVIDER_DATA_DISPLAY_NAME = "displayName";
+    public static final String PROVIDER_DATA_PROFILE_IMAGE_URL = "profileImageURL";
 
     public static final String CHAT_GLOBAL_HELPER = "Global";
 }

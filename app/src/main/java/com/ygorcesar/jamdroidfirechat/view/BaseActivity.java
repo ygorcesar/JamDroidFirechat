@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.facebook.login.LoginManager;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.google.android.gms.auth.api.Auth;
@@ -91,6 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
                             }
                         }
                 );
+            } else if (mProvider.equals(ConstantsFirebase.FACEBOOK_PROVIDER)) {
+                LoginManager.getInstance().logOut();
+                Log.d(TAG, "Logged Out from Faccebook Account");
             }
         }
     }

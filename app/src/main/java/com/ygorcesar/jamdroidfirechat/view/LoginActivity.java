@@ -10,6 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,10 +38,10 @@ import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class LoginActivity extends BaseActivity {
-
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ProgressDialog mAuthProgressDialog;
     private Firebase mFirebaseRef;
@@ -53,9 +58,13 @@ public class LoginActivity extends BaseActivity {
     /* Request code used to invoke sign in user interactions for Google+ */
     private static final int RC_SIGN_IN = 1;
     private static final int RC_GOOGLE_LOGIN = 2;
+
+    private static final int RC_FACEBOOK_LOGIN = 64206;
     /* A Google account object that is populated if the user signs in with Google */
     GoogleSignInAccount mGoogleAccount;
 
+    private CallbackManager mFacebookCallbackManager;
+    private LoginButton mFacebookLoginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,17 +111,27 @@ public class LoginActivity extends BaseActivity {
         mAuthProgressDialog.setCancelable(false);
 
         setupGoogleSignIn();
+        setupFacebookSignIn();
     }
 
     private void setupGoogleSignIn() {
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_with_google);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
+//        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSignInGooglePressed(v);
             }
         });
+    }
+
+    private void setupFacebookSignIn() {
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_button);
+        mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+
+        mFacebookLoginButton.registerCallback(mFacebookCallbackManager, getFacebookOAuthTokenAndLogin());
     }
 
     /**
@@ -145,6 +164,9 @@ public class LoginActivity extends BaseActivity {
                 if (mGoogleAccount.getEmail() != null)
                     getGoogleOAuthTokenAndLogin();
                 break;
+            case RC_FACEBOOK_LOGIN:
+                mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+                break;
         }
     }
 
@@ -169,28 +191,17 @@ public class LoginActivity extends BaseActivity {
         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void loginWithGoogle(String token) {
-        mFirebaseRef.authWithOAuthToken(ConstantsFirebase.GOOGLE_PROVIDER, token, new FireBaseAuthResultHandler(ConstantsFirebase.GOOGLE_PROVIDER));
+    private void loginWithOathToken(String provider, String token) {
+        mFirebaseRef.authWithOAuthToken(provider, token, new FireBaseAuthResultHandler(provider));
     }
 
-    private void setAuthenticatedUserGoogle(AuthData authData) {
+    private void setAuthenticatedWithOAuth(AuthData authData) {
         final String unprocessedEmail, displayName, photoUrl;
-        if (mGoogleApiClient.isConnected()) {
-            unprocessedEmail = mGoogleAccount.getEmail().toLowerCase();
-            displayName = mGoogleAccount.getDisplayName();
-            photoUrl = mGoogleAccount.getPhotoUrl().toString();
-            mSharedPrefEditor.putString(Constants.KEY_USER_EMAIL, unprocessedEmail).apply();
-            mSharedPrefEditor.putString(Constants.KEY_USER_DISPLAY_NAME, displayName).apply();
-            mSharedPrefEditor.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, photoUrl).apply();
 
-        } else {
-            unprocessedEmail = mSharedPref.getString(Constants.KEY_USER_EMAIL, null);
-            photoUrl = mSharedPref.getString(Constants.KEY_USER_PROVIDER_PHOTO_URL, null);
-        }
-
+        unprocessedEmail = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_EMAIL).toString();
+        displayName = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_DISPLAY_NAME).toString();
+        photoUrl = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_PROFILE_IMAGE_URL).toString();
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
-
-        final String userName = (String) authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_DISPLAY_NAME);
 
         final Firebase userLocation = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS).child(mEncodedEmail);
         userLocation.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -200,10 +211,8 @@ public class LoginActivity extends BaseActivity {
                     HashMap<String, Object> timestampJoined = new HashMap<>();
                     timestampJoined.put(ConstantsFirebase.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-                    User user = new User(userName, mEncodedEmail, photoUrl, timestampJoined);
+                    User user = new User(displayName, mEncodedEmail, photoUrl, timestampJoined);
                     userLocation.setValue(user);
-//                    userLocation.child(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
-//                            .child(ConstantsFirebase.FIREBASE_PROPERTY_CHAT_GERAL).setValue(true);
                 }
             }
 
@@ -212,6 +221,14 @@ public class LoginActivity extends BaseActivity {
                 Log.d(TAG, getString(R.string.log_error_occurred) + firebaseError.getMessage());
             }
         });
+
+        mSharedPrefEditor.putString(Constants.KEY_USER_EMAIL, unprocessedEmail).apply();
+        mSharedPrefEditor.putString(Constants.KEY_USER_DISPLAY_NAME, displayName).apply();
+        mSharedPrefEditor.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, photoUrl).apply();
+
+        /* Save provider name and encodedEmail for later use and start MainActivity */
+        mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
+        mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
     }
 
     /**
@@ -253,14 +270,33 @@ public class LoginActivity extends BaseActivity {
                 if (token != null) {
                     /* Successfully got OAuth token, now login with Google */
                     Log.i(TAG, String.format("Token: %s", token));
-                    loginWithGoogle(token);
+                    loginWithOathToken(ConstantsFirebase.GOOGLE_PROVIDER, token);
                 } else if (mErrorMessage != null) {
                     showErrorToast(mErrorMessage);
                 }
             }
         };
-
         task.execute();
+    }
+
+    private FacebookCallback<LoginResult> getFacebookOAuthTokenAndLogin() {
+        return new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                // App code
+                loginWithOathToken(ConstantsFirebase.FACEBOOK_PROVIDER, loginResult.getAccessToken().getToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "onCancel: facebook cancel");
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Log.e(TAG, "onError: " + e.getMessage(), e.getCause());
+            }
+        };
     }
 
     private class FireBaseAuthResultHandler implements Firebase.AuthResultHandler {
@@ -285,14 +321,12 @@ public class LoginActivity extends BaseActivity {
                  * Verify if user logged with Google Account provider
                  */
                 if (authData.getProvider().equals(ConstantsFirebase.GOOGLE_PROVIDER)) {
-                    setAuthenticatedUserGoogle(authData);
+                    setAuthenticatedWithOAuth(authData);
+                } else if (authData.getProvider().equals(ConstantsFirebase.FACEBOOK_PROVIDER)) {
+                    setAuthenticatedWithOAuth(authData);
                 } else {
                     Log.e(TAG, getString(R.string.log_error_invalid_provider) + authData.getProvider());
                 }
-
-                   /* Save provider name and encodedEmail for later use and start MainActivity */
-                mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
-                mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
 
                 /* Go to MainActivity */
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
