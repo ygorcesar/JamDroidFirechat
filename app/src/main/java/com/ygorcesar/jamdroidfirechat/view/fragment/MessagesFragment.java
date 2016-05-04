@@ -5,7 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -213,17 +213,19 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
      */
     @Override
     public void onMessageItemClick(User user) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putString(Constants.KEY_USER_DISPLAY_NAME, user.getName());
         args.putString(Constants.KEY_ENCODED_EMAIL, Utils.decodeEmail(user.getEmail()));
         args.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, user.getPhotoUrl());
         UserFragment fragment = new UserFragment();
         fragment.setArguments(args);
+        fragment.show(fragmentManager, "fragment_user");
 
-        transaction.replace(R.id.fragment, fragment)
-                .addToBackStack(null)
-                .commit();
+//        transaction.replace(R.id.fragment, fragment)
+//                .addToBackStack(null)
+//                .commit();
     }
 
     @Override

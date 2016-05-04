@@ -10,45 +10,56 @@
             type="com.ygorcesar.jamdroidfirechat.model.User"/>
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:paddingBottom="48dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:gravity="center"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_user_photo"
-                android:layout_width="@dimen/circle_photo_user_detail"
-                android:layout_height="@dimen/circle_photo_user_detail"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                app:photoUrl="@{user.photoUrl}"
-                tools:src="@drawable/ic_person"/>
-
-            <TextView
-                android:id="@+id/tv_user_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_user_photo"
-                android:text="@{user.email}"
-                android:textColor="@color/white"
-                android:textSize="@dimen/item_user_name_text_size"
-                android:textStyle="bold"
-                tools:text="ygorcross@gmail.com"/>
-        </RelativeLayout>
-
-        <ImageView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/gdg_background"/>
-    </LinearLayout>
+            android:layout_alignBottom="@+id/iv_user_photo"
+            android:layout_marginBottom="110dp"
+            android:background="@color/white"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_photo"
+            android:layout_width="@dimen/circle_photo_user_detail"
+            android:layout_height="@dimen/circle_photo_user_detail"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="22dp"
+            android:layout_marginTop="28dp"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="4dp"
+            app:photoUrl="@{user.photoUrl}"
+            tools:src="@drawable/ic_person"/>
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_user_photo"
+            android:layout_marginBottom="6dp"
+            android:gravity="center"
+            android:text="@{user.name}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/item_user_name_text_size_dialog"
+            android:textStyle="bold"
+            tools:text="ygorcross@gmail.com"/>
+
+        <TextView
+            android:id="@+id/tv_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_user_name"
+            android:gravity="center"
+            android:text="@{user.email}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/item_user_email_text_size"
+            android:textStyle="bold"
+            tools:text="ygorcross@gmail.com"/>
+    </RelativeLayout>
 </layout>

@@ -19,6 +19,8 @@
     <dimen name="ln_send_container_padding_v">2dp</dimen>
 
     <dimen name="item_user_name_text_size">16sp</dimen>
+    <dimen name="item_user_name_text_size_dialog">22sp</dimen>
+    <dimen name="item_user_email_text_size">16sp</dimen>
     <dimen name="item_message_content_text_size">16sp</dimen>
 
     <dimen name="edt_msg_content_margin">8dp</dimen>

@@ -2,8 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
+                android:background="#3D5AFE"
                 android:gravity="center|top">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gdg_logo"
+        android:tint="#993d5afe"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,12 +19,17 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        >
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <android.support.v4.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="40dp"/>
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/jamdroidfirechat"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -37,15 +49,9 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:text="@string/app_firechat"
-            android:textColor="#ff0"
+            android:textColor="@color/white"
             android:textSize="36sp"
             android:textStyle="bold"/>
-
-        <ImageView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_gravity="center"
-            android:src="@drawable/droidjamfirechat_image"/>
 
         <android.support.v4.widget.Space
             android:layout_width="wrap_content"
@@ -74,5 +80,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="10dp"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"/>
 </RelativeLayout>

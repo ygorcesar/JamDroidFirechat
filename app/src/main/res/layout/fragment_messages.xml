@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:background="@drawable/gdg_background_small_colored"
+        android:background="@drawable/gdg_logo"
         tools:context=".view.fragment.MessagesFragment">
 
         <android.support.v7.widget.RecyclerView
