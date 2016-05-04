@@ -64,7 +64,6 @@ public class LoginActivity extends BaseActivity {
     GoogleSignInAccount mGoogleAccount;
 
     private CallbackManager mFacebookCallbackManager;
-    private LoginButton mFacebookLoginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +83,6 @@ public class LoginActivity extends BaseActivity {
         mAuthStateListener = new Firebase.AuthStateListener() {
             @Override
             public void onAuthStateChanged(AuthData authData) {
-                mAuthProgressDialog.dismiss();
-
                 if (authData != null) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -116,22 +113,25 @@ public class LoginActivity extends BaseActivity {
 
     private void setupGoogleSignIn() {
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_with_google);
-//        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSignInGooglePressed(v);
-            }
-        });
+        if (signInButton != null) {
+//            signInButton.setSize(SignInButton.SIZE_WIDE);
+            signInButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSignInGooglePressed(v);
+                }
+            });
+        }
     }
 
     private void setupFacebookSignIn() {
         mFacebookCallbackManager = CallbackManager.Factory.create();
 
-        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_button);
-        mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
-
-        mFacebookLoginButton.registerCallback(mFacebookCallbackManager, getFacebookOAuthTokenAndLogin());
+        LoginButton mFacebookLoginButton = (LoginButton) findViewById(R.id.login_button);
+        if (mFacebookLoginButton != null) {
+            mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+            mFacebookLoginButton.registerCallback(mFacebookCallbackManager, getFacebookOAuthTokenAndLogin());
+        }
     }
 
     /**
@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity {
             mGoogleAccount = result.getSignInAccount();
             getGoogleOAuthTokenAndLogin();
         } else {
-            showErrorToast(result.getStatus().toString());
+//            showErrorToast(result.getStatus().toString());
             mAuthProgressDialog.dismiss();
             Log.e(TAG, "Status Code: " + result.getStatus().getStatusCode());
             Log.e(TAG, "Status Message: " + result.getStatus().getStatus());
@@ -266,7 +266,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(String token) {
-                mAuthProgressDialog.dismiss();
+//                mAuthProgressDialog.dismiss();
                 if (token != null) {
                     /* Successfully got OAuth token, now login with Google */
                     Log.i(TAG, String.format("Token: %s", token));
@@ -284,6 +284,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(final LoginResult loginResult) {
                 // App code
+                mAuthProgressDialog.show();
                 loginWithOathToken(ConstantsFirebase.FACEBOOK_PROVIDER, loginResult.getAccessToken().getToken());
             }
 
@@ -313,7 +314,6 @@ public class LoginActivity extends BaseActivity {
          */
         @Override
         public void onAuthenticated(AuthData authData) {
-            mAuthProgressDialog.dismiss();
             Log.i(TAG, provider + " " + getString(R.string.log_message_auth_successful));
 
             if (authData != null) {
@@ -331,6 +331,7 @@ public class LoginActivity extends BaseActivity {
                 /* Go to MainActivity */
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mAuthProgressDialog.dismiss();
                 startActivity(intent);
                 finish();
             }
@@ -339,7 +340,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onAuthenticationError(FirebaseError firebaseError) {
             mAuthProgressDialog.dismiss();
-
+            Log.e(TAG, "onAuthenticationError: " + firebaseError.getMessage());
             switch (firebaseError.getCode()) {
                 case FirebaseError.USER_DOES_NOT_EXIST:
                     break;

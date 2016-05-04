@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">JamDroidFireChat</string>
     <string name="action_settings">Settings</string>
-    <string name="facebook_app_id">FACEBOOK APP ID</string>
+    <!--<string name="facebook_app_id">FACEBOOK APP ID</string>-->
+    <string name="facebook_app_id">1180883308612126</string>
     <string name="chat_global">Global</string>
 
     <!-- Google Auth Strings -->
