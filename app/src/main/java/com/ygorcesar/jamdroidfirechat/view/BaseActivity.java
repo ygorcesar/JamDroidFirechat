@@ -17,6 +17,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.onesignal.OneSignal;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
@@ -46,7 +47,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 public void onAuthStateChanged(AuthData authData) {
                      /* The user has been logged out */
                     if (authData == null) {
+                        OneSignal.setSubscription(false);
                         takeUserToLoginScreenOnUnAuth();
+                    }else {
+                        OneSignal.setSubscription(true);
                     }
                 }
             };

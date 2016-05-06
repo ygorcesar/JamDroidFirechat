@@ -21,6 +21,7 @@ import com.ygorcesar.jamdroidfirechat.databinding.FragmentChatsBinding;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
+import com.ygorcesar.jamdroidfirechat.utils.Utils;
 import com.ygorcesar.jamdroidfirechat.view.adapters.ChatsItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModelContract;
 
@@ -37,7 +38,13 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentChatsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_chats, container, false);
-
+        
+        if (Utils.getAditionalData() != null) {
+            moveToMessagesFragment(Utils.getAditionalData().getChatKey(),
+                    Utils.getAditionalData().getUserName(),
+                    Utils.getAditionalData().getUserOneSignalId());
+            Utils.setAditionalData(null);
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         mEncodedMail = prefs.getString(Constants.KEY_ENCODED_EMAIL, "");
@@ -50,7 +57,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
 
     private void initializeScreen(RecyclerView rvUsers) {
         mUsers = new ArrayList<>();
-        User userGeral = new User(getString(R.string.chat_global),
+        User userGeral = new User("", getString(R.string.chat_global),
                 ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
                 ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL, null);
         mUsers.add(userGeral);
@@ -94,10 +101,11 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
      * @param chatKey
      * @param friendName
      */
-    public void moveToMessagesFragment(String chatKey, String friendName) {
+    public void moveToMessagesFragment(String chatKey, String friendName, String userOneSignalId) {
         Bundle args = new Bundle();
         args.putString(Constants.KEY_CHAT_CHILD, chatKey);
         args.putString(Constants.KEY_USER_DISPLAY_NAME, friendName);
+        args.putString(Constants.KEY_USER_ONE_SIGNAL_ID, userOneSignalId);
         MessagesFragment fragment = new MessagesFragment();
         fragment.setArguments(args);
 

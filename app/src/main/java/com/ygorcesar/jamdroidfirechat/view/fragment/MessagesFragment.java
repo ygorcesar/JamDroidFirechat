@@ -46,6 +46,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
     private ChildEventListener childMessagesListener;
     private ValueEventListener valueUserListener;
     private String mChildChatKey;
+    private String mUserOneSignalID;
     private FragmentMessagesBinding mFragmentMessagesBinding;
     private static final String TAG = "MessagesFragment";
 
@@ -57,6 +58,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
 
         if (getArguments() != null) {
             mChildChatKey = getArguments().getString(Constants.KEY_CHAT_CHILD, "");
+            mUserOneSignalID = getArguments().getString(Constants.KEY_USER_ONE_SIGNAL_ID, "");
             getActivity().setTitle(getArguments()
                     .getString(Constants.KEY_USER_DISPLAY_NAME, getString(R.string.app_name)));
         }
@@ -99,8 +101,12 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         mFragmentMessagesBinding.rvMessage.setAdapter(adapter);
         adapter.setMessages(mMessages);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String loggedUserName = preferences.getString(Constants.KEY_USER_DISPLAY_NAME, "");
+
         mFragmentMessagesBinding.rvMessage.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(this, mEncodedMail, mChildChatKey));
+        mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(getActivity(), this,
+                mEncodedMail, mChildChatKey, mUserOneSignalID, loggedUserName));
     }
 
     /**

@@ -23,7 +23,7 @@ public class UserFragment extends DialogFragment {
             String displayName = args.getString(Constants.KEY_USER_DISPLAY_NAME);
             String email = args.getString(Constants.KEY_ENCODED_EMAIL, "");
             String photoUrl = args.getString(Constants.KEY_USER_PROVIDER_PHOTO_URL, "");
-            binding.setUser(new User(displayName, email, photoUrl, null));
+            binding.setUser(new User("", displayName, email, photoUrl, null));
         }
         return binding.getRoot();
     }

@@ -31,6 +31,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.Scope;
+import com.onesignal.OneSignal;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
@@ -208,11 +209,16 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
-                    HashMap<String, Object> timestampJoined = new HashMap<>();
+                    final HashMap<String, Object> timestampJoined = new HashMap<>();
                     timestampJoined.put(ConstantsFirebase.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-                    User user = new User(displayName, mEncodedEmail, photoUrl, timestampJoined);
-                    userLocation.setValue(user);
+                    OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+                        @Override
+                        public void idsAvailable(String userId, String registrationId) {
+                            User user = new User(userId, displayName, mEncodedEmail, photoUrl, timestampJoined);
+                            userLocation.setValue(user);
+                        }
+                    });
                 }
             }
 

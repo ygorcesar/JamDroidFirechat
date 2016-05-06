@@ -1,5 +1,5 @@
 package com.ygorcesar.jamdroidfirechat.viewmodel;
 
 public interface ChatsViewModelContract {
-    void moveToMessagesFragment(String chatKey, String friendName);
+    void moveToMessagesFragment(String chatKey, String friendName, String userOneSignalId);
 }

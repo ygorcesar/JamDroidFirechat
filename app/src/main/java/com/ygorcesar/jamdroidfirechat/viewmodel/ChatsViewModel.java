@@ -31,7 +31,8 @@ public class ChatsViewModel extends BaseChatViewModel {
      */
     public void getChatKey(final User user) {
         if (user.getEmail().equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
-            mContract.moveToMessagesFragment(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL, ConstantsFirebase.CHAT_GLOBAL_HELPER);
+            mContract.moveToMessagesFragment(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
+                    ConstantsFirebase.CHAT_GLOBAL_HELPER, "");
         } else {
             Firebase ref = new Firebase(ConstantsFirebase.FIREBASE_URL_USER_FRIENDS);
             ref.child(mLoggedUserEmail).child(user.getEmail())
@@ -40,9 +41,10 @@ public class ChatsViewModel extends BaseChatViewModel {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                                 String chatKey = dataSnapshot.getValue().toString();
-                                mContract.moveToMessagesFragment(chatKey, user.getName());
+                                mContract.moveToMessagesFragment(chatKey, user.getName(), user.getOneSignalUserId());
                             } else {
-                                mContract.moveToMessagesFragment(createChat(user.getEmail()), user.getName());
+                                mContract.moveToMessagesFragment(createChat(user.getEmail()),
+                                        user.getName(), user.getOneSignalUserId());
                             }
                         }
 
