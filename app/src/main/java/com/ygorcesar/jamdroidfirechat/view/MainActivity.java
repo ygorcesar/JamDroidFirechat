@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.view.fragment.ChatsFragment;
@@ -46,5 +47,13 @@ public class MainActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setHomeButtonVisible(boolean visible) {
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(visible);
+    }
+
+    public void setToolbarMenuClickListener(View.OnClickListener toolbarClickListener) {
+        mToolbar.setNavigationOnClickListener(toolbarClickListener);
     }
 }

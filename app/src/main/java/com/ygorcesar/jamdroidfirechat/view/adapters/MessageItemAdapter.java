@@ -57,6 +57,11 @@ public class MessageItemAdapter extends RecyclerView.Adapter<MessageItemAdapter.
         mUsers = users;
     }
 
+    public void clear(){
+        mMessages.clear();
+        mUsers.clear();
+    }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private AdapterItemMessageBinding mAdapterItemMessageBinding;
 

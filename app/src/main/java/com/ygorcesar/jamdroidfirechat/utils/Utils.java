@@ -1,6 +1,8 @@
 package com.ygorcesar.jamdroidfirechat.utils;
 
 import android.content.Context;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -56,5 +58,17 @@ public class Utils {
 
     public static void setAditionalData(AditionalNotificationData aditionalData) {
         Utils.aditionalData = aditionalData;
+    }
+
+    public static void animateScaleXY(View view, int delay, long duration) {
+        view.setScaleX(0f);
+        view.setScaleY(0f);
+        view.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setStartDelay(delay)
+                .setDuration(duration)
+                .start();
     }
 }

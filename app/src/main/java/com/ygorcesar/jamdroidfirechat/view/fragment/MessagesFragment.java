@@ -25,6 +25,7 @@ import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
+import com.ygorcesar.jamdroidfirechat.view.MainActivity;
 import com.ygorcesar.jamdroidfirechat.view.adapters.MessageItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageAdapterViewModelContract;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageFragmViewModel;
@@ -55,7 +56,6 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                              Bundle savedInstanceState) {
         mFragmentMessagesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_messages, container, false);
 
-
         if (getArguments() != null) {
             mChildChatKey = getArguments().getString(Constants.KEY_CHAT_CHILD, "");
             mUserOneSignalID = getArguments().getString(Constants.KEY_USER_ONE_SIGNAL_ID, "");
@@ -71,24 +71,23 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
     public void onStart() {
         super.onStart();
         initializeFirebase();
+
+        Utils.animateScaleXY(mFragmentMessagesBinding.btnSendMessage, 300, 400);
+        Utils.animateScaleXY(mFragmentMessagesBinding.edtMessageContent, 400, 400);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         removeFirebaseListeners();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        getActivity().setTitle(getString(R.string.app_name));
+        clearListsAndAdapter();
     }
 
     /**
      * Inicializando Adapters, RecyclerView e Listeners...
      */
     private void initializeScreen() {
+        setupToolbar();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mEncodedMail = prefs.getString(Constants.KEY_ENCODED_EMAIL, "");
 
@@ -109,6 +108,20 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                 mEncodedMail, mChildChatKey, mUserOneSignalID, loggedUserName));
     }
 
+    private void setupToolbar() {
+        final MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.setHomeButtonVisible(true);
+            activity.setToolbarMenuClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getFragmentManager().popBackStack();
+                    getActivity().setTitle(getString(R.string.app_name));
+                }
+            });
+        }
+    }
+
     /**
      * Inicializando Firebase e Listeners do Firebase
      */
@@ -118,6 +131,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             childMessagesListener = createFirebaseChatListener();
         }
         mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_USERS);
+        mRefUsers.keepSynced(true);
         mRefUsers.addValueEventListener(valueUserListener);
 
 
@@ -193,6 +207,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                         mUsersEmails.add(snapshot.getValue(User.class).getEmail());
                     }
                     ((MessageItemAdapter) mFragmentMessagesBinding.rvMessage.getAdapter()).setUsers(mUsers);
+
                 }
             }
 
@@ -212,6 +227,14 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         }
     }
 
+    private void clearListsAndAdapter() {
+        mUsers.clear();
+        mUsersEmails.clear();
+        mMessages.clear();
+        mKeys.clear();
+        mFragmentMessagesBinding.rvMessage.getAdapter().notifyDataSetChanged();
+    }
+
     /**
      * Resgata click do adapter por meio da interface implementada para exibir usuário da mensagem
      *
@@ -219,7 +242,6 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
      */
     @Override
     public void onMessageItemClick(User user) {
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putString(Constants.KEY_USER_DISPLAY_NAME, user.getName());
@@ -228,10 +250,6 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         UserFragment fragment = new UserFragment();
         fragment.setArguments(args);
         fragment.show(fragmentManager, "fragment_user");
-
-//        transaction.replace(R.id.fragment, fragment)
-//                .addToBackStack(null)
-//                .commit();
     }
 
     @Override

@@ -11,6 +11,7 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/rv_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -18,6 +19,7 @@
         android:paddingBottom="48dp">
 
         <FrameLayout
+            android:id="@+id/fl_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/iv_user_photo"

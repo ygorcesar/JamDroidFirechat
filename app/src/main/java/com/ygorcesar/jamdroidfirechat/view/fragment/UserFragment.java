@@ -11,6 +11,7 @@ import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.FragmentUserBinding;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
+import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 public class UserFragment extends DialogFragment {
 
@@ -25,6 +26,9 @@ public class UserFragment extends DialogFragment {
             String photoUrl = args.getString(Constants.KEY_USER_PROVIDER_PHOTO_URL, "");
             binding.setUser(new User("", displayName, email, photoUrl, null));
         }
+        Utils.animateScaleXY(binding.ivUserPhoto, 100, 800);
+        Utils.animateScaleXY(binding.tvUserName, 200, 800);
+        Utils.animateScaleXY(binding.tvUserEmail, 400, 800);
         return binding.getRoot();
     }
 }

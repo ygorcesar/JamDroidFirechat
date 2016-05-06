@@ -22,6 +22,7 @@ import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
+import com.ygorcesar.jamdroidfirechat.view.MainActivity;
 import com.ygorcesar.jamdroidfirechat.view.adapters.ChatsItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModelContract;
 
@@ -38,7 +39,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentChatsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_chats, container, false);
-        
+
         if (Utils.getAditionalData() != null) {
             moveToMessagesFragment(Utils.getAditionalData().getChatKey(),
                     Utils.getAditionalData().getUserName(),
@@ -56,6 +57,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
 
 
     private void initializeScreen(RecyclerView rvUsers) {
+        setupToolbar();
         mUsers = new ArrayList<>();
         User userGeral = new User("", getString(R.string.chat_global),
                 ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
@@ -73,6 +75,13 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         }
         Firebase mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS);
         mRefUsers.addValueEventListener(mValueUserListener);
+    }
+
+    private void setupToolbar() {
+        final MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.setHomeButtonVisible(false);
+        }
     }
 
     private ValueEventListener createUserValueListener() {
@@ -111,6 +120,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
 
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out_reverse, R.anim.slide_in_reverse);
         transaction.replace(R.id.fragment, fragment).addToBackStack(null).commit();
     }
 }
