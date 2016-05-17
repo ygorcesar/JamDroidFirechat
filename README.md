@@ -8,17 +8,17 @@ Configurando Aplicação
  - Criar conta no [Firebase](https://www.firebase.com/login/)
  - Após criar conta, criar novo App Firebase
  - Habilitar no App criado, login com Google e Facebook, em seguida adicionar Google Client ID, Google Client Secret, Facebook App Id e Facebook App Secret
- - Atualizar
-   [build.gradle](https://github.com/ygorcesar/JamDroidFireChat/blob/master/app/build.gradle)
-   colocando url da aplicação firebase criada `buildConfigField "String",
+ - Atualizar [build.gradle](https://github.com/ygorcesar/JamDroidFireChat/blob/master/app/build.gradle)
+-   Substituindo url da aplicação firebase criada `buildConfigField "String",
    "FIREBASE_ROOT_URL", "https://<meuapp>.firebaseio.com"`
- - Atualizar
-   [strings.xml](https://github.com/ygorcesar/JamDroidFireChat/blob/master/app/src/main/res/values/strings.xml)
-   colocando seu Facebook APP ID `<string name="facebook_app_id">FACEBOOK APP ID</string>`
+-  Substituir OneSignal App Id por Id da aplicação OneSignal criada `onesignal_app_id :onesignal_jamdroid_app_id`
+- Substituir GoogleProjectNumber por Id do Projeto Google criado `onesignal_google_project_number : onesignal_google_jamdroid_project_number` 
+- Substituir Facebook APP ID colocando Id da aplicação criada no facebook `resValue "string", "facebook_app_id", FacebookAppIdJamdroid`
  - Gerar  google-services.json e colocar-lo na pasta **app** do projeto android:
    https://developers.google.com/mobile/add
  - Google Login Guide: https://developers.google.com/identity/sign-in/android/start
  - Facebook Login Guide: https://developers.facebook.com/docs/facebook-login/android
+ - OneSignal Guide(Notifications in App): https://documentation.onesignal.com/docs/using-onesignal-in-your-android-app
 
 App
 -------------
