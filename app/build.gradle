@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     def versionMajor = 1
-    def versionMinor = 3
+    def versionMinor = 4
     def versionPatch = 0
 
     dataBinding {
@@ -27,6 +27,9 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "String", "FIREBASE_ROOT_URL", DroidJamFireChatRootUrl
+
+        resValue "string", "facebook_app_id", FacebookAppIdJamdroid
+        resValue "string", "version", "Versão ${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
         debug {
@@ -61,7 +64,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
 
     /* OneSignal API */
-    compile 'com.onesignal:OneSignal:2.+@aar'
+    compile 'com.onesignal:OneSignal:2.3.0'
 
     /* Facebook SDK*/
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'

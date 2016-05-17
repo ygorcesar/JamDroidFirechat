@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ygorcesar.jamdroidfirechat.R;
-import com.ygorcesar.jamdroidfirechat.databinding.FragmentUserBinding;
+import com.ygorcesar.jamdroidfirechat.databinding.DialogFragmentUserBinding;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
@@ -17,7 +17,8 @@ public class UserFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentUserBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false);
+        DialogFragmentUserBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.dialog_fragment_user, container, false);
 
         Bundle args = getArguments();
         if (args != null) {

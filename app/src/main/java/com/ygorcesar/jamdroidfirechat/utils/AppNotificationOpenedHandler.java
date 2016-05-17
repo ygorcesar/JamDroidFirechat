@@ -12,10 +12,12 @@ public class AppNotificationOpenedHandler implements OneSignal.NotificationOpene
 
     @Override
     public void notificationOpened(String message, JSONObject additionalData, boolean isActive) {
-        AditionalNotificationData aditionalData = new Gson().fromJson(additionalData.toString(),
-                AditionalNotificationData.class);
         if (!isActive) {
-            Utils.setAditionalData(aditionalData);
+            AditionalNotificationData aditionalData = new Gson().fromJson(additionalData.toString(),
+                    AditionalNotificationData.class);
+            if (aditionalData.getChatKey() != null && aditionalData.getUserName() != null) {
+                Utils.setAditionalData(aditionalData);
+            }
             Log.d(TAG, "notificationOpened: App em Background");
         }
     }

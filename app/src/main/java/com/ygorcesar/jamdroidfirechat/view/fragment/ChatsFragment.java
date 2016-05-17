@@ -22,7 +22,7 @@ import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
-import com.ygorcesar.jamdroidfirechat.view.MainActivity;
+import com.ygorcesar.jamdroidfirechat.view.activity.MainActivity;
 import com.ygorcesar.jamdroidfirechat.view.adapters.ChatsItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModelContract;
 

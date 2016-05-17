@@ -25,7 +25,7 @@ import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
-import com.ygorcesar.jamdroidfirechat.view.MainActivity;
+import com.ygorcesar.jamdroidfirechat.view.activity.MainActivity;
 import com.ygorcesar.jamdroidfirechat.view.adapters.MessageItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageAdapterViewModelContract;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageFragmViewModel;
@@ -37,7 +37,6 @@ import java.util.List;
 public class MessagesFragment extends Fragment implements MessageFragmViewModelContract,
         MessageAdapterViewModelContract {
 
-    private String mEncodedMail;
     private List<User> mUsers;
     private List<String> mUsersEmails;
     private List<Message> mMessages;
@@ -72,8 +71,8 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         super.onStart();
         initializeFirebase();
 
-        Utils.animateScaleXY(mFragmentMessagesBinding.btnSendMessage, 300, 400);
-        Utils.animateScaleXY(mFragmentMessagesBinding.edtMessageContent, 400, 400);
+        Utils.animateScaleXY(mFragmentMessagesBinding.edtMessageContent, 300, 400);
+        Utils.animateScaleXY(mFragmentMessagesBinding.btnSendMessage, 500, 400);
     }
 
     @Override
@@ -89,14 +88,14 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
     private void initializeScreen() {
         setupToolbar();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mEncodedMail = prefs.getString(Constants.KEY_ENCODED_EMAIL, "");
+        String encodedMail = prefs.getString(Constants.KEY_ENCODED_EMAIL, "");
 
         mUsers = new ArrayList<>();
         mUsersEmails = new ArrayList<>();
         mMessages = new ArrayList<>();
         mKeys = new ArrayList<>();
 
-        MessageItemAdapter adapter = new MessageItemAdapter(this, mEncodedMail, mUsersEmails);
+        MessageItemAdapter adapter = new MessageItemAdapter(this, encodedMail, mUsersEmails);
         mFragmentMessagesBinding.rvMessage.setAdapter(adapter);
         adapter.setMessages(mMessages);
 
@@ -105,7 +104,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
 
         mFragmentMessagesBinding.rvMessage.setLayoutManager(new LinearLayoutManager(getActivity()));
         mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(getActivity(), this,
-                mEncodedMail, mChildChatKey, mUserOneSignalID, loggedUserName));
+                encodedMail, mChildChatKey, mUserOneSignalID, loggedUserName));
     }
 
     private void setupToolbar() {
@@ -249,7 +248,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         args.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, user.getPhotoUrl());
         UserFragment fragment = new UserFragment();
         fragment.setArguments(args);
-        fragment.show(fragmentManager, "fragment_user");
+        fragment.show(fragmentManager, "dialog_fragment_user");
     }
 
     @Override

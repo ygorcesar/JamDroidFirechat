@@ -1,4 +1,4 @@
-package com.ygorcesar.jamdroidfirechat.view;
+package com.ygorcesar.jamdroidfirechat.view.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +22,7 @@ import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
 public abstract class BaseActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, BaseActivitySessionContract {
     private final String TAG = BaseActivity.class.getSimpleName();
     protected String mProvider, mEncodedEmail;
     protected GoogleApiClient mGoogleApiClient;
@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         setupGoogleApiClient();
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(BaseActivity.this);
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(BaseActivity.this);
         /* Get mEncodedEmail and mProvider from SharedPreferences, use null as default value */
         mEncodedEmail = sp.getString(Constants.KEY_ENCODED_EMAIL, null);
         mProvider = sp.getString(Constants.KEY_PROVIDER, null);
@@ -49,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                     if (authData == null) {
                         OneSignal.setSubscription(false);
                         takeUserToLoginScreenOnUnAuth();
-                    }else {
+                    } else {
                         OneSignal.setSubscription(true);
                     }
                 }
@@ -81,7 +81,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     /**
      * Desconecta a conta google do app
      */
-    protected void logout() {
+    public void logout() {
         if (mProvider != null) {
             mFireBaseRef.unauth();
 
@@ -106,21 +106,27 @@ public abstract class BaseActivity extends AppCompatActivity implements
     /**
      * Revoga o acesso da conta google a aplicação
      */
-    protected void revokeAccess() {
+    @Override
+    public void revokeAccess() {
         if (mProvider != null) {
             mFireBaseRef.unauth();
 
             if (mProvider.equals(ConstantsFirebase.GOOGLE_PROVIDER)) {
                 /* Revoke access from Google Account. */
-                Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(@NonNull Status status) {
-                                // Google Account Access Revoked.
-                                Log.d(TAG, String.format("Google Account revoked access: %s", status.isSuccess() ? "Success." : "Failed."));
+                if (mGoogleApiClient.isConnected()) {
+                    Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                            new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(@NonNull Status status) {
+                                    // Google Account Access Revoked.
+                                    Log.d(TAG, String.format("Google Account revoked access: %s", status.isSuccess() ? "Success." : "Failed."));
+                                }
                             }
-                        }
-                );
+                    );
+                }
+            } else if (mProvider.equals(ConstantsFirebase.FACEBOOK_PROVIDER)) {
+                LoginManager.getInstance().logOut();
+                Log.d(TAG, "Logged Out from Faccebook Account");
             }
         }
     }
