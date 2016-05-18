@@ -52,10 +52,14 @@ public abstract class BaseChatViewModel extends BaseObservable {
      */
     @BindingAdapter({"app:photoUrl"})
     public static void loadImage(ImageView view, String url) {
-        if (url.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
-            view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_chat_global));
+        if (url != null) {
+            if (url.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
+                view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_chat_global));
+            }else {
+                Utils.loadImageWithPicasso(view.getContext(), view, url, R.drawable.ic_person);
+            }
         } else {
-            Utils.loadImageWithPicasso(view.getContext(), view, url, R.drawable.ic_person);
+            view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_person));
         }
     }
 

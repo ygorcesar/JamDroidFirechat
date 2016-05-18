@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatsFragment extends Fragment implements ChatsViewModelContract {
+    private Firebase mRefUsers;
     private List<User> mUsers;
     private ValueEventListener mValueUserListener;
     private String mEncodedMail;
@@ -51,19 +52,22 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         mEncodedMail = prefs.getString(Constants.KEY_ENCODED_EMAIL, "");
 
         initializeScreen(mFragmentChatsBinding.rvChats);
-        initializeFirebase();
         return mFragmentChatsBinding.getRoot();
     }
 
+    @Override public void onStart() {
+        super.onStart();
+        initializeFirebase();
+        getActivity().setTitle(getString(R.string.app_name));
+    }
+
+    @Override public void onStop() {
+        super.onStop();
+        removeFirebaseListeners();
+    }
 
     private void initializeScreen(RecyclerView rvUsers) {
         setupToolbar();
-        mUsers = new ArrayList<>();
-        User userGeral = new User("", getString(R.string.chat_global),
-                ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
-                ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL, null);
-        mUsers.add(userGeral);
-
         ChatsItemAdapter adapter = new ChatsItemAdapter(this, mEncodedMail);
         rvUsers.setAdapter(adapter);
         rvUsers.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -73,7 +77,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         if (mValueUserListener == null) {
             mValueUserListener = createUserValueListener();
         }
-        Firebase mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS);
+        mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS);
         mRefUsers.addValueEventListener(mValueUserListener);
     }
 
@@ -88,6 +92,11 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mUsers = new ArrayList<>();
+                User userGeral = new User("", getString(R.string.chat_global),
+                        ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
+                        ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL, null);
+                mUsers.add(userGeral);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (!snapshot.getValue(User.class).getEmail().equals(mEncodedMail)) {
                         mUsers.add(snapshot.getValue(User.class));
@@ -122,5 +131,14 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out_reverse, R.anim.slide_in_reverse);
         transaction.replace(R.id.fragment, fragment).addToBackStack(null).commit();
+    }
+
+    /**
+     * Remove listeners dos objetos Firebase
+     */
+    private void removeFirebaseListeners() {
+        if (mValueUserListener != null) {
+            mRefUsers.removeEventListener(mValueUserListener);
+        }
     }
 }

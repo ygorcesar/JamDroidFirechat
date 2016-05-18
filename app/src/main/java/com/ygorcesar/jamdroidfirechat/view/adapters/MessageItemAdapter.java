@@ -41,7 +41,10 @@ public class MessageItemAdapter extends RecyclerView.Adapter<MessageItemAdapter.
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         Message message = mMessages.get(position);
-        holder.bindMessage(mUsers.get(mUsersEmails.indexOf(message.getEmail())), message);
+        int index = mUsersEmails.indexOf(message.getEmail());
+        if ( index!= -1) {
+            holder.bindMessage(mUsers.get(index), message);
+        }
     }
 
     @Override

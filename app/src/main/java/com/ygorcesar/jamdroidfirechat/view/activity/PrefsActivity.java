@@ -117,18 +117,17 @@ public class PrefsActivity extends BaseActivity {
         }
 
         private void deleteFirebaseAccount(final String encodedEmail) {
+            Toast.makeText(PrefsFragment.this.getActivity(),
+                    getString(R.string.msg_account_deleted),
+                    Toast.LENGTH_SHORT).show();
+
+            ((BaseActivity) getActivity()).revokeAccess();
             Firebase refUserAccount = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS).child(encodedEmail);
             refUserAccount.removeValue(new Firebase.CompletionListener() {
                 @Override
                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                     new Firebase(ConstantsFirebase.FIREBASE_URL_USER_FRIENDS)
                             .child(encodedEmail).removeValue();
-
-                    ((BaseActivity) getActivity()).revokeAccess();
-
-                    Toast.makeText(PrefsFragment.this.getActivity(),
-                            getString(R.string.msg_account_deleted),
-                            Toast.LENGTH_SHORT).show();
                 }
             });
         }

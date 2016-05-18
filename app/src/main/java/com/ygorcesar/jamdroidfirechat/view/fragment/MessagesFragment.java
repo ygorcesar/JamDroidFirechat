@@ -115,7 +115,6 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                 @Override
                 public void onClick(View v) {
                     getFragmentManager().popBackStack();
-                    getActivity().setTitle(getString(R.string.app_name));
                 }
             });
         }
