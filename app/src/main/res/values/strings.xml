@@ -59,4 +59,6 @@
     <string name="msg_notification_status_active">ativada</string>
     <string name="msg_notification_status_disable">desativada</string>
     <string name="dialog_title_licenses">Licenças</string>
+    <string name="dialog_title_new_message">Nova Mensagem</string>
+    <string name="dialog_msg_user_says">%1$s, diz: %2$s</string>
 </resources>

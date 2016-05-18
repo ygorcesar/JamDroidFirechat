@@ -34,6 +34,7 @@
             android:background="@drawable/message_item_background"
             android:elevation="4dp"
             android:hint="@string/hint_write_here"
+            android:inputType="textMultiLine|textCapSentences"
             android:lines="2"
             android:maxLines="3"
             android:paddingBottom="@dimen/edt_msg_content_padding_v"

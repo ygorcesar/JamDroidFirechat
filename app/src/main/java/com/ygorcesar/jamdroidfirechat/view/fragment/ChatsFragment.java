@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import com.firebase.client.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.FragmentChatsBinding;
 import com.ygorcesar.jamdroidfirechat.model.User;
+import com.ygorcesar.jamdroidfirechat.utils.AppNotificationContract;
+import com.ygorcesar.jamdroidfirechat.utils.AppNotificationOpenedHandler;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
@@ -29,7 +32,7 @@ import com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModelContract;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatsFragment extends Fragment implements ChatsViewModelContract {
+public class ChatsFragment extends Fragment implements ChatsViewModelContract, AppNotificationContract {
     private Firebase mRefUsers;
     private List<User> mUsers;
     private ValueEventListener mValueUserListener;
@@ -59,11 +62,13 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         super.onStart();
         initializeFirebase();
         getActivity().setTitle(getString(R.string.app_name));
+        AppNotificationOpenedHandler.getInstance().setNotificationContract(this);
     }
 
     @Override public void onStop() {
         super.onStop();
         removeFirebaseListeners();
+        AppNotificationOpenedHandler.getInstance().removeListener();
     }
 
     private void initializeScreen(RecyclerView rvUsers) {
@@ -140,5 +145,13 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         if (mValueUserListener != null) {
             mRefUsers.removeEventListener(mValueUserListener);
         }
+    }
+
+    @Override public void showNotificationInApp(String userName, String msg) {
+        new AlertDialog.Builder(getActivity())
+                .setIcon(R.drawable.ic_message_notification_blue)
+                .setTitle(getString(R.string.dialog_title_new_message))
+                .setMessage(getString(R.string.dialog_msg_user_says, userName, msg))
+                .show();
     }
 }

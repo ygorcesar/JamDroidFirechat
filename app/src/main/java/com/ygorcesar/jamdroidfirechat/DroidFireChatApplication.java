@@ -20,7 +20,7 @@ public class DroidFireChatApplication extends android.app.Application {
 
         /* Initialize OneSignal API */
         OneSignal.startInit(this)
-                .setNotificationOpenedHandler(new AppNotificationOpenedHandler())
+                .setNotificationOpenedHandler(AppNotificationOpenedHandler.getInstance())
                 .init();
     }
 }
