@@ -26,7 +26,7 @@ App
 
 Aplicação Android de chat integrado com Firebase para troca de mensagens em tempo real, com chat global e direct com usuários registrados.
 
- - Slide apresentação [Android Jam 2 - Firebase e Android](https://drive.google.com/a/nfeinbox.com.br/file/d/0B-EMWEc1ASc7MXczcUVpTm9Pam8/view)
+ - Slide apresentação [Android Jam 2 - Firebase e Android](http://pt.slideshare.net/YgorCsar/aplicaes-android-realtime-com-firebase)
  - Website Android Jam Aracaju: http://android.gdgaracaju.com.br/
    
  ![Login Screen](https://xydsig.dm2303.livefilestore.com/y3m0WHoMivZCPkTe3yQ7Ul5nYZcjMvw90VSer1ATtOiEpdc1QXcu2W96Rd5hf7G8B__dmoHi3FN1CSqzQ7bGhVnkIOkExsFPzbQ-BDoXOBueF4ItNFWclfLAdXuBssNHcujSNvJP70MWtTo2Kc6RqEf8zXMaNKlXVtMCwcxcXeRJ8A/jamdroid_login.png?psid=1)![Registered Users](https://yiablq.dm2303.livefilestore.com/y3mfA1zN9KKnygG6-Gz9jTmKeDTlQOuzwhMOjipruPo5ZgGsmIJomMdE5S8DjVLsquS0WZ9UhgSjEpuQIdmgfHFI9sZE8o8vR5OUyHnIefvxCmvZtoj1uH9tTm2XToTrdKE0Vb-V_4CrUKskrdKghO2ekRg-m3TDadfa2p1pqPWxVE/jamdroid_main_app.PNG?psid=1)
