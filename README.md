@@ -7,26 +7,23 @@ Aplicação Android, demostrando o uso do Firebase com Android em uma aplicaçã
 Configurando Aplicação
 -------------
 
- - Criar conta no [Firebase](https://www.firebase.com/login/)
+ - Criar conta no [Firebase](https://www.firebase.google.com)
  - Após criar conta, criar novo App Firebase
  - Habilitar no App criado, login com Google e Facebook, em seguida adicionar Google Client ID, Google Client Secret, Facebook App Id e Facebook App Secret
  - Atualizar [gradle.properties](https://github.com/ygorcesar/JamDroidFireChat/blob/master/gradle.properties)
-- Atualizar com sua URL Firebase App: `DroidJamFireChatRootUrl="https://your_app_url.firebaseio.com"`
 - Atualizar com seu Facebook App ID: `FacebookAppIdJamdroid="1111111111111111"`
--  Atualizar com seu OneSignal App ID: `onesignal_jamdroid_app_id=1a1a1a11-1111-1a11-111a-1a1aaa1111a1`
-- Atualizar com seu Google App Project Number: `onesignal_google_jamdroid_project_number=111111111111`
- - Gerar  google-services.json e colocar-lo na pasta **app** do projeto android:
-   https://developers.google.com/mobile/add
+-  Atualizar com sua Key do Firebase Cloud Message: `FirebaseCloudMessageKey="key=1111111111111111111111111111111111"`
+- Gerar  google-services.json em **Firebase Console->Select Project->Settings/Configurações** e colocar-lo na pasta **app** do projeto android.
+ - Firebase Documentation and Guide: https://firebase.google.com/docs/android
  - Google Login Guide: https://developers.google.com/identity/sign-in/android/start
  - Facebook Login Guide: https://developers.facebook.com/docs/facebook-login/android
- - OneSignal Guide(Notifications in App): https://documentation.onesignal.com/docs/using-onesignal-in-your-android-app
 
 App
 -------------
 
 Aplicação Android de chat integrado com Firebase para troca de mensagens em tempo real, com chat global e direct com usuários registrados.
 
- - Slide apresentação [Android Jam 2 - Firebase e Android](https://drive.google.com/a/nfeinbox.com.br/file/d/0B-EMWEc1ASc7MXczcUVpTm9Pam8/view)
+ - Slide apresentação [Android Jam 2 - Firebase e Android](http://pt.slideshare.net/YgorCsar/aplicaes-android-realtime-com-firebase)
  - Website Android Jam Aracaju: http://android.gdgaracaju.com.br/
    
  ![Login Screen](https://xydsig.dm2303.livefilestore.com/y3m0WHoMivZCPkTe3yQ7Ul5nYZcjMvw90VSer1ATtOiEpdc1QXcu2W96Rd5hf7G8B__dmoHi3FN1CSqzQ7bGhVnkIOkExsFPzbQ-BDoXOBueF4ItNFWclfLAdXuBssNHcujSNvJP70MWtTo2Kc6RqEf8zXMaNKlXVtMCwcxcXeRJ8A/jamdroid_login.png?psid=1)![Registered Users](https://yiablq.dm2303.livefilestore.com/y3mfA1zN9KKnygG6-Gz9jTmKeDTlQOuzwhMOjipruPo5ZgGsmIJomMdE5S8DjVLsquS0WZ9UhgSjEpuQIdmgfHFI9sZE8o8vR5OUyHnIefvxCmvZtoj1uH9tTm2XToTrdKE0Vb-V_4CrUKskrdKghO2ekRg-m3TDadfa2p1pqPWxVE/jamdroid_main_app.PNG?psid=1)

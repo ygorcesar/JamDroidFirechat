@@ -3,65 +3,60 @@ package com.ygorcesar.jamdroidfirechat.view.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ServerValue;
-import com.firebase.client.ValueEventListener;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.Scope;
-import com.onesignal.OneSignal;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class LoginActivity extends BaseActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private String provider;
     private ProgressDialog mAuthProgressDialog;
-    private Firebase mFirebaseRef;
-    private Firebase.AuthStateListener mAuthStateListener;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private SharedPreferences.Editor mSharedPrefEditor;
-
-    /**
-     * Variables related to Google Login
-     */
-    /* A flag indicating that a PendingIntent is in progress and prevents us from starting further intents. */
-    private boolean mGoogleIntentInProgress;
-    /* Request code used to invoke sign in user interactions for Google+ */
     private static final int RC_SIGN_IN = 1;
-    private static final int RC_GOOGLE_LOGIN = 2;
 
     private static final int RC_FACEBOOK_LOGIN = 64206;
-    /* A Google account object that is populated if the user signs in with Google */
-    GoogleSignInAccount mGoogleAccount;
 
     private CallbackManager mFacebookCallbackManager;
 
@@ -72,18 +67,16 @@ public class LoginActivity extends BaseActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPrefEditor = sharedPref.edit();
 
-        mFirebaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL);
-
-        initializeScreen();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAuthStateListener = new Firebase.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(AuthData authData) {
-                if (authData != null) {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Log.d(TAG, "onCreate: " + extras.toString());
+        }
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    setAuthenticatedWithOAuth(user);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -92,13 +85,19 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
-        mFirebaseRef.addAuthStateListener(mAuthStateListener);
+        initializeScreen();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFirebaseRef.removeAuthStateListener(mAuthStateListener);
+    @Override protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
     }
 
     private void initializeScreen() {
@@ -112,7 +111,6 @@ public class LoginActivity extends BaseActivity {
     private void setupGoogleSignIn() {
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_with_google);
         if (signInButton != null) {
-//            signInButton.setSize(SignInButton.SIZE_WIDE);
             signInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -128,7 +126,24 @@ public class LoginActivity extends BaseActivity {
         LoginButton mFacebookLoginButton = (LoginButton) findViewById(R.id.login_button);
         if (mFacebookLoginButton != null) {
             mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
-            mFacebookLoginButton.registerCallback(mFacebookCallbackManager, getFacebookOAuthTokenAndLogin());
+            mFacebookLoginButton.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(final LoginResult loginResult) {
+                    mAuthProgressDialog.setMessage(getString(R.string.progress_dialog_authenticating_with, "Facebook"));
+                    mAuthProgressDialog.show();
+                    firebaseAuthWithFacebook(loginResult.getAccessToken());
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.d(TAG, "onCancel: facebook cancel");
+                }
+
+                @Override
+                public void onError(FacebookException e) {
+                    Log.e(TAG, "onError: " + e.getMessage(), e.getCause());
+                }
+            });
         }
     }
 
@@ -157,29 +172,14 @@ public class LoginActivity extends BaseActivity {
         switch (requestCode) {
             case RC_SIGN_IN:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                handleSignInResult(result);
-                break;
-            case RC_GOOGLE_LOGIN:
-                if (mGoogleAccount.getEmail() != null)
-                    getGoogleOAuthTokenAndLogin();
+                if (result.isSuccess()) {
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    firebaseAuthWithGoogle(account);
+                }
                 break;
             case RC_FACEBOOK_LOGIN:
                 mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
                 break;
-        }
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult(): " + result.isSuccess());
-        if (result.isSuccess()) {
-            /* Signed in successfully with Google Account, get the Oauth Token */
-            mGoogleAccount = result.getSignInAccount();
-            getGoogleOAuthTokenAndLogin();
-        } else {
-//            showErrorToast(result.getStatus().toString());
-            mAuthProgressDialog.dismiss();
-            Log.e(TAG, "Status Code: " + result.getStatus().getStatusCode());
-            Log.e(TAG, "Status Message: " + result.getStatus().getStatus());
         }
     }
 
@@ -190,19 +190,44 @@ public class LoginActivity extends BaseActivity {
         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void loginWithOathToken(String provider, String token) {
-        mFirebaseRef.authWithOAuthToken(provider, token, new FireBaseAuthResultHandler(provider));
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
+        provider = ConstantsFirebase.GOOGLE_PROVIDER;
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        signInWithCredential(credential);
     }
 
-    private void setAuthenticatedWithOAuth(AuthData authData) {
+    private void firebaseAuthWithFacebook(AccessToken token) {
+        Log.d(TAG, "firebaseAuthWithFacebook: " + token);
+        provider = ConstantsFirebase.FACEBOOK_PROVIDER;
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        signInWithCredential(credential);
+    }
+
+    private void signInWithCredential(AuthCredential credential) {
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential: ", task.getException());
+                            Toast.makeText(LoginActivity.this, "Falha na autenticação", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void setAuthenticatedWithOAuth(FirebaseUser user) {
         final String unprocessedEmail, displayName, photoUrl;
 
-        unprocessedEmail = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_EMAIL).toString();
-        displayName = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_DISPLAY_NAME).toString();
-        photoUrl = authData.getProviderData().get(ConstantsFirebase.PROVIDER_DATA_PROFILE_IMAGE_URL).toString();
+        unprocessedEmail = user.getEmail();
+        displayName = user.getDisplayName();
+        photoUrl = user.getPhotoUrl().toString();
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
 
-        final Firebase userLocation = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS).child(mEncodedEmail);
+        final DatabaseReference userLocation = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
+                .child(mEncodedEmail);
         userLocation.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -210,152 +235,26 @@ public class LoginActivity extends BaseActivity {
                     final HashMap<String, Object> timestampJoined = new HashMap<>();
                     timestampJoined.put(ConstantsFirebase.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-                    OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
-                        @Override
-                        public void idsAvailable(String userId, String registrationId) {
-                            User user = new User(userId, displayName, mEncodedEmail, photoUrl, timestampJoined);
-                            userLocation.setValue(user);
-                        }
-                    });
+                    User user = new User(FirebaseInstanceId.getInstance().getToken(),
+                            displayName, mEncodedEmail, photoUrl, timestampJoined);
+                    userLocation.setValue(user);
                 }
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.d(TAG, getString(R.string.log_error_occurred) + firebaseError.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, getString(R.string.log_error_occurred) + databaseError.getMessage());
             }
         });
 
-        mSharedPrefEditor.putBoolean(Constants.KEY_PREF_NOTIFICATION, true);
         mSharedPrefEditor.putString(Constants.KEY_USER_EMAIL, unprocessedEmail).apply();
         mSharedPrefEditor.putString(Constants.KEY_USER_DISPLAY_NAME, displayName).apply();
         mSharedPrefEditor.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, photoUrl).apply();
 
         /* Save provider name and encodedEmail for later use and start MainActivity */
-        mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
+        mSharedPrefEditor.putString(Constants.KEY_PROVIDER, provider).apply();
         mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
-    }
 
-    /**
-     * Get GoogleOAuthToken
-     */
-    private void getGoogleOAuthTokenAndLogin() {
-        AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-            String mErrorMessage = null;
-
-            @Override
-            protected String doInBackground(Void... params) {
-                String token = null;
-
-                try {
-                    String scope = String.format(getString(R.string.oauth2_format), new Scope(Scopes.PROFILE)) + " email";
-
-                    token = GoogleAuthUtil.getToken(LoginActivity.this, mGoogleAccount.getEmail(), scope);
-                } catch (IOException transientEx) {
-                    /* Network or Server Error */
-                    Log.e(TAG, getString(R.string.google_error_auth_with_google) + transientEx);
-                    mErrorMessage = getString(R.string.google_error_network_error) + transientEx.getMessage();
-                } catch (UserRecoverableAuthException e) {
-                    Log.w(TAG, getString(R.string.google_error_recoverable_oauth_error) + e.toString());
-
-                    /* We probably need to ask for permissions, so start the intent if there is none pending */
-                    if (!mGoogleIntentInProgress) {
-                        mGoogleIntentInProgress = true;
-                        startActivityForResult(e.getIntent(), RC_GOOGLE_LOGIN);
-                    }
-                } catch (GoogleAuthException authEx) {
-                    Log.e(TAG, " " + authEx.getMessage(), authEx);
-                }
-                return token;
-            }
-
-            @Override
-            protected void onPostExecute(String token) {
-//                mAuthProgressDialog.dismiss();
-                if (token != null) {
-                    /* Successfully got OAuth token, now login with Google */
-                    Log.i(TAG, String.format("Token: %s", token));
-                    loginWithOathToken(ConstantsFirebase.GOOGLE_PROVIDER, token);
-                } else if (mErrorMessage != null) {
-                    showErrorToast(mErrorMessage);
-                }
-            }
-        };
-        task.execute();
-    }
-
-    private FacebookCallback<LoginResult> getFacebookOAuthTokenAndLogin() {
-        return new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(final LoginResult loginResult) {
-                // App code
-                mAuthProgressDialog.setMessage(getString(R.string.progress_dialog_authenticating_with, "Facebook"));
-                mAuthProgressDialog.show();
-                loginWithOathToken(ConstantsFirebase.FACEBOOK_PROVIDER, loginResult.getAccessToken().getToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "onCancel: facebook cancel");
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-                Log.e(TAG, "onError: " + e.getMessage(), e.getCause());
-            }
-        };
-    }
-
-    private class FireBaseAuthResultHandler implements Firebase.AuthResultHandler {
-
-        private final String provider;
-
-        private FireBaseAuthResultHandler(String provider) {
-            this.provider = provider;
-        }
-
-        /**
-         * On successful authentication call setAuthenticatedUser if it was not already
-         * called in
-         */
-        @Override
-        public void onAuthenticated(AuthData authData) {
-            Log.i(TAG, provider + " " + getString(R.string.log_message_auth_successful));
-
-            if (authData != null) {
-                /**
-                 * Verify if user logged with Google Account provider
-                 */
-                if (authData.getProvider().equals(ConstantsFirebase.GOOGLE_PROVIDER)) {
-                    setAuthenticatedWithOAuth(authData);
-                } else if (authData.getProvider().equals(ConstantsFirebase.FACEBOOK_PROVIDER)) {
-                    setAuthenticatedWithOAuth(authData);
-                } else {
-                    Log.e(TAG, getString(R.string.log_error_invalid_provider) + authData.getProvider());
-                }
-
-                /* Go to MainActivity */
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mAuthProgressDialog.dismiss();
-                startActivity(intent);
-                finish();
-            }
-        }
-
-        @Override
-        public void onAuthenticationError(FirebaseError firebaseError) {
-            mAuthProgressDialog.dismiss();
-            Log.e(TAG, "onAuthenticationError: " + firebaseError.getMessage());
-            switch (firebaseError.getCode()) {
-                case FirebaseError.USER_DOES_NOT_EXIST:
-                    break;
-                case FirebaseError.NETWORK_ERROR:
-                    showErrorToast(getString(R.string.error_message_failed_sign_in_no_network));
-                    break;
-                default:
-                    showErrorToast(firebaseError.toString());
-            }
-        }
+        FirebaseMessaging.getInstance().subscribeToTopic(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
     }
 }

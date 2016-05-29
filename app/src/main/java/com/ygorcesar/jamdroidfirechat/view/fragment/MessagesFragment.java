@@ -12,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.FragmentMessagesBinding;
 import com.ygorcesar.jamdroidfirechat.model.Message;
@@ -26,7 +27,7 @@ import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 import com.ygorcesar.jamdroidfirechat.view.activity.MainActivity;
-import com.ygorcesar.jamdroidfirechat.view.adapters.MessageItemAdapter;
+import com.ygorcesar.jamdroidfirechat.view.adapter.MessageItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageAdapterViewModelContract;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageFragmViewModel;
 import com.ygorcesar.jamdroidfirechat.viewmodel.MessageFragmViewModelContract;
@@ -41,12 +42,12 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
     private List<String> mUsersEmails;
     private List<Message> mMessages;
     private List<String> mKeys;
-    private Firebase mRefMessages;
-    private Firebase mRefUsers;
+    private DatabaseReference mRefMessages;
+    private DatabaseReference mRefUsers;
     private ChildEventListener childMessagesListener;
     private ValueEventListener valueUserListener;
     private String mChildChatKey;
-    private String mUserOneSignalID;
+    private String mFcmUserDeviceId;
     private FragmentMessagesBinding mFragmentMessagesBinding;
     private static final String TAG = "MessagesFragment";
 
@@ -57,9 +58,14 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
 
         if (getArguments() != null) {
             mChildChatKey = getArguments().getString(Constants.KEY_CHAT_CHILD, "");
-            mUserOneSignalID = getArguments().getString(Constants.KEY_USER_ONE_SIGNAL_ID, "");
-            getActivity().setTitle(getArguments()
-                    .getString(Constants.KEY_USER_DISPLAY_NAME, getString(R.string.app_name)));
+            mFcmUserDeviceId = getArguments().getString(Constants.KEY_USER_FCM_DEVICE_ID, "");
+
+            if (mFcmUserDeviceId.equals(ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL_TO)) {
+                getActivity().setTitle(ConstantsFirebase.CHAT_GLOBAL_HELPER);
+            } else {
+                getActivity().setTitle(getArguments()
+                        .getString(Constants.KEY_USER_DISPLAY_NAME, getString(R.string.app_name)));
+            }
         }
 
         initializeScreen();
@@ -103,8 +109,8 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
         String loggedUserName = preferences.getString(Constants.KEY_USER_DISPLAY_NAME, "");
 
         mFragmentMessagesBinding.rvMessage.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(getActivity(), this,
-                encodedMail, mChildChatKey, mUserOneSignalID, loggedUserName));
+        mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(this, encodedMail,
+                mChildChatKey, mFcmUserDeviceId, loggedUserName));
     }
 
     private void setupToolbar() {
@@ -128,12 +134,14 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             valueUserListener = createFirebaseUsersListeners();
             childMessagesListener = createFirebaseChatListener();
         }
-        mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL).child(ConstantsFirebase.FIREBASE_LOCATION_USERS);
+        mRefUsers = FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS);
         mRefUsers.keepSynced(true);
         mRefUsers.addValueEventListener(valueUserListener);
 
 
-        mRefMessages = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT).child(mChildChatKey);
+        mRefMessages = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
+                .child(mChildChatKey);
         mRefMessages.keepSynced(true);
         Query chatsRef = mRefMessages.orderByKey().limitToLast(50);
 
@@ -189,7 +197,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         };
@@ -210,7 +218,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
             }
         };
     }

@@ -2,31 +2,24 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
-    def versionMajor = 1
-    def versionMinor = 4
-    def versionPatch = 5
+    def versionMajor = 2
+    def versionMinor = 0
+    def versionPatch = 0
 
     dataBinding {
         enabled = true;
     }
 
     defaultConfig {
-        println "ONE_SIGNAL APP ID: ${onesignal_jamdroid_app_id}"
-        println "PROJECT NUMBER: ${onesignal_google_jamdroid_project_number}"
-
         applicationId "com.ygorcesar.jamdroidfirechat"
-        manifestPlaceholders = [manifestApplicationId          : "${applicationId}",
-                                onesignal_app_id               : onesignal_jamdroid_app_id,
-                                onesignal_google_project_number: onesignal_google_jamdroid_project_number]
-
         minSdkVersion 15
         targetSdkVersion 23
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
-        buildConfigField "String", "FIREBASE_ROOT_URL", DroidJamFireChatRootUrl
+        buildConfigField "String", "FCM_KEY", FirebaseCloudMessageKey
 
         resValue "string", "facebook_app_id", FacebookAppIdJamdroid
         resValue "string", "version", "Versão ${versionMajor}.${versionMinor}.${versionPatch}"
@@ -54,26 +47,32 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     /* Google Api and Libraries */
-    def googleVersion = '23.3.0'
+    def googleVersion = '23.4.0'
+    def firebaseVersion = '9.0.0'
+
     compile "com.android.support:appcompat-v7:${googleVersion}"
     compile "com.android.support:design:${googleVersion}"
     compile 'com.google.code.gson:gson:2.6.2'
 
     /* Google Play Services */
-    compile 'com.google.android.gms:play-services-auth:8.4.0'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-
-    /* OneSignal API */
-    compile 'com.onesignal:OneSignal:2.3.0'
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
 
     /* Facebook SDK*/
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
 
     /* Firebase SDK */
-    compile 'com.firebase:firebase-client-android:2.3.1'
+    compile "com.google.firebase:firebase-core:${firebaseVersion}"
+    compile "com.google.firebase:firebase-database:${firebaseVersion}"
+    compile "com.google.firebase:firebase-crash:${firebaseVersion}"
+    compile "com.google.firebase:firebase-auth:${firebaseVersion}"
+    compile "com.google.firebase:firebase-messaging:${firebaseVersion}"
 
     /* Picasso para download de imagens */
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    /* Retrofit para comunicação HTTP*/
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
     /* Circle ImageView */
     compile 'de.hdodenhof:circleimageview:2.0.0'

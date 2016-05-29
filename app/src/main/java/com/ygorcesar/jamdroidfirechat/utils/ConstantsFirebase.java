@@ -1,7 +1,5 @@
 package com.ygorcesar.jamdroidfirechat.utils;
 
-import com.ygorcesar.jamdroidfirechat.BuildConfig;
-
 public final class ConstantsFirebase {
 
     /**
@@ -12,14 +10,8 @@ public final class ConstantsFirebase {
     public static final String FIREBASE_LOCATION_CHAT = "chat";
     public static final String FIREBASE_LOCATION_CHAT_GLOBAL = "chatGlobal";
 
-    /**
-     * Constants para URLs Firebase
-     */
-    public static final String FIREBASE_URL = BuildConfig.FIREBASE_ROOT_URL;
-    public static final String FIREBASE_URL_USERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_USERS;
-    public static final String FIREBASE_URL_USER_FRIENDS = FIREBASE_URL + "/" + FIREBASE_LOCATION_USER_FRIENDS;
-    public static final String FIREBASE_URL_CHAT = FIREBASE_URL + "/" + FIREBASE_LOCATION_CHAT;
-    public static final String FIREBASE_URL_CHAT_GLOBAL = FIREBASE_URL_CHAT + "/" + FIREBASE_LOCATION_CHAT_GLOBAL;
+    public static final String FIREBASE_TOPIC_CHAT_GLOBAL_TO = "/topics/chatGlobal";
+    public static final String FIREBASE_TOPIC_CHAT_GLOBAL = "chatGlobal";
 
     /**
      * Constants para propriedades dos objetos Firebase
@@ -27,6 +19,7 @@ public final class ConstantsFirebase {
     public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_CHANGED = "timestampLastChanged";
     public static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
     public static final String FIREBASE_PROPERTY_EMAIL = "email";
+    public static final String FIREBASE_PROPERTY_USER_DEVICE_ID = "fcmUserDeviceId";
     public static final String FIREBASE_PROPERTY_USER_HAS_LOGGED_IN_WITH_PASSWORD = "hasLoggedInWithPassword";
     public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_CHANGED_REVERSE = "timestampLastChangedReverse";
 

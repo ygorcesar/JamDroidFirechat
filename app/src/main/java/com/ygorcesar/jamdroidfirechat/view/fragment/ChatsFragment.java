@@ -6,34 +6,32 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.FragmentChatsBinding;
 import com.ygorcesar.jamdroidfirechat.model.User;
-import com.ygorcesar.jamdroidfirechat.utils.AppNotificationContract;
-import com.ygorcesar.jamdroidfirechat.utils.AppNotificationOpenedHandler;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 import com.ygorcesar.jamdroidfirechat.view.activity.MainActivity;
-import com.ygorcesar.jamdroidfirechat.view.adapters.ChatsItemAdapter;
+import com.ygorcesar.jamdroidfirechat.view.adapter.ChatsItemAdapter;
 import com.ygorcesar.jamdroidfirechat.viewmodel.ChatsViewModelContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatsFragment extends Fragment implements ChatsViewModelContract, AppNotificationContract {
-    private Firebase mRefUsers;
+public class ChatsFragment extends Fragment implements ChatsViewModelContract {
+    private DatabaseReference mRefUsers;
     private List<User> mUsers;
     private ValueEventListener mValueUserListener;
     private String mEncodedMail;
@@ -44,11 +42,11 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentChatsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_chats, container, false);
 
-        if (Utils.getAditionalData() != null) {
-            moveToMessagesFragment(Utils.getAditionalData().getChatKey(),
-                    Utils.getAditionalData().getUserName(),
-                    Utils.getAditionalData().getUserOneSignalId());
-            Utils.setAditionalData(null);
+        if (Utils.getAdditionalData() != null) {
+            moveToMessagesFragment(Utils.getAdditionalData().getCHAT_KEY(),
+                    Utils.getAdditionalData().getUSER_DISPLAY_NAME(),
+                    Utils.getAdditionalData().getUSER_FCM_DEVICE_ID_SENDER());
+            Utils.setAdditionalData(null);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -62,13 +60,11 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
         super.onStart();
         initializeFirebase();
         getActivity().setTitle(getString(R.string.app_name));
-        AppNotificationOpenedHandler.getInstance().setNotificationContract(this);
     }
 
     @Override public void onStop() {
         super.onStop();
         removeFirebaseListeners();
-        AppNotificationOpenedHandler.getInstance().removeListener();
     }
 
     private void initializeScreen(RecyclerView rvUsers) {
@@ -82,7 +78,8 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
         if (mValueUserListener == null) {
             mValueUserListener = createUserValueListener();
         }
-        mRefUsers = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS);
+        mRefUsers = FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS);
+        mRefUsers.keepSynced(true);
         mRefUsers.addValueEventListener(mValueUserListener);
     }
 
@@ -112,7 +109,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         };
@@ -121,14 +118,12 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
     /**
      * Move para o fragment do chat para realizar troca de mensagens
      *
-     * @param chatKey
-     * @param friendName
      */
-    public void moveToMessagesFragment(String chatKey, String friendName, String userOneSignalId) {
+    public void moveToMessagesFragment(String chatKey, String friendName, String fcmKeyId) {
         Bundle args = new Bundle();
         args.putString(Constants.KEY_CHAT_CHILD, chatKey);
         args.putString(Constants.KEY_USER_DISPLAY_NAME, friendName);
-        args.putString(Constants.KEY_USER_ONE_SIGNAL_ID, userOneSignalId);
+        args.putString(Constants.KEY_USER_FCM_DEVICE_ID, fcmKeyId);
         MessagesFragment fragment = new MessagesFragment();
         fragment.setArguments(args);
 
@@ -145,13 +140,5 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract, A
         if (mValueUserListener != null) {
             mRefUsers.removeEventListener(mValueUserListener);
         }
-    }
-
-    @Override public void showNotificationInApp(String userName, String msg) {
-        new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_message_notification_blue)
-                .setTitle(getString(R.string.dialog_title_new_message))
-                .setMessage(getString(R.string.dialog_msg_user_says, userName, msg))
-                .show();
     }
 }

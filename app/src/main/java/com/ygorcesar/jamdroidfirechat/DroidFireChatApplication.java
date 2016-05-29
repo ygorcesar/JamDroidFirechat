@@ -1,9 +1,10 @@
 package com.ygorcesar.jamdroidfirechat;
 
+import android.util.Log;
+
 import com.facebook.FacebookSdk;
-import com.firebase.client.Firebase;
-import com.onesignal.OneSignal;
-import com.ygorcesar.jamdroidfirechat.utils.AppNotificationOpenedHandler;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class DroidFireChatApplication extends android.app.Application {
 
@@ -11,16 +12,12 @@ public class DroidFireChatApplication extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-         /* Inicializando Firebase junto com a aplicação*/
-        Firebase.setAndroidContext(this);
-        Firebase.getDefaultConfig().setPersistenceEnabled(true);
+        if (!FirebaseApp.getApps(this).isEmpty()) {
+            Log.d("FIREBASE", "Enabling persinstence!");
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
 
         /* Initialize Facebook SDK*/
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-        /* Initialize OneSignal API */
-        OneSignal.startInit(this)
-                .setNotificationOpenedHandler(AppNotificationOpenedHandler.getInstance())
-                .init();
     }
 }

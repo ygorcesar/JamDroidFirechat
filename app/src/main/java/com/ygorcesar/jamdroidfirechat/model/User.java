@@ -3,7 +3,7 @@ package com.ygorcesar.jamdroidfirechat.model;
 import java.util.HashMap;
 
 public class User {
-    private String oneSignalUserId;
+    private String fcmUserDeviceId;
     private String name;
     private String email;
     private String photoUrl;
@@ -13,9 +13,9 @@ public class User {
     public User() {
     }
 
-    public User(String oneSignalUserId, String name, String email, String photoUrl,
+    public User(String fcmUserDeviceId, String name, String email, String photoUrl,
                 HashMap<String, Object> timestampJoined) {
-        this.oneSignalUserId = oneSignalUserId;
+        this.fcmUserDeviceId = fcmUserDeviceId;
         this.name = name;
         this.email = email;
         this.photoUrl = photoUrl;
@@ -23,8 +23,8 @@ public class User {
         this.hasLoggedInWithPassword = false;
     }
 
-    public String getOneSignalUserId() {
-        return oneSignalUserId;
+    public String getFcmUserDeviceId() {
+        return fcmUserDeviceId;
     }
 
     public String getName() {

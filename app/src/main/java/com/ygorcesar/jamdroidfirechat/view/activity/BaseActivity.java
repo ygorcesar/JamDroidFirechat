@@ -9,25 +9,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.facebook.login.LoginManager;
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.onesignal.OneSignal;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
 public abstract class BaseActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, BaseActivitySessionContract {
-    private final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = "BaseActivity";
     protected String mProvider, mEncodedEmail;
     protected GoogleApiClient mGoogleApiClient;
-    protected Firebase.AuthStateListener mAuthListener;
-    protected Firebase mFireBaseRef;
+    protected FirebaseAuth.AuthStateListener mAuthListener;
+    protected FirebaseAuth mFirebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +43,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
         mProvider = sp.getString(Constants.KEY_PROVIDER, null);
 
         if (!(this instanceof LoginActivity)) {
-            mFireBaseRef = new Firebase(ConstantsFirebase.FIREBASE_URL);
-            mAuthListener = new Firebase.AuthStateListener() {
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
-                public void onAuthStateChanged(AuthData authData) {
-                     /* The user has been logged out */
-                    if (authData == null) {
-                        OneSignal.setSubscription(false);
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    /* The user has been logged out */
+                    if (user == null) {
                         takeUserToLoginScreenOnUnAuth();
-                    } else {
-                        OneSignal.setSubscription(true);
+                        FirebaseMessaging.getInstance()
+                                .unsubscribeFromTopic(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
                     }
                 }
             };
-            mFireBaseRef.addAuthStateListener(mAuthListener);
+            mFirebaseAuth.addAuthStateListener(mAuthListener);
         }
     }
 
@@ -69,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
      */
     private void setupGoogleApiClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.google_web_oauth_client_id))
                 .requestEmail()
                 .build();
 
@@ -82,9 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
      * Desconecta a conta google do app
      */
     public void logout() {
+        mFirebaseAuth.signOut();
         if (mProvider != null) {
-            mFireBaseRef.unauth();
-
             if (mProvider.equals(ConstantsFirebase.GOOGLE_PROVIDER)) {
                 /* Logout from Google Account */
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -108,9 +110,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
      */
     @Override
     public void revokeAccess() {
+        mFirebaseAuth.signOut();
         if (mProvider != null) {
-            mFireBaseRef.unauth();
-
             if (mProvider.equals(ConstantsFirebase.GOOGLE_PROVIDER)) {
                 /* Revoke access from Google Account. */
                 if (mGoogleApiClient.isConnected()) {

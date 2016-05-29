@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ygorcesar.jamdroidfirechat.R;
+import com.ygorcesar.jamdroidfirechat.utils.Singleton;
 import com.ygorcesar.jamdroidfirechat.view.fragment.ChatsFragment;
 
 public class MainActivity extends BaseActivity {
@@ -21,6 +22,8 @@ public class MainActivity extends BaseActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        Singleton.getInstance().clearMessagesAndNumber();
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

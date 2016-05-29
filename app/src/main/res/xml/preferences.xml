@@ -3,6 +3,7 @@
                   android:fragment="com.ygorcesar.jamdroidfirechat.view.activity.PrefsActivity">
 
     <SwitchPreference
+        android:defaultValue="true"
         android:icon="@drawable/ic_message_notification_blue"
         android:key="@string/pref_key_notification"
         android:title="@string/pref_notification"/>

@@ -2,6 +2,7 @@
     <string name="app_name">JamDroidFirechat</string>
     <string name="action_settings">Configurações</string>
     <string name="chat_global">Global</string>
+    <string name="google_web_oauth_client_id">540780416705-7gbh4er9f5q1i4l74o6arndl9lh7l6oa.apps.googleusercontent.com</string>
 
     <string name="json_push_notification">{\'include_player_ids\': [\'%1$s\'], \'headings\': {\'en\':\'%2$s\'}, \'contents\': {\'en\':\'%3$s\'}, \'android_accent_color\': \'FF4081\', \'android_group\': \'chat_msg\', \'data\': %4$s}</string>
 
@@ -61,4 +62,9 @@
     <string name="dialog_title_licenses">Licenças</string>
     <string name="dialog_title_new_message">Nova Mensagem</string>
     <string name="dialog_msg_user_says">%1$s, diz: %2$s</string>
+
+    <plurals name="not_new_message">
+        <item quantity="one">%d nova mensagem:</item>
+        <item quantity="other">%d novas mensagens:</item>
+    </plurals>
 </resources>

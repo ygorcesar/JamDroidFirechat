@@ -3,10 +3,10 @@ package com.ygorcesar.jamdroidfirechat.viewmodel;
 import android.util.Log;
 import android.view.View;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
@@ -32,25 +32,27 @@ public class ChatsViewModel extends BaseChatViewModel {
     public void getChatKey(final User user) {
         if (user.getEmail().equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
             mContract.moveToMessagesFragment(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
-                    ConstantsFirebase.CHAT_GLOBAL_HELPER, "");
+                    ConstantsFirebase.CHAT_GLOBAL_HELPER, ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL_TO);
         } else {
-            Firebase ref = new Firebase(ConstantsFirebase.FIREBASE_URL_USER_FRIENDS);
-            ref.child(mLoggedUserEmail).child(user.getEmail())
+            FirebaseDatabase.getInstance()
+                    .getReference(ConstantsFirebase.FIREBASE_LOCATION_USER_FRIENDS)
+                    .child(mLoggedUserEmail)
+                    .child(user.getEmail())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                                 String chatKey = dataSnapshot.getValue().toString();
-                                mContract.moveToMessagesFragment(chatKey, user.getName(), user.getOneSignalUserId());
+                                mContract.moveToMessagesFragment(chatKey, user.getName(), user.getFcmUserDeviceId());
                             } else {
                                 mContract.moveToMessagesFragment(createChat(user.getEmail()),
-                                        user.getName(), user.getOneSignalUserId());
+                                        user.getName(), user.getFcmUserDeviceId());
                             }
                         }
 
                         @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-                            Log.d(TAG, "onCancelled: " + firebaseError.getMessage());
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d(TAG, "onCancelled: " + databaseError.getMessage());
                         }
                     });
         }
@@ -63,12 +65,14 @@ public class ChatsViewModel extends BaseChatViewModel {
      * @return
      */
     private String createChat(String userEmail) {
-        Firebase ref = new Firebase(ConstantsFirebase.FIREBASE_URL_CHAT);
-        ref = ref.push();
+        String chatKey = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
+                .push()
+                .getKey();
 
-        makeFriends(mLoggedUserEmail, userEmail, ref.getKey());
-        makeFriends(userEmail, mLoggedUserEmail, ref.getKey());
-        return ref.getKey();
+        makeFriends(mLoggedUserEmail, userEmail, chatKey);
+        makeFriends(userEmail, mLoggedUserEmail, chatKey);
+        return chatKey;
     }
 
     /**
@@ -80,7 +84,8 @@ public class ChatsViewModel extends BaseChatViewModel {
      * @param key
      */
     private void makeFriends(String userEmail, String userFriend, String key) {
-        Firebase ref = new Firebase(ConstantsFirebase.FIREBASE_URL_USER_FRIENDS);
-        ref.child(userEmail).child(userFriend).setValue(key);
+        FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USER_FRIENDS)
+                .child(userEmail).child(userFriend).setValue(key);
     }
 }

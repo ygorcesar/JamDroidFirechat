@@ -5,12 +5,10 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.ygorcesar.jamdroidfirechat.R;
 
 public class Utils {
-    private static AditionalNotificationData aditionalData;
+    private static PushNotificationObject.AdditionalData additionalData;
 
     /**
      * Encoda o email pois os paths do Firebase não podem conter: '.', '#', '$', '[', ou ']'
@@ -47,17 +45,12 @@ public class Utils {
                 .into(imageView);
     }
 
-    public static String generateNotificationJson(Context context, String msg, AditionalNotificationData aditionalData) {
-        return context.getString(R.string.json_push_notification,
-                aditionalData.getUserOneSignalId(), aditionalData.getUserName(), msg, new Gson().toJson(aditionalData));
+    public static PushNotificationObject.AdditionalData getAdditionalData() {
+        return additionalData;
     }
 
-    public static AditionalNotificationData getAditionalData() {
-        return aditionalData;
-    }
-
-    public static void setAditionalData(AditionalNotificationData aditionalData) {
-        Utils.aditionalData = aditionalData;
+    public static void setAdditionalData(PushNotificationObject.AdditionalData additionalData) {
+        Utils.additionalData = additionalData;
     }
 
     public static void animateScaleXY(View view, int delay, long duration) {

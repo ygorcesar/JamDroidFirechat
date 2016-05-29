@@ -13,9 +13,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.onesignal.OneSignal;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
@@ -63,12 +64,21 @@ public class PrefsActivity extends BaseActivity {
                     boolean notificationStatus = preference.getSharedPreferences()
                             .getBoolean(Constants.KEY_PREF_NOTIFICATION, true);
 
-                    OneSignal.setSubscription(notificationStatus);
+                    preference.getEditor()
+                            .putBoolean(Constants.KEY_PREF_NOTIFICATION, notificationStatus)
+                            .commit();
                     Toast.makeText(this.getActivity(),
                             getString(R.string.msg_notification_status_changed, notificationStatus ?
                                     getString(R.string.msg_notification_status_active) :
                                     getString(R.string.msg_notification_status_disable)),
                             Toast.LENGTH_SHORT).show();
+
+                    FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+                    if (notificationStatus) {
+                        firebaseMessaging.subscribeToTopic(ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL);
+                    } else {
+                        firebaseMessaging.unsubscribeFromTopic(ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL);
+                    }
                     break;
                 case Constants.KEY_PREF_GITHUB:
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -120,14 +130,14 @@ public class PrefsActivity extends BaseActivity {
             Toast.makeText(PrefsFragment.this.getActivity(),
                     getString(R.string.msg_account_deleted),
                     Toast.LENGTH_SHORT).show();
-
             ((BaseActivity) getActivity()).revokeAccess();
-            Firebase refUserAccount = new Firebase(ConstantsFirebase.FIREBASE_URL_USERS).child(encodedEmail);
-            refUserAccount.removeValue(new Firebase.CompletionListener() {
+            DatabaseReference refUserAccount = FirebaseDatabase.getInstance()
+                    .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
+                    .child(encodedEmail);
+            refUserAccount.removeValue(new DatabaseReference.CompletionListener() {
                 @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    new Firebase(ConstantsFirebase.FIREBASE_URL_USER_FRIENDS)
-                            .child(encodedEmail).removeValue();
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    databaseReference.removeValue();
                 }
             });
         }
