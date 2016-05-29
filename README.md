@@ -1,4 +1,4 @@
-**![JamDroidFirechat logo](https://yydsig.dm2303.livefilestore.com/y3mOT5vMitWd-vV8AEfIMgpop83vOlk7Y66jGnATblkUHQBni7rKwbEMQZ0qBSqRfTKgSqhRkutDeD8IZafgshbygA2c0WUq0uC-psNVFyDYwlTaL4J3ur5BxcvCWAGaIKh988WL3CD8aqvpxvge_2XJuUFXcpk0wjzsnCPPD42jpc/jamdroid.png?psid=1)JamDroidFirechat**
+**![JamDroidFirechat logo](https://yydsig.dm2303.livefilestore.com/y3p4l_lCAx3W9zg5f9yZlsGV0gy_U_eOSOnn1IP2bPIc9dGV3mQlIJxuCYEZphcstV3w-82e3gR_6hk1SzSKR6h6VeBNbnLH4YhoL_XI3E7eGTqIFmmTm6NAGDgLEZsvC4Ria1mrbSCvsm-cqUtqfuKEbdNEgvwdLH5qqe5Wsr3N78/jamdroid.png?psid=1)JamDroidFirechat**
 ==================
 [![Google Play Link](https://wiawzw.dm2303.livefilestore.com/y3mtKZ3wP8EEfBG_bOMV6KINTP_9T4PvSHSoQHHfUSG7cSncEakPeCK0nDU1vXDXX0FLq_8DQAaIMXPGGUwcS7eOMWzDtxBNgcsotgeT2kF05LyC2IgHNRqHwBRruP4c3U6-_wrxQmFWUJjKtr-GbwzO2zvFhsFcuRjOIszTX5SUNU/google_play_logo.png?psid=1)
 ](https://play.google.com/store/apps/details?id=com.ygorcesar.jamdroidfirechat)
