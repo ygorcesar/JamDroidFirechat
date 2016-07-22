@@ -34,4 +34,11 @@ public final class ConstantsFirebase {
     public static final String PROVIDER_DATA_PROFILE_IMAGE_URL = "profileImageURL";
 
     public static final String CHAT_GLOBAL_HELPER = "Global";
+
+    /**
+     * Messages Types
+     */
+    public static final int MESSAGE_TYPE_TEXT = 0;
+    public static final int MESSAGE_TYPE_IMAGE = 1;
+    public static final int MESSAGE_TYPE_LOCATION = 2;
 }

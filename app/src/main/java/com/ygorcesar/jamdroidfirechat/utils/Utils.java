@@ -1,11 +1,20 @@
 package com.ygorcesar.jamdroidfirechat.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewAnimationUtils;
 
-import com.squareup.picasso.Picasso;
+import java.io.IOException;
 
 public class Utils {
     private static PushNotificationObject.AdditionalData additionalData;
@@ -30,21 +39,6 @@ public class Utils {
         return userEmail.replace(",", ".");
     }
 
-
-    /**
-     * Utilizando Librarie Picasso para carregar imagens em imageview
-     *
-     * @param context
-     * @param imageView
-     * @param url
-     * @param idPlaceHolder
-     */
-    public static void loadImageWithPicasso(Context context, ImageView imageView, String url, int idPlaceHolder) {
-        Picasso.with(context).load(url)
-                .placeholder(idPlaceHolder)
-                .into(imageView);
-    }
-
     public static PushNotificationObject.AdditionalData getAdditionalData() {
         return additionalData;
     }
@@ -63,5 +57,123 @@ public class Utils {
                 .setStartDelay(delay)
                 .setDuration(duration)
                 .start();
+    }
+
+    public static void animateFadeIn(final View view, int delay, long duration) {
+        view.setAlpha(0f);
+        view.animate()
+                .alpha(1f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setStartDelay(delay)
+                .setDuration(duration)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override public void onAnimationStart(Animator animator) {
+                        view.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override public void onAnimationEnd(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationRepeat(Animator animator) {
+
+                    }
+                })
+                .start();
+
+    }
+
+    public static void animateFadeOut(final View view, int delay, long duration) {
+        view.setAlpha(1f);
+        view.animate()
+                .alpha(0f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setStartDelay(delay)
+                .setDuration(duration)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationEnd(Animator animator) {
+                        view.setVisibility(View.GONE);
+                    }
+
+                    @Override public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationRepeat(Animator animator) {
+
+                    }
+                })
+                .start();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void enterCircularReveal(View v) {
+        int cx = v.getMeasuredWidth() / 2;
+        int cy = v.getMeasuredHeight() / 2;
+
+        int finalRadius = Math.max(v.getWidth(), v.getHeight()) / 2;
+        Animator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
+        v.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void exitCircularReveal(final View v) {
+        int cx = v.getMeasuredWidth() / 2;
+        int cy = v.getMeasuredHeight() / 2;
+
+        int initialRadius = v.getWidth() / 2;
+        Animator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                v.setVisibility(View.INVISIBLE);
+            }
+        });
+        anim.start();
+    }
+
+    public static Bitmap getBitmapFromUri(Context context, String uri) throws IOException {
+        return MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(uri));
+    }
+
+    public static Bitmap getScaledBitmap(Bitmap bitmap, int maxSize) {
+        float ratio = Math.min(
+                (float) maxSize / bitmap.getWidth(),
+                (float) maxSize / bitmap.getHeight());
+        int width = Math.round(ratio * bitmap.getWidth());
+        int height = Math.round(ratio * bitmap.getHeight());
+        return Bitmap.createScaledBitmap(bitmap, width, height, false);
+    }
+
+    public static String[] getSharedType(String content, Bundle args) {
+        String[] s = new String[4];
+        switch (content) {
+            case Intent.EXTRA_TEXT:
+                s[Constants.ARGS_POS_SHARED] = args.getString(Intent.EXTRA_TEXT);
+                s[Constants.ARGS_POS_TYPE] = Intent.EXTRA_TEXT;
+                break;
+            case Intent.EXTRA_STREAM:
+                s[Constants.ARGS_POS_SHARED] = args.getString(Intent.EXTRA_STREAM);
+                s[Constants.ARGS_POS_TYPE] = Intent.EXTRA_STREAM;
+                break;
+            case Constants.EXTRA_LOCATION:
+                s[Constants.ARGS_POS_SHARED] = args.getString(Constants.EXTRA_LOCATION);
+                s[Constants.ARGS_POS_TYPE] = Constants.EXTRA_LOCATION;
+                s[Constants.ARGS_POS_LATITUDE] = args.getString(Constants.KEY_SHARED_LATITUDE, "");
+                s[Constants.ARGS_POS_LONGITUDE] = args.getString(Constants.KEY_SHARED_LONGITUDE, "");
+                break;
+        }
+        return s;
     }
 }

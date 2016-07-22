@@ -3,8 +3,21 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".view.activity.MainActivity">
 
-    <item android:id="@+id/action_settings"
+    <item
+        android:id="@+id/action_attach"
+        android:icon="@drawable/ic_attach"
+        android:title="@string/action_attach"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_invite"
+        android:title="@string/action_invite"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
         android:title="@string/action_settings"
-        app:showAsAction="ifRoom"
-          android:icon="@drawable/ic_settings"/>
+        app:showAsAction="never"/>
 </menu>

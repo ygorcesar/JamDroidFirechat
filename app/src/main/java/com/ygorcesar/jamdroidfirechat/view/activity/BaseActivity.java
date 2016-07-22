@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.greysonparrelli.permiso.Permiso;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
@@ -36,6 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setupGoogleApiClient();
+
+        Permiso.getInstance().setActivity(this);
 
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(BaseActivity.this);
         /* Get mEncodedEmail and mProvider from SharedPreferences, use null as default value */
@@ -145,5 +148,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
     }
 }

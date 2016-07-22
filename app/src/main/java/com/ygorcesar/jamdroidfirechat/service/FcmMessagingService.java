@@ -29,42 +29,83 @@ import java.util.List;
 
 public class FcmMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FcmMessagingService";
-
+    private long[] pattern = {300, 300, 300, 300, 300};
 
     @Override public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Push message received!");
-        String userName = remoteMessage.getData().get(Constants.KEY_USER_DISPLAY_NAME);
-        String userEmail = remoteMessage.getData().get(Constants.KEY_USER_EMAIL);
-        String chatKey = remoteMessage.getData().get(Constants.KEY_CHAT_KEY);
-        String deviceId = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID);
-        String deviceIdSender = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID_SENDER);
-        String title = remoteMessage.getData().get("TITLE");
-        String msg = remoteMessage.getData().get("MSG");
+        if (remoteMessage.getNotification() != null) {
+            sendDefaultNotification(remoteMessage.getNotification().getTitle(),
+                    remoteMessage.getNotification().getBody());
+        } else {
+            String userName = remoteMessage.getData().get(Constants.KEY_USER_DISPLAY_NAME);
+            String userEmail = remoteMessage.getData().get(Constants.KEY_USER_EMAIL);
+            String chatKey = remoteMessage.getData().get(Constants.KEY_CHAT_KEY);
+            String deviceId = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID);
+            String deviceIdSender = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID_SENDER);
+            String title = remoteMessage.getData().get("TITLE");
+            String msg = remoteMessage.getData().get("MSG");
 
-        if (chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
-            title = String.format("%s- %s", title, ConstantsFirebase.CHAT_GLOBAL_HELPER);
-        }
+            if (chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
+                title = String.format("%s- %s", title, ConstantsFirebase.CHAT_GLOBAL_HELPER);
+            }
 
-        boolean notificationIsActive = PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(Constants.KEY_PREF_NOTIFICATION, false);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null && notificationIsActive) {
-            if (!auth.getCurrentUser().getEmail().equals(Utils.decodeEmail(userEmail))) {
-                Utils.setAdditionalData(new PushNotificationObject
-                        .AdditionalData(title, msg, chatKey, userName, userEmail, deviceId, deviceIdSender));
-                sendNotification(title, msg);
-                Log.d(TAG, "Showing notifcation");
+            boolean notificationIsActive = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getBoolean(Constants.KEY_PREF_NOTIFICATION, false);
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null && notificationIsActive) {
+                if (!auth.getCurrentUser().getEmail().equals(Utils.decodeEmail(userEmail))) {
+                    Utils.setAdditionalData(new PushNotificationObject
+                            .AdditionalData(title, msg, chatKey, userName, userEmail, deviceId, deviceIdSender));
+                    sendNotification(title, msg);
+                    Log.d(TAG, "Showing notifcation");
+                }
             }
         }
     }
 
+    private void sendDefaultNotification(String messageTitle, String messageBody) {
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Bitmap largerIcon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_notification_large_default);
+
+        Notification notification;
+        if (messageTitle != null && !messageTitle.isEmpty()) {
+            notification = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_notification_stat_default)
+                    .setLargeIcon(largerIcon)
+                    .setContentTitle(messageTitle)
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setVibrate(pattern)
+                    .setColor(getResources().getColor(R.color.colorAccent))
+                    .setLights(Color.BLUE, 1, 1)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(createPendingIntent())
+                    .setGroupSummary(true)
+                    .build();
+        } else {
+            notification = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_notification_stat_default)
+                    .setLargeIcon(largerIcon)
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setVibrate(pattern)
+                    .setColor(getResources().getColor(R.color.colorAccent))
+                    .setLights(Color.BLUE, 1, 1)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(createPendingIntent())
+                    .setGroupSummary(true)
+                    .build();
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
+
     private void sendNotification(String messageTitle, String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final String GROUP_KEY_MESSAGES = "chat_key_messages";
-        long[] pattern = {300, 300, 300, 300, 300};
         int numMessages = Singleton.getInstance().getNumMessages();
         List<String> messages = Singleton.getInstance().getNotificationMessages();
         Singleton.getInstance().addMessage(messageBody);
@@ -91,15 +132,21 @@ public class FcmMessagingService extends FirebaseMessagingService {
                 .setVibrate(pattern)
                 .setStyle(inboxStyle)
                 .setNumber(numMessages)
-                .setColor(getColor(R.color.colorAccent))
+                .setColor(getResources().getColor(R.color.colorAccent))
                 .setLights(Color.BLUE, 1, 1)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
+                .setContentIntent(createPendingIntent())
                 .setGroup(GROUP_KEY_MESSAGES)
                 .setGroupSummary(true)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
+    }
+
+    private PendingIntent createPendingIntent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

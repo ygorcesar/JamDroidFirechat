@@ -210,6 +210,7 @@ public class LoginActivity extends BaseActivity {
                     @Override public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
+                            mAuthProgressDialog.dismiss();
                             Log.w(TAG, "signInWithCredential: ", task.getException());
                             Toast.makeText(LoginActivity.this, "Falha na autenticação", Toast.LENGTH_SHORT).show();
                         }
@@ -238,6 +239,9 @@ public class LoginActivity extends BaseActivity {
                     User user = new User(FirebaseInstanceId.getInstance().getToken(),
                             displayName, mEncodedEmail, photoUrl, timestampJoined);
                     userLocation.setValue(user);
+                } else {
+                    userLocation.child(ConstantsFirebase.FIREBASE_PROPERTY_USER_DEVICE_ID)
+                            .setValue(FirebaseInstanceId.getInstance().getToken());
                 }
             }
 
@@ -254,6 +258,7 @@ public class LoginActivity extends BaseActivity {
         /* Save provider name and encodedEmail for later use and start MainActivity */
         mSharedPrefEditor.putString(Constants.KEY_PROVIDER, provider).apply();
         mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
+        mSharedPrefEditor.putBoolean(Constants.KEY_PREF_NOTIFICATION,true).apply();
 
         FirebaseMessaging.getInstance().subscribeToTopic(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
     }

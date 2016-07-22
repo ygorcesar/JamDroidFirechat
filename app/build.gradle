@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion '24.0.1'
 
     def versionMajor = 2
-    def versionMinor = 0
+    def versionMinor = 1
     def versionPatch = 0
 
     dataBinding {
@@ -15,17 +15,18 @@ android {
     defaultConfig {
         applicationId "com.ygorcesar.jamdroidfirechat"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         buildConfigField "String", "FCM_KEY", FirebaseCloudMessageKey
 
         resValue "string", "facebook_app_id", FacebookAppIdJamdroid
+        resValue "string", "jamdroid_google_app_id", GoogleConsoleAppIdJamdroid
         resValue "string", "version", "Versão ${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
-        debug {
+         debug {
             versionNameSuffix "-debug"
         }
 
@@ -43,19 +44,20 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
 
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
     /* Google Api and Libraries */
-    def googleVersion = '23.4.0'
-    def firebaseVersion = '9.0.0'
+    def googleVersion = '24.1.0'
+    def firebaseVersion = '9.2.1'
 
     compile "com.android.support:appcompat-v7:${googleVersion}"
     compile "com.android.support:design:${googleVersion}"
     compile 'com.google.code.gson:gson:2.6.2'
 
     /* Google Play Services */
-    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-auth:9.2.1'
+    compile 'com.google.android.gms:play-services-places:9.2.1'
 
     /* Facebook SDK*/
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
@@ -66,9 +68,13 @@ dependencies {
     compile "com.google.firebase:firebase-crash:${firebaseVersion}"
     compile "com.google.firebase:firebase-auth:${firebaseVersion}"
     compile "com.google.firebase:firebase-messaging:${firebaseVersion}"
+    compile "com.google.firebase:firebase-storage:${firebaseVersion}"
+    compile "com.google.firebase:firebase-invites:${firebaseVersion}"
+
+    compile 'com.firebaseui:firebase-ui-database:0.4.3'
 
     /* Picasso para download de imagens */
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     /* Retrofit para comunicação HTTP*/
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
@@ -76,6 +82,11 @@ dependencies {
 
     /* Circle ImageView */
     compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    compile 'com.flipboard:bottomsheet-core:1.5.1'
+    compile 'com.flipboard:bottomsheet-commons:1.5.1'
+
+    compile 'com.greysonparrelli.permiso:permiso:0.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

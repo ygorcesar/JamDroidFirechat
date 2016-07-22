@@ -62,6 +62,24 @@
     <string name="dialog_title_licenses">Licenças</string>
     <string name="dialog_title_new_message">Nova Mensagem</string>
     <string name="dialog_msg_user_says">%1$s, diz: %2$s</string>
+    <string name="progress_dialog_uploading">Enviando Imagem...</string>
+    <string name="msg_permission_required">É necessário dar permissão para esta ação!</string>
+    <string name="dialog_title_select_image">Escolha uma imagem...</string>
+    <string name="msg_info_send_success">Enviado com sucesso!</string>
+    <string name="msg_info_send_failed">Ocorreu erro ao enviar!</string>
+    <string name="action_invite">Convide</string>
+    <string name="invitation_title">Compartilhe JamdroidFirechat</string>
+    <string name="invitation_message">Olá, venha conhecer o JamdroidFirechat, um app de chat realtime e o mais legal é opensource.</string>
+    <string name="invitation_call_action">Acessar</string>
+    <string name="action_attach">Media</string>
+    <string name="menu_action_location">Localização</string>
+    <string name="menu_action_gallery">Galeria</string>
+    <string name="menu_action_camera">Camera</string>
+
+    <string name="map_static_url"><![CDATA[http://maps.google.com/maps/api/staticmap?markers=%1$s,%2$s&zoom=15&size=360x360&scale=2]]></string>
+    <string name="map_location_intent">geo:%1$s,%2$s?q=%3$s,%4$s</string>
+    <string name="notification_msg_image">Enviou uma nova imagem</string>
+    <string name="notification_msg_location">Lhe enviou uma localização</string>
 
     <plurals name="not_new_message">
         <item quantity="one">%d nova mensagem:</item>

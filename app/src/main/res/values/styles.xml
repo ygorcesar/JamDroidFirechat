@@ -39,5 +39,4 @@
         <item name="android:layout_marginRight">@dimen/item_user_photo_margin_h</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
-
 </resources>

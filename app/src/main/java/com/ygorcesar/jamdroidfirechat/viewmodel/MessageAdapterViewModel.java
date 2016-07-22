@@ -2,9 +2,12 @@ package com.ygorcesar.jamdroidfirechat.viewmodel;
 
 import android.view.View;
 
+import com.ygorcesar.jamdroidfirechat.R;
+import com.ygorcesar.jamdroidfirechat.model.MapLocation;
 import com.ygorcesar.jamdroidfirechat.model.Message;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
+import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -31,6 +34,14 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
         return mMessage.getMessage();
     }
 
+    public int getType(){
+        return mMessage.getType();
+    }
+
+    public MapLocation getMapLocation(){
+        return mMessage.getMapLocation();
+    }
+
     /**
      * Transformando o timestamp do servidor para TimeZone padrão do Aparelho
      *
@@ -49,6 +60,23 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
     }
 
     public void onItemClick(View view) {
-        mMessageAdapterViewModelContract.onMessageItemClick(mUser);
+        switch (view.getId()){
+            case R.id.iv_item_user_photo_sender:
+                mMessageAdapterViewModelContract.onMessageItemClick(mUser, view.getId());
+                break;
+            case R.id.tv_item_user_email:
+                mMessageAdapterViewModelContract.onMessageItemClick(mUser, view.getId());
+                break;
+            case R.id.iv_image:
+                switch (mMessage.getType()){
+                    case ConstantsFirebase.MESSAGE_TYPE_IMAGE:
+                        mMessageAdapterViewModelContract.onMessageItemClick(mMessage.getMessage(), view);
+                        break;
+                    case ConstantsFirebase.MESSAGE_TYPE_LOCATION:
+                        mMessageAdapterViewModelContract.onMessageLocationClick(mMessage.getMapLocation());
+                        break;
+                }
+                break;
+        }
     }
 }

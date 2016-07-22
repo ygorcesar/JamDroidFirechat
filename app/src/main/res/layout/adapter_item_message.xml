@@ -5,9 +5,11 @@
 
     <data>
 
-        <variable
-            name="view"
-            type="android.view.View"/>
+        <import
+            alias="cons"
+            type="com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase"/>
+
+        <import type="android.view.View"/>
 
         <variable
             name="messageViewModel"
@@ -25,7 +27,7 @@
             android:layout_height="2dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:visibility="@{messageViewModel.sender ? view.VISIBLE : view.GONE}"/>
+            android:visibility="@{messageViewModel.sender ? View.VISIBLE : View.GONE}"/>
 
         <RelativeLayout
             android:id="@+id/rv_message_container"
@@ -41,7 +43,6 @@
             android:layout_toStartOf="@+id/space_right"
             android:background="@{messageViewModel.sender ? @drawable/message_item_background_sender : @drawable/message_item_background}"
             android:elevation="2dp"
-            android:onClick="@{messageViewModel.onItemClick}"
             android:orientation="vertical"
             android:padding="@dimen/item_message_padding"
             tools:background="@drawable/message_item_background">
@@ -49,6 +50,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_item_user_photo_sender"
                 style="@style/AppTheme.CircleImgList"
+                android:onClick="@{messageViewModel::onItemClick}"
+                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}"
                 app:civ_border_color="@color/circle_iv_border"
                 app:civ_border_width="1dp"
                 app:photoUrl="@{messageViewModel.photoUrl}"
@@ -61,35 +64,59 @@
                 android:layout_marginBottom="@dimen/item_user_email_margin_v"
                 android:layout_toEndOf="@+id/iv_item_user_photo_sender"
                 android:layout_toRightOf="@+id/iv_item_user_photo_sender"
+                android:onClick="@{messageViewModel::onItemClick}"
                 android:text="@{messageViewModel.name}"
                 android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
                 android:textSize="@dimen/item_user_name_text_size"
                 android:textStyle="bold"
+                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}"
                 tools:text="Ygor César"/>
 
-            <TextView
-                android:id="@+id/tv_item_message"
+            <RelativeLayout
+                android:id="@+id/rv_item_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_item_user_email"
                 android:layout_toEndOf="@+id/iv_item_user_photo_sender"
                 android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-                android:text="@{messageViewModel.message}"
-                android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
-                android:textSize="@dimen/item_message_content_text_size"
-                tools:text="Mussum Ipsum, cacilds vidis litro abertis."/>
+                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}">
 
-            <TextView
-                android:id="@+id/tv_item_message_time"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_item_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{messageViewModel.message}"
+                    android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/item_message_content_text_size"
+                    tools:text="Mussum Ipsum, cacilds vidis litro abertis."/>
+
+                <TextView
+                    android:id="@+id/tv_item_message_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/tv_item_message"
+                    android:text="@{messageViewModel.time}"
+                    android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
+                    android:textSize="@dimen/item_message_time_size"
+                    tools:text="12:30"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/tv_item_message"
-                android:text="@{messageViewModel.time}"
-                android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
-                android:textSize="@dimen/item_message_time_size"
-                tools:text="12:30"/>
+                android:adjustViewBounds="true"
+                android:maxHeight="@dimen/item_message_max_height"
+                android:maxWidth="@dimen/item_message_max_width"
+                android:onClick="@{messageViewModel::onItemClick}"
+                android:scaleType="centerCrop"
+                android:transitionName="shared"
+                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_IMAGE || messageViewModel.type == cons.MESSAGE_TYPE_LOCATION ? View.VISIBLE : View.GONE}"
+                app:mapLocation="@{messageViewModel.mapLocation}"
+                app:photoUrlMessage="@{messageViewModel.message}"/>
         </RelativeLayout>
 
         <android.support.v4.widget.Space
@@ -98,6 +125,6 @@
             android:layout_height="42dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:visibility="@{messageViewModel.sender ? view.GONE : view.VISIBLE}"/>
+            android:visibility="@{messageViewModel.sender ? View.GONE : View.VISIBLE}"/>
     </RelativeLayout>
 </layout>
