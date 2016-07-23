@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.AdapterItemChatsBinding;
@@ -55,11 +56,12 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
                 String[] args = Utils.getSharedType(CONTENT_TYPE, getArguments());
                 sharedArgs = args[Constants.ARGS_POS_SHARED];
                 sharedType = args[Constants.ARGS_POS_TYPE];
-                if (sharedType.equals(Constants.EXTRA_LOCATION)){
+                if (sharedType.equals(Constants.EXTRA_LOCATION)) {
                     sharedLatitude = args[Constants.ARGS_POS_LATITUDE];
                     sharedLongitude = args[Constants.ARGS_POS_LONGITUDE];
                 }
             }
+            getArguments().clear();
         }
 
         createChatGlobal();
@@ -76,6 +78,11 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         getActivity().setTitle(getString(R.string.app_name));
     }
 
+    @Override public void onPause() {
+        super.onPause();
+        clearArguments();
+    }
+
     @Override public void onStop() {
         super.onStop();
         mAdapter.cleanup();
@@ -90,8 +97,9 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
     }
 
     private void initializeFirebase() {
-        DatabaseReference refUsers = FirebaseDatabase.getInstance()
-                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS);
+        Query refUsers = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
+                .orderByChild(ConstantsFirebase.FIREBASE_PROPERTY_NAME);
         refUsers.keepSynced(true);
 
         mAdapter = new FirebaseRecyclerAdapter<User, ChatsItemHolder>(User.class, R.layout.adapter_item_chats,
@@ -106,6 +114,8 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
             @Override
             protected void populateViewHolder(ChatsItemHolder viewHolder, User user, int position) {
                 if (user.getEmail().equals(mEncodedMail)) {
+                    // POG To remove View of Logged User
+                    viewHolder.setIsRecyclable(false);
                     viewHolder.mAdapterItemChatsBinding.lnItemRow.removeAllViews();
                     viewHolder.mAdapterItemChatsBinding.lnItemRow.setPadding(0, 0, 0, 0);
                 } else {
@@ -114,6 +124,13 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
             }
         };
         mFragmentChatsBinding.rvChats.setAdapter(mAdapter);
+    }
+
+    private void clearArguments() {
+        sharedArgs = null;
+        sharedType = null;
+        sharedLatitude = null;
+        sharedLongitude = null;
     }
 
     private void setupToolbar() {
@@ -153,7 +170,7 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
         if (sharedArgs != null) {
             args.putString(sharedType, sharedArgs);
             args.putString(Constants.KEY_SHARED_CONTENT, sharedType);
-            if (sharedType.equals(Constants.EXTRA_LOCATION)){
+            if (sharedType.equals(Constants.EXTRA_LOCATION)) {
                 args.putString(Constants.KEY_SHARED_LATITUDE, sharedLatitude);
                 args.putString(Constants.KEY_SHARED_LONGITUDE, sharedLongitude);
             }

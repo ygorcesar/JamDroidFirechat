@@ -73,6 +73,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+
 public class MessagesFragment extends Fragment implements MessageFragmViewModelContract,
         MessageAdapterViewModelContract {
 
@@ -110,6 +112,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             initializeScreen();
 
             String CONTENT_TYPE = getArguments().getString(Constants.KEY_SHARED_CONTENT, "");
+            getArguments().putString(Constants.KEY_SHARED_CONTENT, "");
             if (!CONTENT_TYPE.isEmpty()) {
                 String[] args = Utils.getSharedType(CONTENT_TYPE, getArguments());
                 String sharedArgs = args[0];
@@ -256,6 +259,10 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
 
         mFragmentMessagesBinding.setMessageViewModel(new MessageFragmViewModel(this, encodedMail,
                 mChildChatKey, mFcmUserDeviceId, loggedUserName));
+
+        EmojIconActions emojIcon = new EmojIconActions(getActivity(), mFragmentMessagesBinding.getRoot(),
+                mFragmentMessagesBinding.edtMessageContent, mFragmentMessagesBinding.ivEmoji);
+        emojIcon.ShowEmojIcon();
     }
 
     private void setupToolbar() {
@@ -525,7 +532,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                         imageUri = uri.toString();
                         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
-                }else{
+                } else {
                     Toast.makeText(MessagesFragment.this.getActivity(),
                             getString(R.string.msg_permission_required), Toast.LENGTH_LONG).show();
                 }

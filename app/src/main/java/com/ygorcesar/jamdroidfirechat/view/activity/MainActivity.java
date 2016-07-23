@@ -14,11 +14,13 @@ import android.view.WindowManager;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ygorcesar.jamdroidfirechat.BuildConfig;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.MapLocation;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
+import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Singleton;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 import com.ygorcesar.jamdroidfirechat.view.fragment.ChatsFragment;
@@ -105,6 +107,16 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override protected void onStart() {
+        super.onStart();
+        setUserOnline(true);
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        setUserOnline(false);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -180,5 +192,12 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
         return mapLocation;
+    }
+
+    private void setUserOnline(boolean online){
+        FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
+                .child(mEncodedEmail)
+                .child(ConstantsFirebase.FIREBASE_PROPERTY_ONLINE)
+                .setValue(online);
     }
 }

@@ -22,7 +22,8 @@ public abstract class BaseChatViewModel extends BaseObservable {
     }
 
     public String getName() {
-        return mUser.getName();
+        return !mUser.getEmail().equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)
+                ? mUser.getName() : mUser.getName().replace("0", "");
     }
 
     public String getEmail() {
@@ -31,6 +32,10 @@ public abstract class BaseChatViewModel extends BaseObservable {
 
     public String getPhotoUrl() {
         return mUser.getPhotoUrl();
+    }
+
+    public boolean isOnline() {
+        return mUser.getEmail().equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL) || mUser.isOnline();
     }
 
     public void onItemClick(View view) {
@@ -42,7 +47,6 @@ public abstract class BaseChatViewModel extends BaseObservable {
      * @return int
      */
     public boolean isSender() {
-        boolean equals = mLoggedUserEmail.equals(mUser.getEmail());
         return mLoggedUserEmail.equals(mUser.getEmail());
     }
 
@@ -52,7 +56,7 @@ public abstract class BaseChatViewModel extends BaseObservable {
      * @param view
      * @param url
      */
-    @BindingAdapter({"app:photoUrl"})
+    @BindingAdapter({"bind:photoUrl"})
     public static void loadImage(ImageView view, String url) {
         if (url != null && !url.isEmpty()) {
             if (url.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
@@ -61,7 +65,7 @@ public abstract class BaseChatViewModel extends BaseObservable {
                 Glide.with(view.getContext())
                         .load(url)
                         .placeholder(R.drawable.ic_person)
-                        .centerCrop()
+                        .fitCenter()
                         .dontAnimate()
                         .into(view);
             }

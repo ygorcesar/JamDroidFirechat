@@ -9,6 +9,7 @@ public class User {
     private String photoUrl;
     private HashMap<String, Object> timestampJoined;
     private boolean hasLoggedInWithPassword;
+    private boolean online;
 
     public User() {
     }
@@ -21,6 +22,7 @@ public class User {
         this.photoUrl = photoUrl;
         this.timestampJoined = timestampJoined;
         this.hasLoggedInWithPassword = false;
+        this.online = false;
     }
 
     public String getFcmUserDeviceId() {
@@ -45,5 +47,9 @@ public class User {
 
     public boolean isHasLoggedInWithPassword() {
         return hasLoggedInWithPassword;
+    }
+
+    public boolean isOnline() {
+        return online;
     }
 }

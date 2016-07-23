@@ -16,4 +16,5 @@
 
     <color name="white">#FFFFFF</color>
     <color name="circle_iv_border">#FFE1E1E1</color>
+    <color name="green_online">#00FF26</color>
 </resources>

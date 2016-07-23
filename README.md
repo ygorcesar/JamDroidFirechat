@@ -13,6 +13,7 @@ Configurando Aplicação
  - Atualizar [gradle.properties](https://github.com/ygorcesar/JamDroidFireChat/blob/master/gradle.properties)
 - Atualizar com seu Facebook App ID: `FacebookAppIdJamdroid="1111111111111111"`
 - Atualizar com seu Facebook App ID: `GoogleConsoleAppIdJamdroid="1111111111111111-111111"`
+- Atualizar com sua Key do Google Web Oauth: `GoogleWebOauthId="11111111111111-1111111111111111111111.apps.googleusercontent.com"`
 -  Atualizar com sua Key do Firebase Cloud Message: `FirebaseCloudMessageKey="key=1111111111111111111111111111111111"`
 - Gerar  google-services.json em **Firebase Console->Select Project->Settings/Configurações** e colocar-lo na pasta **app** do projeto android.
  - Firebase Documentation and Guide: https://firebase.google.com/docs/android
@@ -31,4 +32,3 @@ Aplicação Android de chat integrado com Firebase para troca de mensagens em te
  ![Chats](https://github.com/ygorcesar/JamDroidFirechat/blob/master/screenshots/home.png?raw=true)
 ![Messages](https://github.com/ygorcesar/JamDroidFirechat/blob/master/screenshots/chat.png?raw=true)![User Profile](https://github.com/ygorcesar/JamDroidFirechat/blob/master/screenshots/user_profile.png?raw=true)
 ![Invites](https://github.com/ygorcesar/JamDroidFirechat/blob/master/screenshots/invite.png?raw=true)![Configuration](https://github.com/ygorcesar/JamDroidFirechat/blob/master/screenshots/config.png?raw=true)
-

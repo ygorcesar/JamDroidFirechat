@@ -47,6 +47,14 @@ public class Utils {
         Utils.additionalData = additionalData;
     }
 
+    public static String capitalizeString(String string) {
+        if (string == null || string.isEmpty()) {
+            return string;
+        } else {
+            return string.substring(0, 1).toUpperCase() + string.substring(1);
+        }
+    }
+
     public static void animateScaleXY(View view, int delay, long duration) {
         view.setScaleX(0f);
         view.setScaleY(0f);

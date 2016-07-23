@@ -47,11 +47,38 @@
             android:padding="@dimen/item_message_padding"
             tools:background="@drawable/message_item_background">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="@dimen/item_message_max_height"
+                    android:maxWidth="@dimen/item_message_max_width"
+                    android:onClick="@{messageViewModel::onItemClick}"
+                    android:scaleType="centerCrop"
+                    android:transitionName="shared"
+                    android:visibility="@{messageViewModel.typeMessage ? View.GONE : View.VISIBLE}"
+                    app:mapLocation="@{messageViewModel.mapLocation}"
+                    app:photoUrlMessage="@{messageViewModel.message}"/>
+            </FrameLayout>
+
+            <android.support.v4.widget.Space
+                android:id="@+id/space_photo"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:visibility="@{messageViewModel.typeMessage ? View.GONE : View.VISIBLE}"/>
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_item_user_photo_sender"
                 style="@style/AppTheme.CircleImgList"
+                android:layout_below="@+id/space_photo"
+                android:layout_toEndOf="@+id/space_photo"
+                android:layout_toRightOf="@+id/space_photo"
                 android:onClick="@{messageViewModel::onItemClick}"
-                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}"
                 app:civ_border_color="@color/circle_iv_border"
                 app:civ_border_width="1dp"
                 app:photoUrl="@{messageViewModel.photoUrl}"
@@ -69,7 +96,7 @@
                 android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
                 android:textSize="@dimen/item_user_name_text_size"
                 android:textStyle="bold"
-                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}"
+                android:visibility="@{messageViewModel.typeMessage ? View.VISIBLE : View.GONE}"
                 tools:text="Ygor César"/>
 
             <RelativeLayout
@@ -79,9 +106,9 @@
                 android:layout_below="@+id/tv_item_user_email"
                 android:layout_toEndOf="@+id/iv_item_user_photo_sender"
                 android:layout_toRightOf="@+id/iv_item_user_photo_sender"
-                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_TEXT ? View.VISIBLE : View.GONE}">
+                android:visibility="@{messageViewModel.typeMessage ? View.VISIBLE : View.GONE}">
 
-                <TextView
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/tv_item_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -103,20 +130,6 @@
                     android:textSize="@dimen/item_message_time_size"
                     tools:text="12:30"/>
             </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/iv_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="@dimen/item_message_max_height"
-                android:maxWidth="@dimen/item_message_max_width"
-                android:onClick="@{messageViewModel::onItemClick}"
-                android:scaleType="centerCrop"
-                android:transitionName="shared"
-                android:visibility="@{messageViewModel.type == cons.MESSAGE_TYPE_IMAGE || messageViewModel.type == cons.MESSAGE_TYPE_LOCATION ? View.VISIBLE : View.GONE}"
-                app:mapLocation="@{messageViewModel.mapLocation}"
-                app:photoUrlMessage="@{messageViewModel.message}"/>
         </RelativeLayout>
 
         <android.support.v4.widget.Space

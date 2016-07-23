@@ -38,6 +38,10 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
         return mMessage.getType();
     }
 
+    public boolean isTypeMessage(){
+        return mMessage.getType() == ConstantsFirebase.MESSAGE_TYPE_TEXT;
+    }
+
     public MapLocation getMapLocation(){
         return mMessage.getMapLocation();
     }

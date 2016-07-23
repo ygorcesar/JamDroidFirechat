@@ -11,6 +11,7 @@ import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
@@ -88,6 +89,9 @@ public class PrefsActivity extends BaseActivity {
                 case Constants.KEY_PREF_ABOUT:
                     Dialog dialog = new Dialog(getActivity());
                     dialog.setContentView(R.layout.dialog_fragment_version);
+                    ((TextView)dialog.findViewById(R.id.tv_version))
+                            .setText(String.format(getString(R.string.version),
+                                    getString(R.string.pref_version)));
                     dialog.show();
                     break;
                 case Constants.KEY_PREF_REVOKE_ACCESS:

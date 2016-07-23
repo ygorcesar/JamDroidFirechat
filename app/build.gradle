@@ -6,7 +6,7 @@ android {
 
     def versionMajor = 2
     def versionMinor = 1
-    def versionPatch = 0
+    def versionPatch = 2
 
     dataBinding {
         enabled = true;
@@ -23,7 +23,8 @@ android {
 
         resValue "string", "facebook_app_id", FacebookAppIdJamdroid
         resValue "string", "jamdroid_google_app_id", GoogleConsoleAppIdJamdroid
-        resValue "string", "version", "Versão ${versionMajor}.${versionMinor}.${versionPatch}"
+        resValue "string", "google_web_oauth_client_id", GoogleWebOauthId
+        resValue "string", "version", "%s ${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
          debug {
@@ -32,6 +33,7 @@ android {
 
         release {
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -87,6 +89,7 @@ dependencies {
     compile 'com.flipboard:bottomsheet-commons:1.5.1'
 
     compile 'com.greysonparrelli.permiso:permiso:0.2.0'
+    compile 'hani.momanii.supernova_emoji_library:supernova-emoji-library:0.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

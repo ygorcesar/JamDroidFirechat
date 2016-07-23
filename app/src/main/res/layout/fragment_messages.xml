@@ -37,7 +37,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_margin="@dimen/edt_msg_content_margin"
+                    android:layout_marginBottom="@dimen/edt_msg_content_margin"
+                    android:layout_marginLeft="@dimen/edt_msg_content_margin"
+                    android:layout_marginStart="@dimen/edt_msg_content_margin"
                     android:layout_toLeftOf="@+id/btn_send_message"
                     android:layout_toStartOf="@+id/btn_send_message"
                     android:background="@drawable/message_item_background"
@@ -47,7 +49,19 @@
                     android:paddingRight="@dimen/edt_msg_content_padding_h"
                     android:paddingTop="@dimen/edt_msg_content_padding_v">
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <ImageView
+                        android:id="@+id/iv_emoji"
+                        android:layout_width="@dimen/edt_ic_size"
+                        android:layout_height="@dimen/edt_ic_size"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_insert_emoticon"
+                        android:tint="@color/colorSecondaryIcon"/>
+
+                    <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                         android:id="@+id/edt_message_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -57,12 +71,14 @@
                         android:hint="@string/hint_write_here"
                         android:inputType="textMultiLine|textCapSentences"
                         android:lines="2"
-                        android:maxLines="3"/>
+                        android:maxLines="3"
+                        android:layout_toRightOf="@+id/iv_emoji"
+                        android:layout_toEndOf="@+id/iv_emoji"/>
 
                     <ImageView
                         android:id="@+id/iv_camera"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
+                        android:layout_width="@dimen/edt_ic_size"
+                        android:layout_height="@dimen/edt_ic_size"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"

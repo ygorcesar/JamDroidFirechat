@@ -223,7 +223,12 @@ public class LoginActivity extends BaseActivity {
 
         unprocessedEmail = user.getEmail();
         displayName = user.getDisplayName();
-        photoUrl = user.getPhotoUrl().toString();
+        if (user.getPhotoUrl() != null) {
+            photoUrl = user.getPhotoUrl().toString();
+        } else {
+            photoUrl = "";
+        }
+
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
 
         final DatabaseReference userLocation = FirebaseDatabase.getInstance()
@@ -237,7 +242,7 @@ public class LoginActivity extends BaseActivity {
                     timestampJoined.put(ConstantsFirebase.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
                     User user = new User(FirebaseInstanceId.getInstance().getToken(),
-                            displayName, mEncodedEmail, photoUrl, timestampJoined);
+                            Utils.capitalizeString(displayName), mEncodedEmail, photoUrl, timestampJoined);
                     userLocation.setValue(user);
                 } else {
                     userLocation.child(ConstantsFirebase.FIREBASE_PROPERTY_USER_DEVICE_ID)
@@ -258,7 +263,7 @@ public class LoginActivity extends BaseActivity {
         /* Save provider name and encodedEmail for later use and start MainActivity */
         mSharedPrefEditor.putString(Constants.KEY_PROVIDER, provider).apply();
         mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
-        mSharedPrefEditor.putBoolean(Constants.KEY_PREF_NOTIFICATION,true).apply();
+        mSharedPrefEditor.putBoolean(Constants.KEY_PREF_NOTIFICATION, true).apply();
 
         FirebaseMessaging.getInstance().subscribeToTopic(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
     }

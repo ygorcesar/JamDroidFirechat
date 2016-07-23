@@ -1,85 +1,84 @@
 <resources>
-    <string name="app_name">JamDroidFirechat</string>
-    <string name="action_settings">Configurações</string>
+    <string name="app_name" translatable="false">JamDroidFirechat</string>
+    <string name="action_settings">Settings</string>
     <string name="chat_global">Global</string>
-    <string name="google_web_oauth_client_id">540780416705-7gbh4er9f5q1i4l74o6arndl9lh7l6oa.apps.googleusercontent.com</string>
 
-    <string name="json_push_notification">{\'include_player_ids\': [\'%1$s\'], \'headings\': {\'en\':\'%2$s\'}, \'contents\': {\'en\':\'%3$s\'}, \'android_accent_color\': \'FF4081\', \'android_group\': \'chat_msg\', \'data\': %4$s}</string>
+    <string name="json_push_notification" translatable="false">{\'include_player_ids\': [\'%1$s\'], \'headings\': {\'en\':\'%2$s\'}, \'contents\': {\'en\':\'%3$s\'}, \'android_accent_color\': \'FF4081\', \'android_group\': \'chat_msg\', \'data\': %4$s}</string>
 
     <!-- Google Auth Strings -->
-    <string name="google_error_auth_with_google">"Erro na autenticação com o Google: "</string>
+    <string name="google_error_auth_with_google">"Error on authentication with Google: "</string>
     <string name="google_error_network_error">"Erro de rede: "</string>
     <string name="google_error_recoverable_oauth_error">Recoverable Google OAuth error: </string>
 
     <!-- Dialogs and Progress Dialogs -->
-    <string name="progress_dialog_loading" type="id">Carregando..</string>
-    <string name="progress_dialog_authenticating_with">Autenticando com o %s</string>
+    <string name="progress_dialog_loading" type="id">Loading..</string>
+    <string name="progress_dialog_authenticating_with">Authenticating with %s</string>
 
-    <string name="dialog_title_delete_account">Deseja realmente exluir a conta?</string>
-    <string name="dialog_title_logout">Deseja deslogar?</string>
-    <string name="dialog_title_revoke_access">Deseja revogar o acesso?</string>
+    <string name="dialog_title_delete_account">Do you want to delete your account?</string>
+    <string name="dialog_title_logout">Do you want to logout?</string>
+    <string name="dialog_title_revoke_access">Do you want to revoke access?</string>
     <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">CANCELAR</string>
+    <string name="dialog_cancel">Cancel</string>
 
     <!-- OAuth Format -->
-    <string name="oauth2_format">oauth2:%s</string>
+    <string name="oauth2_format" translatable="false">oauth2:%s</string>
 
     <!-- Errors -->
-    <string name="error_message_failed_sign_in_no_network">Erro ao tentar conectar, verifique sua conexão.</string>
+    <string name="error_message_failed_sign_in_no_network">Error trying to connect, check your connection.</string>
 
     <!-- Log Messages -->
     <string name="log_message_auth_successful">Auth successful.</string>
     <string name="log_error_invalid_provider">Invalid provider: </string>
-    <string name="button_send">Enviar</string>
-    <string name="notice_insert_message">Insira uma mensagem</string>
+    <string name="button_send">Send</string>
+    <string name="notice_insert_message">Enter a message</string>
 
     <!-- Base Error Strings-->
-    <string name="log_error_occurred">"Ocorreu um erro: "</string>
-    <string name="hint_write_here">Digite aqui...</string>
-    <string name="action_exit">Sair</string>
-    <string name="action_revoke_access">Revogar Acesso</string>
-    <string name="app_firechat">FireChat</string>
-    <string name="app_jamdroid">JamDroid</string>
+    <string name="log_error_occurred">"An error has occurred: "</string>
+    <string name="hint_write_here">Write here...</string>
+    <string name="action_exit">Logout</string>
+    <string name="action_revoke_access">Revoke Access</string>
+    <string name="app_firechat" translatable="false">FireChat</string>
+    <string name="app_jamdroid" translatable="false">JamDroid</string>
 
     <!-- Preferences Strings-->
-    <string name="pref_delete_account">Excluir conta</string>
-    <string name="pref_notification">Notificação</string>
-    <string name="pref_version">Versão</string>
-    <string name="pref_github">Github</string>
+    <string name="pref_delete_account">Delete account</string>
+    <string name="pref_notification" translatable="false">Notification</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_github" translatable="false">Github</string>
     <!-- Preferences Keys -->
-    <string name="pref_key_notification">PREF_KEY_NOTIFICATION</string>
-    <string name="pref_key_github">PREF_KEY_GITHUB</string>
-    <string name="pref_key_about">PREF_KEY_ABOUT</string>
-    <string name="pref_key_revoke_access">PREF_KEY_REVOKE_ACCESS</string>
-    <string name="pref_key_delete_account">PREF_KEY_DELETE_ACCOUNT</string>
-    <string name="pref_key_exit">PREF_KEY_EXIT</string>
+    <string name="pref_key_notification" translatable="false">PREF_KEY_NOTIFICATION</string>
+    <string name="pref_key_github" translatable="false">PREF_KEY_GITHUB</string>
+    <string name="pref_key_about" translatable="false">PREF_KEY_ABOUT</string>
+    <string name="pref_key_revoke_access" translatable="false">PREF_KEY_REVOKE_ACCESS</string>
+    <string name="pref_key_delete_account" translatable="false">PREF_KEY_DELETE_ACCOUNT</string>
+    <string name="pref_key_exit" translatable="false">PREF_KEY_EXIT</string>
 
     <!-- Messages Strings -->
-    <string name="msg_account_deleted">Conta excluída!</string>
-    <string name="msg_notification_status_changed">Notificação %s!</string>
-    <string name="msg_notification_status_active">ativada</string>
-    <string name="msg_notification_status_disable">desativada</string>
-    <string name="dialog_title_licenses">Licenças</string>
-    <string name="dialog_title_new_message">Nova Mensagem</string>
-    <string name="dialog_msg_user_says">%1$s, diz: %2$s</string>
-    <string name="progress_dialog_uploading">Enviando Imagem...</string>
-    <string name="msg_permission_required">É necessário dar permissão para esta ação!</string>
-    <string name="dialog_title_select_image">Escolha uma imagem...</string>
-    <string name="msg_info_send_success">Enviado com sucesso!</string>
-    <string name="msg_info_send_failed">Ocorreu erro ao enviar!</string>
-    <string name="action_invite">Convide</string>
-    <string name="invitation_title">Compartilhe JamdroidFirechat</string>
-    <string name="invitation_message">Olá, venha conhecer o JamdroidFirechat, um app de chat realtime e o mais legal é opensource.</string>
-    <string name="invitation_call_action">Acessar</string>
+    <string name="msg_account_deleted">Account deleted!</string>
+    <string name="msg_notification_status_changed">Notification %s!</string>
+    <string name="msg_notification_status_active">activated</string>
+    <string name="msg_notification_status_disable">disabled</string>
+    <string name="dialog_title_licenses">Licenses</string>
+    <string name="dialog_title_new_message">New Message</string>
+    <string name="dialog_msg_user_says">%1$s, says: %2$s</string>
+    <string name="progress_dialog_uploading">Sending image...</string>
+    <string name="msg_permission_required">You must give permission for this action</string>
+    <string name="dialog_title_select_image">Choose an image...</string>
+    <string name="msg_info_send_success">Sent with success!</string>
+    <string name="msg_info_send_failed">There was a problem sending!</string>
+    <string name="action_invite">Invite</string>
+    <string name="invitation_title">Share JamdroidFirechat</string>
+    <string name="invitation_message">Hello, come the JamdroidFirechat a realtime chat app and the coolest is opensource.</string>
+    <string name="invitation_call_action">Access</string>
     <string name="action_attach">Media</string>
-    <string name="menu_action_location">Localização</string>
-    <string name="menu_action_gallery">Galeria</string>
+    <string name="menu_action_location">Location</string>
+    <string name="menu_action_gallery">Gallery</string>
     <string name="menu_action_camera">Camera</string>
 
-    <string name="map_static_url"><![CDATA[http://maps.google.com/maps/api/staticmap?markers=%1$s,%2$s&zoom=15&size=360x360&scale=2]]></string>
-    <string name="map_location_intent">geo:%1$s,%2$s?q=%3$s,%4$s</string>
-    <string name="notification_msg_image">Enviou uma nova imagem</string>
-    <string name="notification_msg_location">Lhe enviou uma localização</string>
+    <string name="map_static_url" translatable="false"><![CDATA[http://maps.google.com/maps/api/staticmap?markers=%1$s,%2$s&zoom=15&size=360x360&scale=2]]></string>
+    <string name="map_location_intent" translatable="false">geo:%1$s,%2$s?q=%3$s,%4$s</string>
+    <string name="notification_msg_image">Sent you a new image</string>
+    <string name="notification_msg_location">Sent you a location</string>
 
     <plurals name="not_new_message">
         <item quantity="one">%d nova mensagem:</item>
