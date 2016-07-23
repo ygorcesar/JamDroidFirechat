@@ -14,7 +14,11 @@ import android.view.WindowManager;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ygorcesar.jamdroidfirechat.BuildConfig;
 import com.ygorcesar.jamdroidfirechat.R;
@@ -194,10 +198,22 @@ public class MainActivity extends BaseActivity {
         return mapLocation;
     }
 
-    private void setUserOnline(boolean online){
-        FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
-                .child(mEncodedEmail)
-                .child(ConstantsFirebase.FIREBASE_PROPERTY_ONLINE)
-                .setValue(online);
+    private void setUserOnline(final boolean online) {
+        final DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
+                .child(mEncodedEmail);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    userRef.child(ConstantsFirebase.FIREBASE_PROPERTY_ONLINE)
+                            .setValue(online);
+                }
+            }
+
+            @Override public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
