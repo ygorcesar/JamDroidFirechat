@@ -1,6 +1,8 @@
 package com.ygorcesar.jamdroidfirechat.viewmodel;
 
+import android.databinding.BindingAdapter;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.MapLocation;
@@ -34,15 +36,34 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
         return mMessage.getMessage();
     }
 
-    public int getType(){
+    public int getType() {
         return mMessage.getType();
     }
 
-    public boolean isTypeMessage(){
+    public int getStatus(){
+        return mMessage.getStatus();
+    }
+
+    @BindingAdapter({"bind:statusMessage"})
+    public static void setIconStatus(ImageView iv, int status) {
+        switch (status) {
+            case ConstantsFirebase.MESSAGE_STATUS_PENDING:
+                iv.setImageResource(R.drawable.ic_pending);
+                break;
+            case ConstantsFirebase.MESSAGE_STATUS_SENDED:
+                iv.setImageResource(R.drawable.ic_sended);
+                break;
+            case ConstantsFirebase.MESSAGE_STATUS_RECEIVED:
+                iv.setImageResource(R.drawable.ic_received);
+                break;
+        }
+    }
+
+    public boolean isTypeMessage() {
         return mMessage.getType() == ConstantsFirebase.MESSAGE_TYPE_TEXT;
     }
 
-    public MapLocation getMapLocation(){
+    public MapLocation getMapLocation() {
         return mMessage.getMapLocation();
     }
 
@@ -54,7 +75,7 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
     public String getTime() {
         Timestamp stamp = new Timestamp((long) mMessage.getTime().get(Constants.KEY_CHAT_TIME_SENDED));
         Date date = new Date(stamp.getTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", new Locale("pt", "BR"));
+        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(date);
     }
@@ -64,7 +85,7 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
     }
 
     public void onItemClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_item_user_photo_sender:
                 mMessageAdapterViewModelContract.onMessageItemClick(mUser, view.getId());
                 break;
@@ -72,7 +93,7 @@ public class MessageAdapterViewModel extends BaseChatViewModel {
                 mMessageAdapterViewModelContract.onMessageItemClick(mUser, view.getId());
                 break;
             case R.id.iv_image:
-                switch (mMessage.getType()){
+                switch (mMessage.getType()) {
                     case ConstantsFirebase.MESSAGE_TYPE_IMAGE:
                         mMessageAdapterViewModelContract.onMessageItemClick(mMessage.getMessage(), view);
                         break;

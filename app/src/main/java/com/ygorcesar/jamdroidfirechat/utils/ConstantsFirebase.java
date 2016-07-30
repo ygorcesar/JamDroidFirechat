@@ -25,6 +25,8 @@ public final class ConstantsFirebase {
     public static final String FIREBASE_PROPERTY_USER_HAS_LOGGED_IN_WITH_PASSWORD = "hasLoggedInWithPassword";
     public static final String FIREBASE_PROPERTY_TIMESTAMP_LAST_CHANGED_REVERSE = "timestampLastChangedReverse";
 
+    public static final String FIREBASE_PROPERTY_MESSAGE_STATUS = "status";
+
     /**
      * Constants para Login com Firebase
      */
@@ -39,8 +41,21 @@ public final class ConstantsFirebase {
 
     /**
      * Messages Types
+     * 0 - TEXT
+     * 1 - IMAGE
+     * 2 - MAP LOCATION
      */
     public static final int MESSAGE_TYPE_TEXT = 0;
     public static final int MESSAGE_TYPE_IMAGE = 1;
     public static final int MESSAGE_TYPE_LOCATION = 2;
+
+    /**
+     * Message Status
+     * 0 - PENDING
+     * 1 - SENDED
+     * 2 - RECEIVED
+     */
+    public static final int MESSAGE_STATUS_PENDING = 0;
+    public static final int MESSAGE_STATUS_SENDED = 1;
+    public static final int MESSAGE_STATUS_RECEIVED = 2;
 }

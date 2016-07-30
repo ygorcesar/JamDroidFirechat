@@ -113,13 +113,15 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
 
             @Override
             protected void populateViewHolder(ChatsItemHolder viewHolder, User user, int position) {
-                if (user.getEmail().equals(mEncodedMail)) {
-                    // POG To remove View of Logged User
-                    viewHolder.setIsRecyclable(false);
-                    viewHolder.mAdapterItemChatsBinding.lnItemRow.removeAllViews();
-                    viewHolder.mAdapterItemChatsBinding.lnItemRow.setPadding(0, 0, 0, 0);
-                } else {
-                    viewHolder.bindUser(user, ChatsFragment.this);
+                if (user.getEmail() != null) {
+                    if (user.getEmail().equals(mEncodedMail)) {
+                        // POG To remove View of Logged User
+                        viewHolder.setIsRecyclable(false);
+                        viewHolder.mAdapterItemChatsBinding.lnItemRow.removeAllViews();
+                        viewHolder.mAdapterItemChatsBinding.lnItemRow.setPadding(0, 0, 0, 0);
+                    } else {
+                        viewHolder.bindUser(user, ChatsFragment.this);
+                    }
                 }
             }
         };
@@ -142,14 +144,14 @@ public class ChatsFragment extends Fragment implements ChatsViewModelContract {
 
     private void createChatGlobal() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
-                .child("0" + ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
+                .child(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
                     FirebaseDatabase.getInstance().getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
-                            .child("0" + ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)
+                            .child(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)
                             .setValue(new User(ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL_TO,
-                                    getString(R.string.chat_global), ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
+                                    "0" + getString(R.string.chat_global), ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL,
                                     ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL, null));
                 }
             }

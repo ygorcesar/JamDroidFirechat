@@ -112,6 +112,7 @@
                     android:id="@+id/tv_item_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
                     android:text="@{messageViewModel.message}"
                     android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
                     android:textIsSelectable="true"
@@ -122,13 +123,31 @@
                     android:id="@+id/tv_item_message_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/tv_item_message"
+                    android:layout_alignBottom="@+id/iv_status_message"
+                    android:layout_alignTop="@+id/iv_status_message"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_toLeftOf="@+id/iv_status_message"
+                    android:layout_toStartOf="@+id/iv_status_message"
+                    android:gravity="center"
                     android:text="@{messageViewModel.time}"
                     android:textColor="@{messageViewModel.sender ? @color/white : @color/colorSecondaryText}"
                     android:textSize="@dimen/item_message_time_size"
                     tools:text="12:30"/>
+
+                <ImageView
+                    android:id="@+id/iv_status_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_item_message"
+                    android:tint="@color/white"
+                    android:visibility="@{messageViewModel.sender ? View.VISIBLE : View.INVISIBLE}"
+                    app:statusMessage="@{messageViewModel.status}"
+                    tools:src="@drawable/ic_pending"
+                    tools:tint="@color/colorPrimaryIcon"
+                    tools:visibility="visible"/>
             </RelativeLayout>
         </RelativeLayout>
 

@@ -16,6 +16,9 @@ public final class Constants {
     public static final String KEY_CHAT_TIME_SENDED = "CHAT_TIME_SENDED";
     public static final String KEY_CHAT_CHILD = "CHAT_KEY_CHILD";
     public static final String KEY_CHAT_KEY = "CHAT_KEY";
+    public static final String KEY_MSG_TITLE = "TITLE";
+    public static final String KEY_MSG = "MSG";
+    public static final String KEY_MSG_KEY = "MSG_KEY";
     public static final String KEY_IMAGE_URL = "IMAGE_URL";
 
     public static final String KEY_PREF_NOTIFICATION = "PREF_KEY_NOTIFICATION";

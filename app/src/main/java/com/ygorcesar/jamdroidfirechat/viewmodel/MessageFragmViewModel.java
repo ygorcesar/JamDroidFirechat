@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -83,15 +84,21 @@ public class MessageFragmViewModel {
             } else {
                 message = new Message(mLoggedUserEmail, content, messageType, timeSended);
             }
-            chatRef.setValue(message);
-            sendNotification(content, messageType);
+            chatRef.setValue(message, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    databaseReference.child(ConstantsFirebase.FIREBASE_PROPERTY_MESSAGE_STATUS)
+                            .setValue(ConstantsFirebase.MESSAGE_STATUS_SENDED);
+                }
+            });
+            sendNotification(content, messageType, chatRef.getKey());
             mMessageFragmViewModelContract.setEditTextMessage("");
         } else {
             mMessageFragmViewModelContract.showToastMessage(R.string.notice_insert_message);
         }
     }
 
-    private void sendNotification(String msg, int msgType) {
+    private void sendNotification(String msg, int msgType, String msgKey) {
         String fcmSenderKey = mChildChatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL) ?
                 ConstantsFirebase.FIREBASE_TOPIC_CHAT_GLOBAL_TO :
                 FirebaseInstanceId.getInstance().getToken();
@@ -106,7 +113,7 @@ public class MessageFragmViewModel {
 
         PushNotificationObject notificationObject = new PushNotificationObject(
                 mFcmUserDeviceId, new PushNotificationObject
-                .AdditionalData(mUserName, msg, mChildChatKey, mUserName,
+                .AdditionalData(mUserName, msg, mChildChatKey, msgKey, mUserName,
                 mLoggedUserEmail, mFcmUserDeviceId, fcmSenderKey));
         Singleton.getInstance().sendMsgPushNotification(notificationObject);
     }

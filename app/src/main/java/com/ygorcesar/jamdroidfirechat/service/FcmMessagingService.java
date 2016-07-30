@@ -12,9 +12,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ygorcesar.jamdroidfirechat.R;
@@ -28,11 +32,9 @@ import com.ygorcesar.jamdroidfirechat.view.activity.MainActivity;
 import java.util.List;
 
 public class FcmMessagingService extends FirebaseMessagingService {
-    private static final String TAG = "FcmMessagingService";
     private long[] pattern = {300, 300, 300, 300, 300};
 
     @Override public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "Push message received!");
         if (remoteMessage.getNotification() != null) {
             sendDefaultNotification(remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody());
@@ -42,8 +44,9 @@ public class FcmMessagingService extends FirebaseMessagingService {
             String chatKey = remoteMessage.getData().get(Constants.KEY_CHAT_KEY);
             String deviceId = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID);
             String deviceIdSender = remoteMessage.getData().get(Constants.KEY_USER_FCM_DEVICE_ID_SENDER);
-            String title = remoteMessage.getData().get("TITLE");
-            String msg = remoteMessage.getData().get("MSG");
+            String title = remoteMessage.getData().get(Constants.KEY_MSG_TITLE);
+            String msg = remoteMessage.getData().get(Constants.KEY_MSG);
+            String msgKey = remoteMessage.getData().get(Constants.KEY_MSG_KEY);
 
             if (chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
                 title = String.format("%s- %s", title, ConstantsFirebase.CHAT_GLOBAL_HELPER);
@@ -53,14 +56,36 @@ public class FcmMessagingService extends FirebaseMessagingService {
                     .getBoolean(Constants.KEY_PREF_NOTIFICATION, false);
             FirebaseAuth auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null && notificationIsActive) {
-                if (!auth.getCurrentUser().getEmail().equals(Utils.decodeEmail(userEmail))) {
+                if (auth.getCurrentUser().getEmail() != null && !auth.getCurrentUser()
+                        .getEmail().equals(Utils.decodeEmail(userEmail))) {
+
                     Utils.setAdditionalData(new PushNotificationObject
-                            .AdditionalData(title, msg, chatKey, userName, userEmail, deviceId, deviceIdSender));
+                            .AdditionalData(title, msg, chatKey, msgKey, userName,
+                            userEmail, deviceId, deviceIdSender));
                     sendNotification(title, msg);
-                    Log.d(TAG, "Showing notifcation");
+
+                    if (!chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
+                        setMessageReceived(FirebaseDatabase.getInstance().getReference()
+                                .child(ConstantsFirebase.FIREBASE_LOCATION_CHAT).child(chatKey).child(msgKey)
+                                .child(ConstantsFirebase.FIREBASE_PROPERTY_MESSAGE_STATUS));
+                    }
                 }
             }
         }
+    }
+
+    private void setMessageReceived(final DatabaseReference messageRef) {
+        messageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null &&
+                        dataSnapshot.getValue(long.class) == ConstantsFirebase.MESSAGE_STATUS_SENDED) {
+                    messageRef.setValue(ConstantsFirebase.MESSAGE_STATUS_RECEIVED);
+                }
+            }
+
+            @Override public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void sendDefaultNotification(String messageTitle, String messageBody) {

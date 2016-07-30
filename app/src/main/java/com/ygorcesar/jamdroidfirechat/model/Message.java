@@ -8,6 +8,7 @@ public class Message {
     private int type;
     private HashMap<String, Object> time;
     private MapLocation mapLocation;
+    private int status;
 
     public Message() {
     }
@@ -51,5 +52,9 @@ public class Message {
 
     public MapLocation getMapLocation() {
         return mapLocation;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

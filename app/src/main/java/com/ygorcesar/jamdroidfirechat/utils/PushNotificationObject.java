@@ -22,16 +22,18 @@ public class PushNotificationObject {
         private String TITLE;
         private String MSG;
         private String CHAT_KEY;
+        private String MSG_KEY;
         private String USER_DISPLAY_NAME;
         private String USER_EMAIL;
         private String USER_FCM_DEVICE_ID;
         private String USER_FCM_DEVICE_ID_SENDER;
 
-        public AdditionalData(String TITLE, String MSG, String CHAT_KEY, String USER_DISPLAY_NAME,
+        public AdditionalData(String TITLE, String MSG, String CHAT_KEY,String MSG_KEY, String USER_DISPLAY_NAME,
                               String USER_EMAIL, String USER_FCM_DEVICE_ID, String USER_FCM_DEVICE_ID_SENDER) {
             this.TITLE = TITLE;
             this.MSG = MSG;
             this.CHAT_KEY = CHAT_KEY;
+            this.MSG_KEY = MSG_KEY;
             this.USER_DISPLAY_NAME = USER_DISPLAY_NAME;
             this.USER_EMAIL = USER_EMAIL;
             this.USER_FCM_DEVICE_ID = USER_FCM_DEVICE_ID;
@@ -48,6 +50,10 @@ public class PushNotificationObject {
 
         public String getCHAT_KEY() {
             return CHAT_KEY;
+        }
+
+        public String getMSG_KEY() {
+            return MSG_KEY;
         }
 
         public String getUSER_DISPLAY_NAME() {
