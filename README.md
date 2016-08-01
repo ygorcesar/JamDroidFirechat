@@ -8,6 +8,14 @@
 
  Android Application, demonstrating the use of Firebase with Android in a chat application.
 
+ - Real-time chat
+ - Push notifications
+ - -Support send and share Photos and Images
+ - Support send and share Location
+ - Send and Receive Message Confirmation
+ - User Status Online/Offline
+ - App Invite
+
 Configuring Application
 -------------
 
@@ -37,6 +45,14 @@ Android Chat Application Integrated with Firebase to exchange messages in real t
 ---------
  Aplicação Android, demostrando o uso do Firebase com Android em uma aplicação de chat com troca de mensagens.
 
+ - Chat em tempo real
+ - Notificações Push
+ - Envio e compartilhamento de Imagens e Fotos
+ - Envio e compartilhamento de localização
+ - Confirrmação de envio e recebimento de mensagem
+ - Status de usuários Online/Offline
+ - App Invite
+ 
 Configurando Aplicação
 -------------
 
