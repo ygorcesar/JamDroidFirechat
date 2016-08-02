@@ -39,6 +39,12 @@ public class FcmMessagingService extends FirebaseMessagingService {
             sendDefaultNotification(remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody());
         } else {
+            String currentUserEmail = "";
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null && auth.getCurrentUser().getEmail() != null) {
+                currentUserEmail = auth.getCurrentUser().getEmail();
+            }
+
             String userName = remoteMessage.getData().get(Constants.KEY_USER_DISPLAY_NAME);
             String userEmail = remoteMessage.getData().get(Constants.KEY_USER_EMAIL);
             String chatKey = remoteMessage.getData().get(Constants.KEY_CHAT_KEY);
@@ -50,25 +56,23 @@ public class FcmMessagingService extends FirebaseMessagingService {
 
             if (chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
                 title = String.format("%s- %s", title, ConstantsFirebase.CHAT_GLOBAL_HELPER);
+            } else {
+                if (!currentUserEmail.equals(Utils.decodeEmail(userEmail))) {
+                    setMessageReceived(FirebaseDatabase.getInstance().getReference()
+                            .child(ConstantsFirebase.FIREBASE_LOCATION_CHAT).child(chatKey).child(msgKey)
+                            .child(ConstantsFirebase.FIREBASE_PROPERTY_MESSAGE_STATUS));
+                }
             }
 
             boolean notificationIsActive = PreferenceManager.getDefaultSharedPreferences(this)
                     .getBoolean(Constants.KEY_PREF_NOTIFICATION, false);
-            FirebaseAuth auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null && notificationIsActive) {
-                if (auth.getCurrentUser().getEmail() != null && !auth.getCurrentUser()
-                        .getEmail().equals(Utils.decodeEmail(userEmail))) {
+                if (!currentUserEmail.equals(Utils.decodeEmail(userEmail))) {
 
                     Utils.setAdditionalData(new PushNotificationObject
                             .AdditionalData(title, msg, chatKey, msgKey, userName,
                             userEmail, deviceId, deviceIdSender));
                     sendNotification(title, msg);
-
-                    if (!chatKey.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
-                        setMessageReceived(FirebaseDatabase.getInstance().getReference()
-                                .child(ConstantsFirebase.FIREBASE_LOCATION_CHAT).child(chatKey).child(msgKey)
-                                .child(ConstantsFirebase.FIREBASE_PROPERTY_MESSAGE_STATUS));
-                    }
                 }
             }
         }

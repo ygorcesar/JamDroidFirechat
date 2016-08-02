@@ -367,6 +367,8 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
     public void onMessageItemClick(User user, int viewId) {
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
+        args.putString(Constants.KEY_CHAT_KEY, mChildChatKey);
+        args.putString(Constants.KEY_USER_FCM_DEVICE_ID, user.getFcmUserDeviceId());
         args.putString(Constants.KEY_USER_DISPLAY_NAME, user.getName());
         args.putString(Constants.KEY_ENCODED_EMAIL, Utils.decodeEmail(user.getEmail()));
         args.putString(Constants.KEY_USER_PROVIDER_PHOTO_URL, user.getPhotoUrl());

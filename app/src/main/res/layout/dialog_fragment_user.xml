@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:paddingBottom="48dp">
+        android:paddingBottom="18dp">
 
         <FrameLayout
             android:id="@+id/fl_header"
@@ -63,5 +63,28 @@
             android:textSize="@dimen/item_user_email_text_size"
             android:textStyle="bold"
             tools:text="ygorcross@gmail.com"/>
+
+        <ImageView
+            android:id="@+id/iv_chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_user_email"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/space_right"
+            android:layout_toStartOf="@id/space_right"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_chat_message"
+            android:tint="@color/white"
+            android:visibility="gone"/>
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_right"
+            android:layout_width="16dp"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_user_email"/>
     </RelativeLayout>
 </layout>

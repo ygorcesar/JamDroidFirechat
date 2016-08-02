@@ -10,7 +10,7 @@
 
  - Real-time chat
  - Push notifications
- - -Support send and share Photos and Images
+ - Support send and share Photos and Images
  - Support send and share Location
  - Send and Receive Message Confirmation
  - User Status Online/Offline

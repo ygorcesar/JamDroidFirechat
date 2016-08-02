@@ -155,4 +155,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
     }
+
+    public String getEncodedEmail() {
+        return mEncodedEmail;
+    }
 }
