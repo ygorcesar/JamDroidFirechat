@@ -6,7 +6,7 @@ android {
 
     def versionMajor = 2
     def versionMinor = 1
-    def versionPatch = 4
+    def versionPatch = 5
 
     dataBinding {
         enabled = true;

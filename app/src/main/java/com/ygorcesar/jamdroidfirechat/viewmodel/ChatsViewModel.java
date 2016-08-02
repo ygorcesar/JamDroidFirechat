@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
+import com.ygorcesar.jamdroidfirechat.utils.Utils;
 
 public class ChatsViewModel extends BaseChatViewModel {
 
@@ -45,7 +46,7 @@ public class ChatsViewModel extends BaseChatViewModel {
                                 String chatKey = dataSnapshot.getValue().toString();
                                 mContract.moveToMessagesFragment(chatKey, user.getName(), user.getFcmUserDeviceId());
                             } else {
-                                mContract.moveToMessagesFragment(createChat(user.getEmail()),
+                                mContract.moveToMessagesFragment(Utils.createChat(mLoggedUserEmail, user.getEmail()),
                                         user.getName(), user.getFcmUserDeviceId());
                             }
                         }
@@ -56,36 +57,5 @@ public class ChatsViewModel extends BaseChatViewModel {
                         }
                     });
         }
-    }
-
-    /**
-     * Cria key exclusiva para chat
-     *
-     * @param userEmail
-     * @return
-     */
-    private String createChat(String userEmail) {
-        String chatKey = FirebaseDatabase.getInstance()
-                .getReference(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
-                .push()
-                .getKey();
-
-        makeFriends(mLoggedUserEmail, userEmail, chatKey);
-        makeFriends(userEmail, mLoggedUserEmail, chatKey);
-        return chatKey;
-    }
-
-    /**
-     * Cria relação entre usuário atual e selecionado para chat, setando uma key exclusiva
-     * de chat para ambos
-     *
-     * @param userEmail
-     * @param userFriend
-     * @param key
-     */
-    private void makeFriends(String userEmail, String userFriend, String key) {
-        FirebaseDatabase.getInstance()
-                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USER_FRIENDS)
-                .child(userEmail).child(userFriend).setValue(key);
     }
 }

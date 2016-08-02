@@ -54,7 +54,7 @@ public class UserFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    private void getChatKey(final String friendName, String friendEmail, final String fcmKeyId) {
+    private void getChatKey(final String friendName, final String friendEmail, final String fcmKeyId) {
         FirebaseDatabase.getInstance()
                 .getReference(ConstantsFirebase.FIREBASE_LOCATION_USER_FRIENDS)
                 .child(mLoggedUserEmail)
@@ -65,6 +65,9 @@ public class UserFragment extends DialogFragment {
                         if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                             String chatKey = dataSnapshot.getValue().toString();
                             moveToMessagesFragment(chatKey, friendName, fcmKeyId);
+                        } else {
+                            moveToMessagesFragment(Utils.createChat(mLoggedUserEmail,Utils.encodeEmail( friendEmail))
+                                    , friendName, fcmKeyId);
                         }
                     }
 

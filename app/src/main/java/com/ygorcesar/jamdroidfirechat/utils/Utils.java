@@ -14,10 +14,43 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 
 public class Utils {
     private static PushNotificationObject.AdditionalData additionalData;
+
+    /**
+     * Cria key exclusiva para chat
+     *
+     * @param userEmail
+     * @return
+     */
+    public static String createChat(String loggedUserEmail, String userEmail) {
+        String chatKey = FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_CHAT)
+                .push()
+                .getKey();
+
+        Utils.makeFriends(loggedUserEmail, userEmail, chatKey);
+        Utils.makeFriends(userEmail, loggedUserEmail, chatKey);
+        return chatKey;
+    }
+
+    /**
+     * Cria relação entre usuário atual e selecionado para chat, setando uma key exclusiva
+     * de chat para ambos
+     *
+     * @param userEmail
+     * @param userFriend
+     * @param key
+     */
+    private static void makeFriends(String userEmail, String userFriend, String key) {
+        FirebaseDatabase.getInstance()
+                .getReference(ConstantsFirebase.FIREBASE_LOCATION_USER_FRIENDS)
+                .child(userEmail).child(userFriend).setValue(key);
+    }
 
     /**
      * Encoda o email pois os paths do Firebase não podem conter: '.', '#', '$', '[', ou ']'
