@@ -21,17 +21,18 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/jamdroid_google_app_id" />
+            android:value="@string/jamdroid_google_app_id"/>
 
-        <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@style/com_facebook_activity_theme"/>
 
         <activity
             android:name=".view.activity.LoginActivity"
@@ -59,11 +60,15 @@
                 <data android:mimeType="image/*"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="https" android:host="maps.google.com" />
-                <data android:scheme="geo" />
+
+                <data
+                    android:host="maps.google.com"
+                    android:scheme="https"/>
+                <data android:scheme="geo"/>
             </intent-filter>
         </activity>
 

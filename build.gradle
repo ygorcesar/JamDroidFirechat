@@ -1,12 +1,46 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+ext {
+    minVersion = 19
+    targetVersion = 27
+    compileVersion = 27
+
+    supportLibraryVersion = '27.0.1'
+    playServicesVersion = '11.6.2'
+    firebaseSdkVersion = '11.6.2'
+    crashlyticsVersion = '2.7.1@aar'
+    constraintLayoutVersion = '1.1.0-beta3'
+
+    archLifecycleVersion = '1.0.0'
+
+    ankoVersion = '0.10.3'
+    facebookSdkVersion = '4.28.0'
+    gsonVersion = '2.8.2'
+    glideVersion = '3.8.0'
+    circleImageviewVersion = '2.2.0'
+    emojiVersion = '1.1'
+    flipboardBottomSheetVersion = '1.5.3'
+
+    junitVersion = '4.12'
+    runnerVersion = '1.0.1'
+    espressoVersion = '3.0.1'
+}
+
 buildscript {
+
+    ext.kotlin_version = '1.2.0'
+    ext.gradle_plugin_version = '3.0.1'
+    ext.fabric_plugin_version = '1.24.4'
     repositories {
+        google()
         jcenter()
+        maven { url "https://maven.fabric.io/public" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath "com.android.tools.build:gradle:$gradle_plugin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.gms:google-services:3.1.2"
+        classpath "io.fabric.tools:gradle:$fabric_plugin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -15,8 +49,10 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
-        maven { url "https://dl.bintray.com/hani-momanii/maven"}
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.fabric.io/public" }
     }
 }
 

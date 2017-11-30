@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -175,6 +176,8 @@ public class LoginActivity extends BaseActivity {
                 if (result.isSuccess()) {
                     GoogleSignInAccount account = result.getSignInAccount();
                     firebaseAuthWithGoogle(account);
+                } else {
+                    Log.e(TAG, "onActivityResult: " + result.getStatus());
                 }
                 break;
             case RC_FACEBOOK_LOGIN:
@@ -215,7 +218,12 @@ public class LoginActivity extends BaseActivity {
                             Toast.makeText(LoginActivity.this, "Falha na autenticação", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                }).addOnFailureListener(this, new OnFailureListener() {
+            @Override public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "onFailure: FALHA", e);
+            }
+        });
     }
 
     private void setAuthenticatedWithOAuth(FirebaseUser user) {

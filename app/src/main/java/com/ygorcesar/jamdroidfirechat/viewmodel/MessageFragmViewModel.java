@@ -22,7 +22,6 @@ import com.ygorcesar.jamdroidfirechat.model.Message;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.PushNotificationObject;
-import com.ygorcesar.jamdroidfirechat.utils.Singleton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -115,7 +114,6 @@ public class MessageFragmViewModel {
                 mFcmUserDeviceId, new PushNotificationObject
                 .AdditionalData(mUserName, msg, mChildChatKey, msgKey, mUserName,
                 mLoggedUserEmail, mFcmUserDeviceId, fcmSenderKey));
-        Singleton.getInstance().sendMsgPushNotification(notificationObject);
     }
 
     public void sendLocationMessage(String latitude, String longitude) {
