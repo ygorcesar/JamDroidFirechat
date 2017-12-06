@@ -35,8 +35,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.flipboard.bottomsheet.commons.ImagePickerSheetView;
 import com.google.android.gms.location.places.Place;
@@ -486,8 +484,8 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                                 public void onProvideImage(final ImageView imageView, final Uri imageUri, int size) {
                                     Glide.with(getActivity())
                                             .load(imageUri)
-                                            .centerCrop()
-                                            .crossFade()
+                                            /*.centerCrop()
+                                            .crossFade()*/
                                             .into(imageView);
                                 }
                             })
@@ -608,7 +606,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
             if (args != null) {
                 url = args.getString(Constants.KEY_IMAGE_URL);
                 if (url != null) {
-                    Glide.with(getActivity())
+                  /*  Glide.with(getActivity())
                             .load(url)
                             .asBitmap()
                             .fitCenter()
@@ -617,7 +615,7 @@ public class MessagesFragment extends Fragment implements MessageFragmViewModelC
                                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                     binding.ivImage.setImageBitmap(resource);
                                 }
-                            });
+                            });*/
                 }
             }
 

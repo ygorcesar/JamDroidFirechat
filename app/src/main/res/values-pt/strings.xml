@@ -15,19 +15,19 @@
     <string name="dialog_title_logout">Deseja deslogar?</string>
     <string name="dialog_title_new_message">Nova Mensagem</string>
     <string name="dialog_title_revoke_access">Deseja revogar o acesso?</string>
-    <string name="dialog_title_select_image">Escolha uma imagem...</string>
+    <string name="dialog_title_select_image">Escolha uma imagem…</string>
     <string name="error_message_failed_sign_in_no_network">Erro ao tentar conectar, verifique sua conexão.</string>
     <string name="google_error_auth_with_google">"Erro na autenticação com o Google: "</string>
     <string name="google_error_network_error">"Erro de rede: "</string>
     <string name="google_error_recoverable_oauth_error">Recoverable Google OAuth error:</string>
-    <string name="hint_write_here">Digite aqui...</string>
+    <string name="hint_write_here">Digite aqui…</string>
     <string name="invitation_call_action">Acessar</string>
     <string name="invitation_message">Olá, venha conhecer o JamdroidFirechat, um app de chat realtime e o mais legal é opensource.</string>
     <string name="invitation_title">Compartilhe JamdroidFirechat</string>
     <string name="log_error_invalid_provider">Provider invpalido:</string>
     <string name="log_error_occurred">"Ocorreu um erro: "</string>
     <string name="log_message_auth_successful">Autenticação completa.</string>
-    <string name="menu_action_camera">Camera</string>
+    <string name="menu_action_camera">Câmera</string>
     <string name="menu_action_gallery">Galeria</string>
     <string name="menu_action_location">Localização</string>
     <string name="msg_account_deleted">Conta excluída!</string>
@@ -42,8 +42,12 @@
     <string name="notification_msg_location">Lhe enviou uma localização</string>
     <string name="pref_delete_account">Excluir conta</string>
     <string name="pref_version">Versão</string>
+
+    <string name="authenticating_with_facebook">Autenticando com Facebook…</string>
+    <string name="authenticating_with_google">Autenticando com Google…</string>
     <string name="progress_dialog_authenticating_with">Autenticando com o %s</string>
     <string name="progress_dialog_loading">Carregando..</string>
-    <string name="progress_dialog_uploading">Enviando Imagem...</string>
+    <string name="progress_dialog_uploading">Enviando Imagem…</string>
     <string name="version">Versão 2.1.0</string>
+    <string name="action_search">Buscar</string>
 </resources>

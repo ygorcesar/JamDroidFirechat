@@ -14,24 +14,21 @@ import android.view.WindowManager;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ygorcesar.jamdroidfirechat.BuildConfig;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.MapLocation;
+import com.ygorcesar.jamdroidfirechat.ui.preferences.PrefsActivity;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
-import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 import com.ygorcesar.jamdroidfirechat.utils.Singleton;
 import com.ygorcesar.jamdroidfirechat.utils.Utils;
 import com.ygorcesar.jamdroidfirechat.view.fragment.ChatsFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends com.ygorcesar.jamdroidfirechat.ui.BaseActivity {
     private static final int REQUEST_INVITE = 100;
     private Toolbar mToolbar;
     private BottomSheetLayout mBottomSheet;
@@ -199,7 +196,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setUserOnline(final boolean online) {
-        final DatabaseReference userRef = FirebaseDatabase.getInstance()
+    /*    final DatabaseReference userRef = FirebaseDatabase.getInstance()
                 .getReference(ConstantsFirebase.FIREBASE_LOCATION_USERS)
                 .child(mEncodedEmail);
 
@@ -214,6 +211,10 @@ public class MainActivity extends BaseActivity {
             @Override public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
+    }
+
+    @NotNull @Override public String getLoggerTag() {
+        return null;
     }
 }

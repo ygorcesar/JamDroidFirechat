@@ -15,12 +15,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.greysonparrelli.permiso.Permiso;
 import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.databinding.FragmentShowImageBinding;
@@ -44,7 +38,7 @@ public class ShowImageFragment extends Fragment {
             url = args.getString(Constants.KEY_IMAGE_URL);
         }
         if (url != null && !url.isEmpty()) {
-            Glide.with(getActivity())
+       /*     Glide.with(getActivity())
                     .load(url)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
@@ -58,7 +52,7 @@ public class ShowImageFragment extends Fragment {
                             return false;
                         }
                     })
-                    .into(binding.ivImage);
+                    .into(binding.ivImage);*/
         }
 
         binding.fabShare.setImageResource(R.drawable.ic_share);
@@ -71,7 +65,7 @@ public class ShowImageFragment extends Fragment {
                                 if (resultSet.areAllPermissionsGranted()) {
                                     try {
                                         binding.flProgressBar.setVisibility(View.VISIBLE);
-                                        Glide.with(getActivity())
+                                       /* Glide.with(getActivity())
                                                 .load(url)
                                                 .asBitmap()
                                                 .into(new SimpleTarget<Bitmap>() {
@@ -79,7 +73,7 @@ public class ShowImageFragment extends Fragment {
                                                     public void onResourceReady(final Bitmap bmp, GlideAnimation glideAnimation) {
                                                         initializeShareIntent(bmp, binding.flProgressBar);
                                                     }
-                                                });
+                                                });*/
                                     } catch (Exception e) {
                                         binding.flProgressBar.setVisibility(View.GONE);
                                         e.printStackTrace();

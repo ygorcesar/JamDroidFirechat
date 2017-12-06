@@ -11,6 +11,8 @@
     <string name="google_error_recoverable_oauth_error">Recoverable Google OAuth error: </string>
 
     <!-- Dialogs and Progress Dialogs -->
+    <string name="authenticating_with_facebook">Authenticating with Facebook…</string>
+    <string name="authenticating_with_google">Authenticating with Google…</string>
     <string name="progress_dialog_loading" type="id">Loading..</string>
     <string name="progress_dialog_authenticating_with">Authenticating with %s</string>
 
@@ -34,7 +36,7 @@
 
     <!-- Base Error Strings-->
     <string name="log_error_occurred">"An error has occurred: "</string>
-    <string name="hint_write_here">Write here...</string>
+    <string name="hint_write_here">Write here…</string>
     <string name="action_exit">Logout</string>
     <string name="action_revoke_access">Revoke Access</string>
     <string name="app_firechat" translatable="false">FireChat</string>
@@ -61,12 +63,13 @@
     <string name="dialog_title_licenses">Licenses</string>
     <string name="dialog_title_new_message">New Message</string>
     <string name="dialog_msg_user_says">%1$s, says: %2$s</string>
-    <string name="progress_dialog_uploading">Sending image...</string>
+    <string name="progress_dialog_uploading">Sending image…</string>
     <string name="msg_permission_required">You must give permission for this action</string>
-    <string name="dialog_title_select_image">Choose an image...</string>
+    <string name="dialog_title_select_image">Choose an image…</string>
     <string name="msg_info_send_success">Sent with success!</string>
     <string name="msg_info_send_failed">There was a problem sending!</string>
     <string name="action_invite">Invite</string>
+    <string name="action_search">Search</string>
     <string name="invitation_title">Share JamdroidFirechat</string>
     <string name="invitation_message">Hello, come the JamdroidFirechat a realtime chat app and the coolest is opensource.</string>
     <string name="invitation_call_action">Access</string>
@@ -84,4 +87,7 @@
         <item quantity="one">%d nova mensagem:</item>
         <item quantity="other">%d novas mensagens:</item>
     </plurals>
+
+
+    <string name="content_description_app_icon" translatable="false">App Icon</string>
 </resources>

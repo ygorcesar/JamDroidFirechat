@@ -5,8 +5,6 @@ import android.databinding.BindingAdapter;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.ygorcesar.jamdroidfirechat.R;
 import com.ygorcesar.jamdroidfirechat.model.MapLocation;
 import com.ygorcesar.jamdroidfirechat.model.User;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
@@ -58,7 +56,7 @@ public abstract class BaseChatViewModel extends BaseObservable {
      */
     @BindingAdapter({"bind:photoUrl"})
     public static void loadImage(ImageView view, String url) {
-        if (url != null && !url.isEmpty()) {
+    /*    if (url != null && !url.isEmpty()) {
             if (url.equals(ConstantsFirebase.FIREBASE_LOCATION_CHAT_GLOBAL)) {
                 view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_chat_global));
             } else {
@@ -71,12 +69,12 @@ public abstract class BaseChatViewModel extends BaseObservable {
             }
         } else {
             view.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_person));
-        }
+        }*/
     }
 
     @BindingAdapter({"bind:photoUrlMessage", "bind:mapLocation"})
     public static void loadMessageImage(ImageView view, String url, MapLocation mapLocation) {
-        if (mapLocation != null) {
+      /*  if (mapLocation != null) {
             Glide.with(view.getContext())
                     .load(view.getContext().getString(R.string.map_static_url,
                             mapLocation.getLatitude(), mapLocation.getLongitude()))
@@ -92,7 +90,7 @@ public abstract class BaseChatViewModel extends BaseObservable {
                         .crossFade()
                         .into(view);
             }
-        }
+        }*/
     }
 
     public void setUser(User user) {

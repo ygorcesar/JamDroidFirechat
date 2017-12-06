@@ -16,10 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.greysonparrelli.permiso.Permiso;
 import com.ygorcesar.jamdroidfirechat.R;
+import com.ygorcesar.jamdroidfirechat.ui.login.LoginActivity;
 import com.ygorcesar.jamdroidfirechat.utils.Constants;
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase;
 
@@ -45,13 +44,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
         mEncodedEmail = sp.getString(Constants.KEY_ENCODED_EMAIL, null);
         mProvider = sp.getString(Constants.KEY_PROVIDER, null);
 
-        if (!(this instanceof LoginActivity)) {
+        /*if (!(this instanceof LoginActivity)) {
             mFirebaseAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
-                    /* The user has been logged out */
+                    *//* The user has been logged out *//*
                     if (user == null) {
                         takeUserToLoginScreenOnUnAuth();
                         FirebaseMessaging.getInstance()
@@ -60,7 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 }
             };
             mFirebaseAuth.addAuthStateListener(mAuthListener);
-        }
+        }*/
     }
 
     @Override

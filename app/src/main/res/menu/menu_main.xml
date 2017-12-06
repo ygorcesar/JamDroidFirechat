@@ -4,6 +4,13 @@
       tools:context=".view.activity.MainActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|always"/>
+
+    <item
         android:id="@+id/action_attach"
         android:icon="@drawable/ic_attach"
         android:title="@string/action_attach"
@@ -11,8 +18,8 @@
 
     <item
         android:id="@+id/action_invite"
-        android:title="@string/action_invite"
         android:icon="@drawable/ic_share"
+        android:title="@string/action_invite"
         app:showAsAction="ifRoom"/>
 
     <item

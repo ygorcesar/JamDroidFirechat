@@ -41,4 +41,7 @@ public final class Constants {
     public static final int ARGS_POS_TYPE = 1;
     public static final int ARGS_POS_LATITUDE = 2;
     public static final int ARGS_POS_LONGITUDE = 3;
+
+    public static final String FACEBOOK_PERMISSION_PUBLIC = "public_profile";
+    public static final String FACEBOOK_PERMISSION_EMAIL = "email";
 }
