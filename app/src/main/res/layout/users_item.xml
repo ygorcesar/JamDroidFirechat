@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="user"
+            name="userBinding"
             type="com.ygorcesar.jamdroidfirechat.ui.users.UserBinding"/>
     </data>
 
@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_selectable"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="@{user::onItemClick}">
+        android:onClick="@{userBinding::onItemClick}">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_photo"
@@ -24,7 +22,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            app:bindUserPhoto="@{user.photoUrl}"
+            app:bindUserPhoto="@{userBinding.userPhotoUrl}"
             app:civ_border_color="@color/circle_iv_border"
             app:civ_border_width="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +37,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:text="@{user.name}"
+            android:text="@{userBinding.userName}"
             android:textSize="@dimen/item_user_name_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"

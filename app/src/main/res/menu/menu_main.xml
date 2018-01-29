@@ -11,12 +11,6 @@
         app:showAsAction="collapseActionView|always"/>
 
     <item
-        android:id="@+id/action_attach"
-        android:icon="@drawable/ic_attach"
-        android:title="@string/action_attach"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/action_invite"
         android:icon="@drawable/ic_share"
         android:title="@string/action_invite"

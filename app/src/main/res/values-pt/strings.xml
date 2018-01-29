@@ -50,4 +50,11 @@
     <string name="progress_dialog_uploading">Enviando Imagem…</string>
     <string name="version">Versão 2.1.0</string>
     <string name="action_search">Buscar</string>
+    <string name="authenticating">Autenticando…</string>
+
+    <string name="dialog_message_delete_note">Nota: esta ação irá deletar a mensagem para todos os usuários</string>
+    <string name="dialog_message_delete_title">Você deseja excluir essa mensagem?</string>
+    <string name="hint_select_an_image">Selecione uma imagem…</string>
+    <string name="notification_new_notification">Você tem uma nova notificação</string>
+    <string name="title_select_an_user">Selecione um Usuário</string>
 </resources>

@@ -6,12 +6,13 @@ import com.ygorcesar.jamdroidfirechat.data.entity.User
 abstract class BaseBinding(user: User) : BaseObservable() {
     var user: User = user
         set(value) {
+            field = value
             notifyChange()
         }
 
-    fun getName() = user.name
+    fun getUserName() = user.name
 
-    fun getEmail() = user.email
+    fun getUserEmail() = user.email
 
-    fun getPhotoUrl() = user.photoUrl
+    fun getUserPhotoUrl() = user.photoUrl
 }

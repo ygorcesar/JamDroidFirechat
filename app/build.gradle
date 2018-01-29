@@ -4,9 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-def versionMajor = 2
-def versionMinor = 1
-def versionPatch = 5
+def versionMajor = 3
+def versionMinor = 0
+def versionPatch = 0
 def appVersionCode = versionMajor * 1000 + versionMinor * 100 + versionPatch
 
 android {
@@ -28,8 +28,8 @@ android {
     }
     buildTypes {
         debug {
-            minifyEnabled false
-            useProguard false
+            minifyEnabled true
+            useProguard true
             versionNameSuffix "-debug"
         }
 
@@ -53,7 +53,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version") {
+        exclude group: 'org.jetbrains', module: 'annotations'
+    }
     kapt "com.android.databinding:compiler:$gradle_plugin_version"
 
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
@@ -77,9 +79,9 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$firebaseSdkVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseSdkVersion"
     implementation "com.google.firebase:firebase-invites:$firebaseSdkVersion"
-    releaseImplementation("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion") {
+    /* releaseImplementation("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion") {
         transitive = true
-    }
+    }*/
 
     /* Facebook SDK*/
     implementation("com.facebook.android:facebook-login:$facebookSdkVersion") {
@@ -92,21 +94,18 @@ dependencies {
 
     implementation "com.github.frangsierra:rx2firebase:$rxFirebaseVersion"
 
-    implementation 'com.firebaseui:firebase-ui-database:1.2.0'
-
-    /* Picasso para download de imagens */
+    /* Glide para download de imagens */
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
-
-    implementation "com.google.code.gson:gson:$gsonVersion"
 
     /* Circle ImageView */
     implementation "de.hdodenhof:circleimageview:$circleImageviewVersion"
 
-    implementation "com.flipboard:bottomsheet-core:$flipboardBottomSheetVersion"
-    implementation "com.flipboard:bottomsheet-commons:$flipboardBottomSheetVersion"
+    implementation "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
 
-    implementation 'com.greysonparrelli.permiso:permiso:0.3.0'
+    implementation "com.github.chrisbanes:PhotoView:$photoViewVersion"
+
     implementation "com.github.hani-momanii:SuperNova-Emoji:$emojiVersion"
 
     testImplementation "junit:junit:$junitVersion"

@@ -38,5 +38,10 @@
 
     <dimen name="margin_zero">0dp</dimen>
     <dimen name="edt_ic_size">34dp</dimen>
+    <dimen name="toolbar_title_margin_h">8dp</dimen>
+    <dimen name="toolbar_text_size">18sp</dimen>
+    <dimen name="input_message_elevation">2dp</dimen>
+    <dimen name="shape_message_corner_radius">4dp</dimen>
+    <dimen name="shape_message_border_size">2dp</dimen>
 
 </resources>

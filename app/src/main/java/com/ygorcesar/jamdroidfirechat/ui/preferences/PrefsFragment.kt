@@ -12,9 +12,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.ygorcesar.jamdroidfirechat.R
 import com.ygorcesar.jamdroidfirechat.ui.BaseActivity
 import com.ygorcesar.jamdroidfirechat.utils.Constants
-import com.ygorcesar.jamdroidfirechat.utils.subscribeToGlobal
-import com.ygorcesar.jamdroidfirechat.utils.unsubscribeFromGlobal
-import com.ygorcesar.jamdroidfirechat.utils.userReference
+import com.ygorcesar.jamdroidfirechat.extensions.subscribeToGlobal
+import com.ygorcesar.jamdroidfirechat.extensions.unsubscribeFromGlobal
+import com.ygorcesar.jamdroidfirechat.extensions.userReference
 import kotlinx.android.synthetic.main.dialog_fragment_version.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.browse
@@ -29,7 +29,7 @@ class PrefsFragment : PreferenceFragment() {
 
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference): Boolean {
         when (preference.key) {
-            Constants.KEY_PREF_NOTIFICATION -> toggleNotificationStatus(preference)
+            Constants.KEY_PREF_NOTIFICATION_IS_ACTIVE -> toggleNotificationStatus(preference)
             Constants.KEY_PREF_GITHUB -> browse(Constants.PROJECT_GITHUB_URL)
             Constants.KEY_PREF_ABOUT -> showAboutDialog()
             Constants.KEY_PREF_REVOKE_ACCESS -> buildDialog(R.string.dialog_title_revoke_access, { (activity as BaseActivity).revokeAccess() })
@@ -40,8 +40,8 @@ class PrefsFragment : PreferenceFragment() {
     }
 
     private fun toggleNotificationStatus(preference: Preference) {
-        val notificationStatus = preference.sharedPreferences.getBoolean(Constants.KEY_PREF_NOTIFICATION, true)
-        preference.editor.putBoolean(Constants.KEY_PREF_NOTIFICATION, notificationStatus).commit()
+        val notificationStatus = preference.sharedPreferences.getBoolean(Constants.KEY_PREF_NOTIFICATION_IS_ACTIVE, true)
+        preference.editor.putBoolean(Constants.KEY_PREF_NOTIFICATION_IS_ACTIVE, notificationStatus).commit()
 
         val statusId = if (notificationStatus) {
             FirebaseMessaging.getInstance().subscribeToGlobal()

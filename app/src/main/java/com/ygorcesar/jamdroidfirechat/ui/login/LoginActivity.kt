@@ -9,20 +9,21 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.ConnectionResult
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import com.google.firebase.messaging.FirebaseMessaging
-import com.ygorcesar.jamdroidfirechat.R
+import com.ygorcesar.jamdroidfirechat.databinding.LoginActivityBinding
+import com.ygorcesar.jamdroidfirechat.extensions.provideViewModel
+import com.ygorcesar.jamdroidfirechat.extensions.subscribeToGlobal
 import com.ygorcesar.jamdroidfirechat.ui.BaseActivity
 import com.ygorcesar.jamdroidfirechat.ui.users.UsersActivity
-import com.ygorcesar.jamdroidfirechat.utils.*
+import com.ygorcesar.jamdroidfirechat.utils.Constants
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import kotlinx.android.synthetic.main.login_activity.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class LoginActivity : BaseActivity() {
+    private val binding: LoginActivityBinding by lazy { LoginActivityBinding.inflate(layoutInflater) }
     private val viewModel: LoginViewModel by lazy { provideViewModel<LoginViewModel>() }
     private val fbCallbackManager: CallbackManager by lazy { CallbackManager.Factory.create() }
     private val authStateListener: FirebaseAuth.AuthStateListener by lazy {
@@ -31,7 +32,8 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_activity)
+        binding.viewmodel = viewModel
+        setContentView(binding.root)
 
         sign_in_google.onClick { signInWithGoogle() }
         setupSignInWithFacebook()
@@ -57,7 +59,7 @@ class LoginActivity : BaseActivity() {
         when (requestCode) {
             RC_GOOGLE_SIGN_IN -> {
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-                viewModel.authWithGoogle(result, { authenticateWithCredentials(it, ConstantsFirebase.GOOGLE_PROVIDER) }, { hideProgress() })
+                viewModel.      authWithGoogle(result, { authenticateWithCredentials(it, GoogleAuthProvider.PROVIDER_ID) })
             }
             RC_FACEBOOK_SIGN_IN -> fbCallbackManager.onActivityResult(requestCode, resultCode, data)
         }
@@ -66,7 +68,7 @@ class LoginActivity : BaseActivity() {
     private fun signInWithGoogle() {
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
         startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
-        showProgress(ConstantsFirebase.GOOGLE_PROVIDER)
+        viewModel.showProgress(GoogleAuthProvider.PROVIDER_ID)
     }
 
     private fun setupSignInWithFacebook() {
@@ -74,16 +76,15 @@ class LoginActivity : BaseActivity() {
             setReadPermissions(Constants.FACEBOOK_PERMISSION_PUBLIC, Constants.FACEBOOK_PERMISSION_EMAIL)
             registerCallback(fbCallbackManager, object : FacebookCallback<LoginResult> {
                 override fun onSuccess(result: LoginResult?) {
-                    showProgress(ConstantsFirebase.FACEBOOK_PROVIDER)
-                    viewModel.authWithFacebook(result, { authenticateWithCredentials(it, ConstantsFirebase.FACEBOOK_PROVIDER) })
+                    viewModel.authWithFacebook(result, { authenticateWithCredentials(it, FacebookAuthProvider.PROVIDER_ID) })
                 }
 
                 override fun onCancel() {
-                    hideProgress()
+                    viewModel.hideProgress()
                 }
 
                 override fun onError(error: FacebookException?) {
-                    hideProgress()
+                    viewModel.hideProgress()
                 }
             })
         }
@@ -110,37 +111,13 @@ class LoginActivity : BaseActivity() {
                                 error("Error on fetch user!", err)
                             }
                         })
-        hideProgress()
+        viewModel.hideProgress()
         goToMainActivity()
-    }
-
-    private fun showProgress(provider: String) {
-        false.apply {
-            sign_in_google.isEnabled = this
-            sign_in_facebook.isEnabled = this
-        }
-        tv_login_state.apply {
-            when (provider) {
-                ConstantsFirebase.GOOGLE_PROVIDER -> setText(R.string.authenticating_with_google)
-                ConstantsFirebase.FACEBOOK_PROVIDER -> setText(R.string.authenticating_with_facebook)
-            }
-            visible()
-        }
-        progress_login.visible()
-    }
-
-    private fun hideProgress() {
-        true.apply {
-            sign_in_google.isEnabled = this
-            sign_in_facebook.isEnabled = this
-        }
-        tv_login_state.invisible()
-        progress_login.invisible()
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
         super.onConnectionFailed(connectionResult)
-        hideProgress()
+        viewModel.hideProgress()
         longToast(connectionResult.toString())
     }
 

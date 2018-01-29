@@ -88,6 +88,18 @@
         <item quantity="other">%d novas mensagens:</item>
     </plurals>
 
-
     <string name="content_description_app_icon" translatable="false">App Icon</string>
+
+
+    <string name="transition_name_user_photo" translatable="false">img_user_photo</string>
+    <string name="transition_name_user_name" translatable="false">img_user_name</string>
+    <string name="transition_name_message_image" translatable="false">message_image</string>
+
+    <string name="authenticating">Authenticating…</string>
+    <string name="dialog_message_delete_note">Note: this action will delete message for all users</string>
+    <string name="dialog_message_delete_title">Do you want delete this message?</string>
+    <string name="hint_select_an_image">Select an image…</string>
+    <string name="notification_new_notification">You received a notification</string>
+    <string name="title_select_an_user">Select an User</string>
+
 </resources>

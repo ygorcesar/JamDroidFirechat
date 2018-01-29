@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="binding"
+            type="com.ygorcesar.jamdroidfirechat.ui.messages.MessagesBinding"/>
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onLongClick="@{() -> binding.onLongClick()}">
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_left"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="1dp"
+            android:layout_alignParentStart="true"
+            android:visibility="@{binding.isSender ? View.GONE : View.VISIBLE }"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/item_message_margin_v"
+            android:layout_marginLeft="@dimen/item_message_margin_h"
+            android:layout_marginRight="@dimen/item_message_margin_h"
+            android:layout_marginTop="@dimen/item_message_margin_v"
+            android:layout_toEndOf="@+id/space_left"
+            android:layout_toStartOf="@id/space_right"
+            app:bindBackground="@{binding.backgroundRes}"
+            tools:background="@drawable/bg_message">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_item_user_photo_sender"
+                style="@style/AppTheme.CircleImgList"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:bindUserPhoto="@{binding.userPhotoUrl}"
+                app:civ_border_color="@color/circle_iv_border"
+                app:civ_border_width="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_person"/>
+
+            <TextView
+                android:id="@+id/tv_item_user_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:text="@{binding.userName}"
+                android:textSize="@dimen/item_user_name_text_size"
+                android:textStyle="bold"
+                app:bindMessageColor="@{binding.colorMessageText}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_item_user_photo_sender"
+                app:layout_constraintTop_toTopOf="@+id/iv_item_user_photo_sender"
+                tools:text="Ygor César"/>
+
+            <TextView
+                android:id="@+id/tv_item_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{binding.messageText}"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/item_message_content_text_size"
+                app:bindMessageColor="@{binding.colorMessageText}"
+                app:layout_constraintEnd_toEndOf="@+id/tv_item_user_email"
+                app:layout_constraintStart_toStartOf="@+id/tv_item_user_email"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_user_email"
+                tools:text="Mussum Ipsum, cacilds vidis litro abertis."/>
+
+            <TextView
+                android:id="@+id/tv_item_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@{binding.time}"
+                android:textSize="@dimen/item_message_time_size"
+                app:bindMessageColor="@{binding.colorMessageText}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tv_item_user_email"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_message"
+                tools:text="12:30"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_right"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:visibility="@{binding.isSender ? View.VISIBLE : View.GONE }"/>
+    </RelativeLayout>
+</layout>

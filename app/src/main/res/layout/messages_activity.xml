@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.messages.MessagesActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:contentInsetStartWithNavigation="0dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_title_user_photo"
+                android:layout_width="@dimen/circle_photo_user"
+                android:layout_height="@dimen/circle_photo_user"
+                android:layout_marginEnd="@dimen/toolbar_title_margin_h"
+                android:padding="6dp"
+                android:transitionName="@string/transition_name_user_photo"
+                tools:src="@drawable/ic_chat_global"/>
+
+            <TextView
+                android:id="@+id/tv_title_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/toolbar_title_margin_h"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_text_size"
+                android:transitionName="@string/transition_name_user_name"
+                tools:text="User Name"/>
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+</android.support.design.widget.CoordinatorLayout>

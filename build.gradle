@@ -6,21 +6,21 @@ ext {
     compileVersion = 27
 
     supportLibraryVersion = '27.0.2'
-    playServicesVersion = '11.6.2'
-    firebaseSdkVersion = '11.6.2'
+    playServicesVersion = '11.8.0'
+    firebaseSdkVersion = '11.8.0'
     crashlyticsVersion = '2.7.1@aar'
-    constraintLayoutVersion = '1.1.0-beta3'
+    constraintLayoutVersion = '1.1.0-beta4'
 
     archLifecycleVersion = '1.0.0'
 
-    ankoVersion = '0.10.3'
+    ankoVersion = '0.10.4'
     facebookSdkVersion = '4.28.0'
     rxFirebaseVersion = '1.1.3'
-    gsonVersion = '2.8.2'
     glideVersion = '4.4.0'
     circleImageviewVersion = '2.2.0'
     emojiVersion = '1.1'
-    flipboardBottomSheetVersion = '1.5.3'
+    permissionDispatcherVersion = '3.1.0'
+    photoViewVersion = '2.1.3'
 
     junitVersion = '4.12'
     runnerVersion = '1.0.1'
@@ -29,13 +29,14 @@ ext {
 
 buildscript {
 
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     ext.gradle_plugin_version = '3.0.1'
     ext.fabric_plugin_version = '1.24.4'
     repositories {
         google()
         jcenter()
         maven { url "https://maven.fabric.io/public" }
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_plugin_version"

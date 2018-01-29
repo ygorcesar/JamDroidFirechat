@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.ygorcesar.jamdroidfirechat.ui.messages.MessagesViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@{viewmodel.messageNotEmpty ? @color/colorAccent : @color/colorDisabled}"
+            android:clickable="@{viewmodel.messageNotEmpty}"
+            android:onClick="@{viewmodel::onViewClick}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_send"/>
+
+        <View
+            android:id="@+id/bg_input"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_input_message"
+            android:elevation="@dimen/input_message_elevation"
+            app:layout_constraintBottom_toBottomOf="@+id/fab"
+            app:layout_constraintEnd_toStartOf="@+id/fab"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fab"/>
+
+        <EditText
+            android:id="@+id/edt_message_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="#00ffffff"
+            android:elevation="@dimen/input_message_elevation"
+            android:hint="@string/hint_write_here"
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="2"
+            android:maxLines="3"
+            android:onClick="@{viewmodel::onViewClick}"
+            android:text="@={viewmodel.messageText}"
+            app:layout_constraintBottom_toBottomOf="@+id/bg_input"
+            app:layout_constraintEnd_toStartOf="@+id/iv_attachment"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/bg_input"
+            app:layout_constraintTop_toTopOf="@+id/bg_input"/>
+
+        <ImageView
+            android:id="@+id/iv_attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:elevation="@dimen/input_message_elevation"
+            android:focusable="true"
+            android:onClick="@{viewmodel::onViewClick}"
+            android:padding="4dp"
+            android:tint="@color/colorSecondaryIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/edt_message_content"
+            app:layout_constraintEnd_toStartOf="@+id/iv_camera"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/edt_message_content"
+            app:layout_constraintTop_toTopOf="@+id/edt_message_content"
+            app:srcCompat="@drawable/ic_attach"/>
+
+        <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:elevation="@dimen/input_message_elevation"
+            android:focusable="true"
+            android:onClick="@{viewmodel::onViewClick}"
+            android:padding="4dp"
+            android:tint="@color/colorSecondaryIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/edt_message_content"
+            app:layout_constraintEnd_toEndOf="@+id/bg_input"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_attachment"
+            app:layout_constraintTop_toTopOf="@+id/edt_message_content"
+            app:srcCompat="@drawable/ic_camera"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_messages"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:bindMessages="@{viewmodel.messages}"
+            app:layout_constraintBottom_toTopOf="@+id/bg_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <include
+            android:id="@+id/content_attachments"
+            layout="@layout/content_attachments_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/bg_input"
+            app:layout_constraintEnd_toEndOf="@+id/fab"
+            app:layout_constraintStart_toStartOf="@+id/bg_input"
+            app:viewmodel="@{viewmodel}"
+            tools:visibility="visible"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

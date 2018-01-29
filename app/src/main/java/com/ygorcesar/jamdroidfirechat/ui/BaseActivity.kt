@@ -9,13 +9,14 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ygorcesar.jamdroidfirechat.R
+import com.ygorcesar.jamdroidfirechat.extensions.unsubscribeFromGlobal
 import com.ygorcesar.jamdroidfirechat.ui.login.LoginActivity
 import com.ygorcesar.jamdroidfirechat.utils.Constants
-import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase
-import com.ygorcesar.jamdroidfirechat.utils.unsubscribeFromGlobal
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 
@@ -40,6 +41,11 @@ abstract class BaseActivity : AppCompatActivity(), GoogleApiClient.OnConnectionF
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.apply {
+            userEmail = Constants.KEY_USER_EMAIL
+            loginProvider = Constants.KEY_PROVIDER
+        }
+
         if (!googleApiClient.isConnecting) googleApiClient.connect()
 
         /* Get mEncodedEmail and mProvider from SharedPreferences, use null as default value */
@@ -51,6 +57,15 @@ abstract class BaseActivity : AppCompatActivity(), GoogleApiClient.OnConnectionF
         if (this !is LoginActivity) firebaseAuth.addAuthStateListener(firebaseAuthListener)
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.apply {
+            putString(Constants.KEY_USER_EMAIL, userEmail)
+            putString(Constants.KEY_PROVIDER, loginProvider)
+        }
+    }
+
+
     /**
      * Desconecta a conta google do app
      */
@@ -58,8 +73,8 @@ abstract class BaseActivity : AppCompatActivity(), GoogleApiClient.OnConnectionF
         firebaseAuth.signOut()
         loginProvider?.let {
             when (it) {
-                ConstantsFirebase.GOOGLE_PROVIDER -> Auth.GoogleSignInApi.signOut(googleApiClient)
-                ConstantsFirebase.FACEBOOK_PROVIDER -> LoginManager.getInstance().logOut()
+                GoogleAuthProvider.PROVIDER_ID -> Auth.GoogleSignInApi.signOut(googleApiClient)
+                FacebookAuthProvider.PROVIDER_ID -> LoginManager.getInstance().logOut()
                 else -> debug { "UnknowProvide" }
             }
         }
@@ -69,8 +84,8 @@ abstract class BaseActivity : AppCompatActivity(), GoogleApiClient.OnConnectionF
         firebaseAuth.signOut()
         loginProvider?.let {
             when (it) {
-                ConstantsFirebase.GOOGLE_PROVIDER -> Auth.GoogleSignInApi.revokeAccess(googleApiClient)
-                ConstantsFirebase.FACEBOOK_PROVIDER -> LoginManager.getInstance().logOut()
+                GoogleAuthProvider.PROVIDER_ID -> Auth.GoogleSignInApi.revokeAccess(googleApiClient)
+                FacebookAuthProvider.PROVIDER_ID -> LoginManager.getInstance().logOut()
                 else -> debug { "UnknowProvider" }
             }
         }

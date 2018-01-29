@@ -9,35 +9,38 @@ import android.support.v7.widget.SearchView
 import com.ygorcesar.jamdroidfirechat.BR
 import com.ygorcesar.jamdroidfirechat.data.entity.ChatReference
 import com.ygorcesar.jamdroidfirechat.data.entity.User
+import com.ygorcesar.jamdroidfirechat.data.repository.UserRepository
 import com.ygorcesar.jamdroidfirechat.data.repository.local.AppDatabase
-import com.ygorcesar.jamdroidfirechat.data.repository.remote.UserDao
-import org.jetbrains.anko.doAsync
 
 class UsersViewModel(context: Application) : AndroidViewModel(context), Observable {
 
-    private val db: AppDatabase by lazy { AppDatabase.getInstance(this.getApplication<Application>().applicationContext) }
-    private val propertyChanged: PropertyChangeRegistry = PropertyChangeRegistry()
-    private var users: List<User> = listOf()
-    private var usersHelper: List<User> = listOf()
-    private val userDao: UserDao by lazy { UserDao() }
+    private val propertyChanged: PropertyChangeRegistry by lazy { PropertyChangeRegistry() }
+    private var usersHelper: List<User> = mutableListOf()
+    private val repository: UserRepository by lazy { UserRepository(AppDatabase.getInstance(this.getApplication<Application>().applicationContext)) }
 
-    @Bindable
-    fun getUsers() = users
+    var users: MutableList<User> = mutableListOf()
+        @Bindable get
+        set(value) {
+            field = value
+            propertyChanged.notifyChange(this, BR.users)
+        }
+
+    fun fetchUsers(email: String) = repository.fetchUsers(email)
 
     fun setUsers(users: List<User>, isSearch: Boolean = false) {
-        if (!isSearch) usersHelper = users
-        this.users = users
-        propertyChanged.notifyChange(this, BR.users)
+        if (!isSearch) {
+            usersHelper = users
+            repository.insertUsers(*users.toTypedArray())
+        }
+        this.users = users.toMutableList()
     }
 
-    fun fetchUsers(email: String) = userDao.fetchUsers(email)
-
-    fun searchUsers(newText: String): List<User> {
+    fun searchUsers(newText: String): MutableList<User> {
         return if (newText.isNotEmpty()) {
-            val filteredUsers = users.filter { it.name.contains(newText, true) }
+            val filteredUsers = users.filter { it.name.contains(newText, true) }.toMutableList()
             filteredUsers
         } else {
-            usersHelper
+            usersHelper.toMutableList()
         }
     }
 
@@ -53,19 +56,9 @@ class UsersViewModel(context: Application) : AndroidViewModel(context), Observab
         }
     }
 
-    fun shouldFetchChatReference(email: String) = db.chatReferenceDao().getChatReference(email)
-
-    fun saveChatReference(friendEmail: String, chatKey: String): ChatReference {
-        val chatRef = ChatReference(friendEmail, chatKey)
-        doAsync { db.chatReferenceDao().insertChatReference(chatRef) }
-        return chatRef
-    }
-
-    fun fetchChatReference(userEmail: String, friendEmail: String) = userDao.fetchFriendChatReference(userEmail, friendEmail)
-
-    fun createChatReference(userEmail: String, friendEmail: String): ChatReference {
-        val chatKey = userDao.createChat(userEmail, friendEmail)
-        return saveChatReference(friendEmail, chatKey)
+    fun fetchReference(userEmail: String, friendEmail: String,
+                       goToChat: (chatRef: ChatReference) -> Unit, onError: (err: Throwable) -> Unit) {
+        repository.fetchReference(userEmail, friendEmail, goToChat, onError)
     }
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) = propertyChanged.add(callback)

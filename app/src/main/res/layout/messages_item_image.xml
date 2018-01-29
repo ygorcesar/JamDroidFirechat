@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="binding"
+            type="com.ygorcesar.jamdroidfirechat.ui.messages.MessagesBinding"/>
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onLongClick="@{() -> binding.onLongClick()}">
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_left"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="1dp"
+            android:layout_alignParentStart="true"
+            android:visibility="@{binding.isSender ? View.GONE : View.VISIBLE }"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/item_message_margin_v"
+            android:layout_marginLeft="@dimen/item_message_margin_h"
+            android:layout_marginRight="@dimen/item_message_margin_h"
+            android:layout_marginTop="@dimen/item_message_margin_v"
+            android:layout_toEndOf="@+id/space_left"
+            android:layout_toStartOf="@id/space_right"
+            app:bindBackground="@{binding.backgroundRes}"
+            tools:background="@drawable/bg_message">
+
+            <ImageView
+                android:id="@+id/iv_message_img"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_message_max_height"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:maxHeight="@dimen/item_message_max_height"
+                android:onClick="@{binding::onImageClick}"
+                android:onLongClick="@{() -> binding.onLongClick()}"
+                android:scaleType="centerCrop"
+                android:transitionName="@string/transition_name_message_image"
+                app:bindMessageType="@{binding.message}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_github_blue"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_item_user_photo_sender"
+                style="@style/AppTheme.CircleImgList"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:bindUserPhoto="@{binding.userPhotoUrl}"
+                app:civ_border_color="@color/circle_iv_border"
+                app:civ_border_width="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_person"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space_right"
+            android:layout_width="@dimen/message_item_space_horizontal"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:visibility="@{binding.isSender ? View.VISIBLE : View.GONE }"/>
+    </RelativeLayout>
+</layout>

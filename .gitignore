@@ -51,6 +51,7 @@ freeline_project_description.json
 .idea/runConfigurations.xml
 gradle/
 libs/
-proguard-rules.pro
 
 app/release/
+/functions-jamdroidfirechat/functions/package-lock.json
+/functions-jamdroidfirechat/functions/node_modules/

@@ -3,13 +3,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="user"
-            type="com.ygorcesar.jamdroidfirechat.model.User"/>
-    </data>
-
     <RelativeLayout
         android:id="@+id/rv_dialog"
         android:layout_width="match_parent"
@@ -36,7 +29,6 @@
             android:layout_marginTop="28dp"
             app:civ_border_color="@color/colorPrimary"
             app:civ_border_width="4dp"
-            app:photoUrl="@{user.photoUrl}"
             tools:src="@drawable/ic_person"/>
 
         <TextView
@@ -46,7 +38,6 @@
             android:layout_below="@+id/iv_user_photo"
             android:layout_marginBottom="6dp"
             android:gravity="center"
-            android:text="@{user.name}"
             android:textColor="@color/white"
             android:textSize="@dimen/item_user_name_text_size_dialog"
             android:textStyle="bold"
@@ -58,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_user_name"
             android:gravity="center"
-            android:text="@{user.email}"
             android:textColor="@color/white"
             android:textSize="@dimen/item_user_email_text_size"
             android:textStyle="bold"

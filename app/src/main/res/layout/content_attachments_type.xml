@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.ygorcesar.jamdroidfirechat.ui.messages.MessagesViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fl_container_to_hide"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/cl_attachment_types"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{viewmodel::onViewClick}"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_attachment_types"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_select_attachment_type"
+            android:elevation="@dimen/input_message_elevation">
+
+            <ImageView
+                android:id="@+id/iv_attach_camera"
+                android:layout_width="@dimen/rounded_menu_icon"
+                android:layout_height="@dimen/rounded_menu_icon"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_rounded_shape"
+                android:elevation="@dimen/input_message_elevation"
+                android:onClick="@{viewmodel::onViewClick}"
+                android:src="@drawable/ic_camera"
+                android:tint="@color/white"
+                app:layout_constraintEnd_toStartOf="@+id/iv_attach_image"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_attach_image"/>
+
+            <ImageView
+                android:id="@+id/iv_attach_image"
+                android:layout_width="@dimen/rounded_menu_icon"
+                android:layout_height="@dimen/rounded_menu_icon"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_rounded_shape"
+                android:elevation="@dimen/input_message_elevation"
+                android:onClick="@{viewmodel::onViewClick}"
+                android:src="@drawable/ic_image_placeholder"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_attach_location"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/iv_attach_camera"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_attach_location"
+                android:layout_width="@dimen/rounded_menu_icon"
+                android:layout_height="@dimen/rounded_menu_icon"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_rounded_shape"
+                android:elevation="@dimen/input_message_elevation"
+                android:onClick="@{viewmodel::onViewClick}"
+                android:src="@drawable/ic_location"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_attach_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/iv_attach_image"
+                app:layout_constraintTop_toTopOf="@+id/iv_attach_image"/>
+
+        </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
+</layout>
