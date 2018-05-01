@@ -16,9 +16,7 @@ class LatestImagesAdapter(val onImageSelected: (imageTile: ImageTile) -> Unit, v
         return LatestImagesViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: LatestImagesViewHolder?, position: Int) {
-        holder?.bind(imagesTile[position])
-    }
+    override fun onBindViewHolder(holder: LatestImagesViewHolder, position: Int) = holder.bind(imagesTile[position])
 
     override fun getItemCount() = imagesTile.size
 

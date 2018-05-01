@@ -5,12 +5,15 @@ import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import com.ygorcesar.jamdroidfirechat.R
+import com.ygorcesar.jamdroidfirechat.R.id.*
 import com.ygorcesar.jamdroidfirechat.data.entity.ChatReference
+import com.ygorcesar.jamdroidfirechat.data.repository.local.AppDatabase
 import com.ygorcesar.jamdroidfirechat.data.repository.remote.UserRemoteDao
 import com.ygorcesar.jamdroidfirechat.extensions.loadImageUrl
 import com.ygorcesar.jamdroidfirechat.ui.BaseActivity
 import com.ygorcesar.jamdroidfirechat.utils.Constants
 import kotlinx.android.synthetic.main.messages_activity.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.error
 
 
@@ -21,6 +24,7 @@ class MessagesActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.messages_activity)
+        doAsync { AppDatabase.getInstance(applicationContext).notificationDao().deleteUnreadNotifications() }
 
         setSupportActionBar(toolbar)
         supportActionBar?.apply {

@@ -1,7 +1,5 @@
 package com.ygorcesar.jamdroidfirechat.extensions
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.app.Dialog
 import android.support.annotation.DrawableRes
 import android.support.design.widget.BottomSheetDialog
@@ -11,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.view.ViewAnimationUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -19,8 +16,8 @@ import com.ygorcesar.jamdroidfirechat.R
 import com.ygorcesar.jamdroidfirechat.ui.latestimages.ImageTile
 import kotlinx.android.synthetic.main.latest_images_picker.view.*
 
-fun RecyclerView._setLinearLayoutManager(withDivider: Boolean = false, orientation: Int = LinearLayoutManager.VERTICAL) {
-    this.layoutManager = LinearLayoutManager(this.context, orientation, false)
+fun RecyclerView._setLinearLayoutManager(withDivider: Boolean = false, orientation: Int = LinearLayoutManager.VERTICAL, stackFromEnd: Boolean = false) {
+    this.layoutManager = LinearLayoutManager(this.context, orientation, false).apply { if (stackFromEnd) this.stackFromEnd = stackFromEnd }
     this.setHasFixedSize(true)
     if (withDivider) {
         this.addItemDecoration(DividerItemDecoration(this.context, orientation))
@@ -58,24 +55,6 @@ fun ImageView.loadImageUrl(url: String, @DrawableRes idRes: Int = R.drawable.ic_
             .load(url)
             .apply(options)
             .into(this)
-}
-
-fun View.enterCircularReveal(centerX: Int = measuredWidth, centerY: Int = measuredHeight) {
-    val finalRadius = Math.max(width, height) / 1.2F
-    visible()
-    ViewAnimationUtils.createCircularReveal(this, centerX, centerY, 0F, finalRadius).start()
-}
-
-fun View.exitCircularReveal(centerX: Int = measuredWidth, centerY: Int = measuredHeight) {
-    val initialRadius = width / 1.2F
-    val anim = ViewAnimationUtils.createCircularReveal(this, centerX, centerY, initialRadius, 0F)
-    anim.addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator) {
-            super.onAnimationEnd(animation)
-            invisible()
-        }
-    })
-    anim.start()
 }
 
 fun Fragment.generateBottomSheetImagePicker(onClick: (ImageTile) -> Unit): Dialog? {

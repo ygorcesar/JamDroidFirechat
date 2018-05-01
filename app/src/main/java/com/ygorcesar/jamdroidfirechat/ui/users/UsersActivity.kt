@@ -8,12 +8,15 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.google.android.gms.appinvite.AppInviteInvitation
 import com.ygorcesar.jamdroidfirechat.R
+import com.ygorcesar.jamdroidfirechat.R.id.rv_users
+import com.ygorcesar.jamdroidfirechat.R.id.toolbar
 import com.ygorcesar.jamdroidfirechat.data.entity.ChatReference
 import com.ygorcesar.jamdroidfirechat.data.entity.MapLocation
+import com.ygorcesar.jamdroidfirechat.data.repository.local.AppDatabase
 import com.ygorcesar.jamdroidfirechat.databinding.UsersActivityBinding
 import com.ygorcesar.jamdroidfirechat.extensions._setLinearLayoutManager
-import com.ygorcesar.jamdroidfirechat.extensions.getLocationFromAdress
 import com.ygorcesar.jamdroidfirechat.extensions.provideViewModel
 import com.ygorcesar.jamdroidfirechat.extensions.startActivityWithTransition
 import com.ygorcesar.jamdroidfirechat.ui.BaseActivity
@@ -23,6 +26,7 @@ import com.ygorcesar.jamdroidfirechat.utils.Constants
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.users_activity.*
 import kotlinx.android.synthetic.main.users_item.view.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.error
 import org.jetbrains.anko.startActivity
 
@@ -39,6 +43,7 @@ class UsersActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
+        doAsync { AppDatabase.getInstance(applicationContext).notificationDao().deleteUnreadNotifications() }
 
         intent?.apply {
             if (Intent.ACTION_SEND == action && !type.isNullOrEmpty()) {
@@ -46,10 +51,6 @@ class UsersActivity : BaseActivity() {
                 if (type == Constants.IntentType.TEXT_PLAIN) {
                     sharedArgs = getStringExtra(Intent.EXTRA_TEXT)
                     extraType = Intent.EXTRA_TEXT
-                    getLocationFromAdress(sharedArgs)?.let {
-                        sharedLocation = it
-                        extraType = Constants.EXTRA_LOCATION
-                    }
                 }
                 if (type.startsWith(Constants.IntentType.IMAGE)) {
                     sharedArgs = getParcelableExtra<Uri>(Intent.EXTRA_STREAM).toString()
@@ -135,21 +136,31 @@ class UsersActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (extraType.isNotEmpty()) {
             menuInflater.inflate(R.menu.menu_shared_args, menu)
-            //TODO
         } else {
             menuInflater.inflate(R.menu.menu_main, menu)
         }
 
-        val searchView = (menu.findItem(R.id.action_search).actionView as SearchView)
-        searchView.setOnQueryTextListener(viewModel.getOnQueryUser())
+        (menu.findItem(R.id.action_search).actionView as SearchView?)?.setOnQueryTextListener(viewModel.getOnQueryUser())
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> startActivity<PrefsActivity>()
+            R.id.action_invite -> onInviteClicked()
             R.id.action_search -> return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun onInviteClicked() {
+        val intent = AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .build()
+        startActivityForResult(intent, REQUEST_INVITE)
+    }
+
+    companion object {
+        const val REQUEST_INVITE = 1
     }
 }

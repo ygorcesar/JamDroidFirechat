@@ -30,15 +30,17 @@ class MessagesViewModel(context: Application, val chatReference: ChatReference, 
         @Bindable get
         set(value) {
             field = value
-            propertyChanged.notifyChange(this, BR.messageText)
-            propertyChanged.notifyChange(this, BR.messageNotEmpty)
+            propertyChanged.apply {
+                notifyChange(this@MessagesViewModel, BR.messageText)
+                notifyChange(this@MessagesViewModel, BR.messageNotEmpty)
+            }
         }
 
     var messages: RxFirebaseChildEvent<Message>? = null
         @Bindable get
         set(value) {
             field = value
-            propertyChanged.notifyChange(this, BR.messages)
+            propertyChanged.notifyChange(this@MessagesViewModel, BR.messages)
         }
 
     fun invalidateLastMessage() {
@@ -70,7 +72,7 @@ class MessagesViewModel(context: Application, val chatReference: ChatReference, 
     @Bindable
     fun isMessageNotEmpty() = messageText.isNotEmpty()
 
-    private fun sendMessage(message: Message) {
+    private fun sendMessage(message: Message, bytes: ByteArray? = null) {
         message.apply {
             email = userEmail
             friendEmail = chatReference.userEmail
@@ -78,8 +80,22 @@ class MessagesViewModel(context: Application, val chatReference: ChatReference, 
         messagesContract.toggleViewAttachment(true)
         messageText = ""
 
-        messageDao.sendMessage(message, chatReference.chatKey).subscribe()
-        propertyChanged.notifyChange(this, BR.messageText)
+        when (message.type) {
+            ConstantsFirebase.MessageType.IMAGE -> {
+                val messageKey = messageDao.sendImageMessage(message, chatReference.chatKey)
+                bytes?.let {
+                    messageDao.uploadImage(chatReference, messageKey, bytes).subscribe({
+                        messageDao.updateMessageImage(chatReference.chatKey, messageKey, it.downloadUrl.toString()).subscribe()
+                    }, {
+                        Log.e("MessagesViewModel", "Error on upload image", it)
+                    }, {
+                        Log.i("MessagesViewModel", "Upload successful!!!")
+                    })
+                }
+            }
+            else -> messageDao.sendMessage(message, chatReference.chatKey).subscribe()
+        }
+        propertyChanged.notifyChange(this@MessagesViewModel, BR.messageText)
     }
 
     private fun sendMessageText() = sendMessage(Message(message = messageText))
@@ -88,16 +104,7 @@ class MessagesViewModel(context: Application, val chatReference: ChatReference, 
 
     fun sendMessageImage(uri: Uri?) {
         uri?.getBitmapBytes(getApplication<Application>().applicationContext)?.let { bytes ->
-            messagesContract.toggleViewAttachment(forceHide = true)
-            val message = Message(email = userEmail, type = ConstantsFirebase.MessageType.IMAGE)
-            val messageKey = messageDao.sendImageMessage(message, chatReference.chatKey)
-            messageDao.uploadImage(chatReference, messageKey, bytes).subscribe({
-                messageDao.updateMessageImage(chatReference.chatKey, messageKey, it.downloadUrl.toString()).subscribe()
-            }, {
-                Log.e("MEssagesViewModel", "Error on upload image", it)
-            }, {
-                Log.i("MessagesViewModel", "Upload successful!!!")
-            })
+            sendMessage(Message(type = ConstantsFirebase.MessageType.IMAGE), bytes)
         }
     }
 

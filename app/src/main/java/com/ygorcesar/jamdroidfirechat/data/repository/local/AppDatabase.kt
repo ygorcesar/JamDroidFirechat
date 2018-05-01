@@ -5,14 +5,17 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.ygorcesar.jamdroidfirechat.data.entity.ChatReference
+import com.ygorcesar.jamdroidfirechat.data.entity.UnreadNotification
 import com.ygorcesar.jamdroidfirechat.data.entity.User
 
-@Database(entities = [ChatReference::class, User::class], version = 1)
+@Database(entities = [ChatReference::class, User::class, UnreadNotification::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun chatReferenceDao(): ChatReferenceDao
 
     abstract fun userDao(): UserDao
+
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

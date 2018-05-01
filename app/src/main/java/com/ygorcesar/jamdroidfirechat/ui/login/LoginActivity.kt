@@ -59,7 +59,7 @@ class LoginActivity : BaseActivity() {
         when (requestCode) {
             RC_GOOGLE_SIGN_IN -> {
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-                viewModel.      authWithGoogle(result, { authenticateWithCredentials(it, GoogleAuthProvider.PROVIDER_ID) })
+                viewModel.authWithGoogle(result, { authenticateWithCredentials(it, GoogleAuthProvider.PROVIDER_ID) })
             }
             RC_FACEBOOK_SIGN_IN -> fbCallbackManager.onActivityResult(requestCode, resultCode, data)
         }
@@ -79,13 +79,8 @@ class LoginActivity : BaseActivity() {
                     viewModel.authWithFacebook(result, { authenticateWithCredentials(it, FacebookAuthProvider.PROVIDER_ID) })
                 }
 
-                override fun onCancel() {
-                    viewModel.hideProgress()
-                }
-
-                override fun onError(error: FacebookException?) {
-                    viewModel.hideProgress()
-                }
+                override fun onCancel() = viewModel.hideProgress()
+                override fun onError(error: FacebookException?) = viewModel.hideProgress()
             })
         }
     }

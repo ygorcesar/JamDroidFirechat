@@ -122,10 +122,10 @@ class MessagesFragment : Fragment(), MessagesContract, AnkoLogger {
 
     private fun setupRecyclerView() {
         binding.rvMessages.apply {
-            _setLinearLayoutManager()
-            adapter = MessagesAdapter(userEmail, { emailOfMessage, onFetchUser, onError ->
+            _setLinearLayoutManager(stackFromEnd = true)
+            adapter = MessagesAdapter(userEmail, fetchUserOfMessage = { emailOfMessage, onFetchUser, onError ->
                 viewModel.fetchUserOfMessage(emailOfMessage, onFetchUser, onError)
-            }, { view, message, isLongClick ->
+            }, onMessageClick = { view, message, isLongClick ->
                 if (isLongClick) {
                     deleteMessage(message.key)
                 } else {
@@ -160,9 +160,10 @@ class MessagesFragment : Fragment(), MessagesContract, AnkoLogger {
     }
 
     override fun initializeGalleryIntent() {
-        val selectImageIntent = Intent()
-        selectImageIntent.type = "image/*"
-        selectImageIntent.action = Intent.ACTION_GET_CONTENT
+        val selectImageIntent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+        }
         startActivityForResult(selectImageIntent, REQUEST_IMAGE)
     }
 

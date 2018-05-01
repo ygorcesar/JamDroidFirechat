@@ -15,15 +15,17 @@ import android.support.v4.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ygorcesar.jamdroidfirechat.R
+import com.ygorcesar.jamdroidfirechat.data.entity.UnreadNotification
+import com.ygorcesar.jamdroidfirechat.data.repository.local.AppDatabase
+import com.ygorcesar.jamdroidfirechat.data.repository.local.NotificationDao
 import com.ygorcesar.jamdroidfirechat.ui.users.UsersActivity
 import com.ygorcesar.jamdroidfirechat.utils.Constants
 import com.ygorcesar.jamdroidfirechat.utils.ConstantsFirebase
 
 
 class FcmNotificationService : FirebaseMessagingService() {
-    private val inboxStyle: NotificationCompat.InboxStyle by lazy { NotificationCompat.InboxStyle() }
-    private var numberOfMessages = 0
     private val pattern: LongArray by lazy { longArrayOf(300, 300, 300, 300, 300) }
+    private val notificationsRepository: NotificationDao by lazy { AppDatabase.getInstance(this).notificationDao() }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -35,8 +37,8 @@ class FcmNotificationService : FirebaseMessagingService() {
                     message.data?.apply {
                         val email = get("email")
                         val chatRef = get("chatRef")
-                        val type = getOrDefault("type", "0").toInt()
-                        val isGlobal = getOrDefault("isGlobal", "false").toBoolean()
+                        val type = get("type")?.toInt() ?: 0
+                        val isGlobal = get("isGlobal")?.toBoolean() ?: false
 
                         val title = getOrDefault("title", getString(R.string.notification_new_notification)) +
                                 if (isGlobal) " - " + ConstantsFirebase.CHAT_GLOBAL_HELPER else ""
@@ -57,14 +59,20 @@ class FcmNotificationService : FirebaseMessagingService() {
 
 
     private fun showNotification(title: String, body: String, email: String?, chatRef: String?) {
-        numberOfMessages++
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val largerIcon = BitmapFactory.decodeResource(resources, R.drawable.ic_notification_large_default)
 
-        with(inboxStyle) {
+        val newUnreadNotification = createUnreadNotification(title, body, email, chatRef)
+
+        val unreadNotifications = getUnreadNotifications().toMutableList().apply { add(newUnreadNotification) }
+        val numberOfMessages = unreadNotifications.size
+
+        val inboxStyle = with(NotificationCompat.InboxStyle()) {
+            unreadNotifications.forEach {
+                addLine("${it.title}: ${it.body}")
+            }
             setBigContentTitle(resources.getQuantityString(R.plurals.not_new_message, numberOfMessages, numberOfMessages))
             setSummaryText("Chat")
-            addLine("$title: $body")
         }
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -93,11 +101,12 @@ class FcmNotificationService : FirebaseMessagingService() {
 
         notificationManager.notify(email ?: Constants.Notification.MESSAGES_DEFAULT_TAG,
                 Constants.Notification.MESSAGES_NOTIFY_ID, notification.build())
+
+        insertNotification(newUnreadNotification)
     }
 
     private fun createPendingIntent(userEmail: String?, chatRef: String?): PendingIntent {
         val intent = Intent(this, UsersActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             if (!userEmail.isNullOrEmpty() && !chatRef.isNullOrEmpty()) {
                 putExtra(Constants.KEY_USER_EMAIL, userEmail)
                 putExtra(Constants.KEY_CHAT_KEY, chatRef)
@@ -105,4 +114,13 @@ class FcmNotificationService : FirebaseMessagingService() {
         }
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
+
+    private fun getUnreadNotifications(): List<UnreadNotification> = notificationsRepository.getUnreadNotifications()
+
+    private fun insertNotification(unreadNotification: UnreadNotification) {
+        notificationsRepository.insertNotification(unreadNotification)
+    }
+
+    private fun createUnreadNotification(title: String, body: String, email: String?, chatRef: String?) =
+            UnreadNotification(title = title, body = body, email = email, chatRef = chatRef)
 }

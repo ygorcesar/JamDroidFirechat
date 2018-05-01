@@ -32,7 +32,7 @@ class UsersViewModel(context: Application) : AndroidViewModel(context), Observab
             usersHelper = users
             repository.insertUsers(*users.toTypedArray())
         }
-        this.users = users.toMutableList()
+        if (users.toMutableList() != this.users) this.users = users.toMutableList()
     }
 
     fun searchUsers(newText: String): MutableList<User> {
